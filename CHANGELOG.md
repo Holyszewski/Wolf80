@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.0.2 – 2026-11-01
+
+- On the first visit the page opens in Czech when the browser is set to Czech or Slovak, otherwise in English; a language chosen with the switch still wins and is remembered.
+
 ## 1.0.1 – 2026-11-01
 
 - The page has a descriptive title, a description for search engines and a preview for links shared on social networks and forums (Open Graph, with an image of the PMI-80 in `site/`).

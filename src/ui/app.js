@@ -62,10 +62,11 @@ function startApp() {
   }
 
   // ---------- language ----------
-  // English by default, Czech on request; the choice is remembered per browser. Elements name
-  // their texts with data-i18n* attributes (src/ui/i18n.js), applyLang() fills them in.
-  let lang = 'en';
-  try { if (localStorage.getItem('wolf80-lang') === 'cs') lang = 'cs'; } catch { /* storage blocked */ }
+  // The choice made with the switch is remembered per browser; before any choice, a browser set to
+  // Czech or Slovak gets Czech and any other English. Elements name their texts with data-i18n*
+  // attributes (src/ui/i18n.js), applyLang() fills them in.
+  let lang = /^(cs|sk)\b/i.test(navigator.languages?.[0] ?? navigator.language ?? '') ? 'cs' : 'en';
+  try { const stored = localStorage.getItem('wolf80-lang'); if (stored === 'cs' || stored === 'en') lang = stored; } catch { /* storage blocked */ }
   const t = (key, params) => uiText(lang, key, params);
   const VERSION = document.querySelector('meta[name="wolf80-version"]')?.content ?? '';
 
