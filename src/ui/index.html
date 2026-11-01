@@ -10,7 +10,22 @@
 <!-- the light theme is set before the page is drawn, so it does not flash dark first (applyTheme in app.js does the rest) -->
 <script>try { var t = localStorage.getItem('wolf80-theme'); if (t === 'system') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; if (t === 'light') { document.documentElement.dataset.theme = 'light'; document.querySelector('meta[name="color-scheme"]').content = 'only light'; } } catch (e) { /* storage blocked */ }</script>
 <meta name="wolf80-version" content="{{VERSION}}">
-<title>Wolf80</title>
+<title>Wolf80 – PMI-80 and Savia-84 emulator</title>
+<!-- for search engines and for link previews on social networks and forums; the image is in site/ (web version only) -->
+<meta name="description" content="Emulator of the Czechoslovak 8-bit single-board computers PMI-80 and Savia-84 in your browser: original monitors, games, sound and debugging. Also as a Windows EXE.">
+<link rel="canonical" href="https://holyszewski.github.io/Wolf80/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Wolf80">
+<meta property="og:title" content="Wolf80 – PMI-80 and Savia-84 emulator">
+<meta property="og:description" content="Emulator of the Czechoslovak 8-bit single-board computers PMI-80 and Savia-84 in your browser: original monitors, games, sound and debugging. Also as a Windows EXE.">
+<meta property="og:url" content="https://holyszewski.github.io/Wolf80/">
+<meta property="og:image" content="https://holyszewski.github.io/Wolf80/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Wolf80 with the PMI-80: the yellow case with the display and the keyboard, the cheat sheet and the list of games">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="cs_CZ">
+<meta name="twitter:card" content="summary_large_image">
 <!--STYLE-->
 </head>
 <body>
