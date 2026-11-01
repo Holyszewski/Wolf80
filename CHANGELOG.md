@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- The web version on GitHub Pages carries the Google Search Console verification and a sitemap (`site/`); the Pages workflow can deploy again without a new release, always building the latest release.
+
 ## 1.0.0 – 2026-11-01
 
 The first public release.

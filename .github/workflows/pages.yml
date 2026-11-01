@@ -2,7 +2,10 @@
 # Copyright (C) 2026 Matěj "Wolf" Holyszewski
 #
 # The web version on GitHub Pages: at each release tag (vX.Y.Z) the tests run, tools/build.mjs builds
-# dist/web and it is deployed. It can also be started by hand (Actions, "Run workflow").
+# dist/web and it is deployed. It can also be started by hand (Actions, "Run workflow"). Either way
+# it builds the latest release reachable from main, so that the web shows a release version, and adds
+# the files of site/ as they are on main (the search engine verification and the sitemap), which
+# belong to the web site only, not to the offline HTML and the EXE.
 name: Web version on GitHub Pages
 
 on:
@@ -25,12 +28,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0 # the whole history and the tags: the build takes its version from git describe
+      - name: Check out the latest release, keep site/ of main
+        run: |
+          tag=$(git describe --tags --abbrev=0 --match 'v[0-9]*')
+          echo "Building $tag"
+          cp -r site "$RUNNER_TEMP/site"
+          git checkout --quiet "$tag"
       - uses: actions/setup-node@v4
         with:
           node-version: 20
       - run: npm test
       - run: node tools/build.mjs
+      - name: Add the files of site/
+        run: cp "$RUNNER_TEMP"/site/* dist/web/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
