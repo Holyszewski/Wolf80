@@ -1,0 +1,847 @@
+{
+  "comment": "Demo programs offered in the side panel, in this order. Each entry names its board (pmi80, savia84, stone1) and may list the firmware ids it runs on (src/board/profiles.js; no list: every firmware of the board). To add one: put its file in programs/<program>/ (one folder per program, one file per board: <program>-<board>.asm), run node tools/make-listings.mjs for its Intel HEX and byte list, add an entry here and its origin to programs/README.md; to remove one, delete its entry. 'name' and 'author' are a text or {cs, en}, as 'help' is; an empty line in 'help' starts a paragraph. 'version' (optional) is the program's own version, shown beside its name. Formats: 'ihex' (Intel HEX), 'bin' (needs 'load'), 'asm' (8080 source, assembled when loaded), 'rom' (already in the firmware: no file, only started). 'start' and 'load' are hex addresses.",
+  "programs": [
+    {
+      "id": "cosmos-pmi80",
+      "name": "COSMOS",
+      "board": "pmi80",
+      "firmware": [
+        "factory"
+      ],
+      "file": "cosmos/cosmos-pmi80.asm",
+      "format": "asm",
+      "start": "1C00",
+      "author": {
+        "cs": "Jiří Šutera; upravil Nostalcomp; do RAM převedl projekt Wolf80",
+        "en": "Jiří Šutera; changed by Nostalcomp; moved to RAM by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Nostalcompova verze hry Jiřího Šutery z druhé EPROM PMI-80 C, převedená do RAM pro tovární monitor: hra postupně zrychluje. Překážky bere z ROM továrního monitoru, takže má jiný průběh než pod PMI-80 C. Loď na levé číslici uhýbá meteoritům a asteroidům, dvě pravé číslice ukazují skóre. Po nápisech COSMOS a StArt hra začne sama. <kbd>4</kbd> nebo <kbd>8</kbd> = nahoru, <kbd>0</kbd> = dolů, <kbd>EX</kbd> = vzdát. Po srážce se ukáže SCOrE a skóre, <kbd>=</kbd> = hrát dál; při skóre FF svítí FuLL SEt, <kbd>=</kbd> začne znovu. Konec <kbd>RE</kbd>.",
+        "en": "Nostalcomp's version of Jiří Šutera's game from the second EPROM of PMI-80 C, moved to RAM for the factory monitor: it speeds up as it goes. Its obstacles come from the factory monitor's ROM, so its course differs from PMI-80 C's. A spaceship on the leftmost digit dodges meteors and asteroids, the two right digits show the score. After COSMOS and StArt the game begins by itself. <kbd>4</kbd> or <kbd>8</kbd> = up, <kbd>0</kbd> = down, <kbd>EX</kbd> = give up. After a crash SCOrE and the score are shown, <kbd>=</kbd> = play on; at the score FF it shows FuLL SEt, <kbd>=</kbd> starts again. <kbd>RE</kbd> ends it."
+      }
+    },
+    {
+      "id": "cosmos-pmi80c",
+      "name": "COSMOS",
+      "board": "pmi80",
+      "firmware": [
+        "pmi80c"
+      ],
+      "format": "rom",
+      "start": "0440",
+      "author": {
+        "cs": "Jiří Šutera; upravil Nostalcomp (ve druhé EPROM PMI-80 C)",
+        "en": "Jiří Šutera; changed by Nostalcomp (in the second EPROM of PMI-80 C)"
+      },
+      "help": {
+        "cs": "Nostalcompova verze hry Jiřího Šutery z druhé EPROM PMI-80 C: hra postupně zrychluje. Loď na levé číslici uhýbá meteoritům a asteroidům, dvě pravé číslice ukazují skóre. Po nápisech COSMOS a StArt hra začne sama. <kbd>4</kbd> nebo <kbd>8</kbd> = nahoru, <kbd>0</kbd> = dolů, <kbd>EX</kbd> = vzdát. Po srážce se ukáže SCOrE a skóre, <kbd>=</kbd> = hrát dál; při skóre FF svítí FuLL SEt, <kbd>=</kbd> začne znovu. Konec <kbd>RE</kbd>.",
+        "en": "Nostalcomp's version of Jiří Šutera's game in the second EPROM of PMI-80 C: it speeds up as it goes. A spaceship on the leftmost digit dodges meteors and asteroids, the two right digits show the score. After COSMOS and StArt the game begins by itself. <kbd>4</kbd> or <kbd>8</kbd> = up, <kbd>0</kbd> = down, <kbd>EX</kbd> = give up. After a crash SCOrE and the score are shown, <kbd>=</kbd> = play on; at the score FF it shows FuLL SEt, <kbd>=</kbd> starts again. <kbd>RE</kbd> ends it."
+      }
+    },
+    {
+      "id": "tenis3-pmi80",
+      "name": "TENIS3",
+      "board": "pmi80",
+      "firmware": [
+        "factory"
+      ],
+      "file": "tenis3/tenis3-pmi80.asm",
+      "format": "asm",
+      "start": "1D00",
+      "author": {
+        "cs": "autor hry TENIS neznámý; TENIS3 od Nostalcompu; do RAM převedl projekt Wolf80",
+        "en": "author of TENIS unknown; TENIS3 by Nostalcomp; moved to RAM by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Nostalcompova verze TENIS3 hry TENIS z aplikačního listu, z druhé EPROM PMI-80 C, převedená do RAM pro tovární monitor. Po nápisu tEnIS 3 počítač jako levý hráč podává, vy jste pravý hráč: míček odpálíte klávesou, když k vám doletí. Po chybě se ukáže skóre a hra pokračuje dalším podáním. Konec <kbd>RE</kbd>.",
+        "en": "Nostalcomp's TENIS3, its version of TENIS from the application sheet, from the second EPROM of PMI-80 C, moved to RAM for the factory monitor. After tEnIS 3 the computer, the left player, serves; you are the right one: hit the ball with a key when it reaches you. After a miss the score is shown and play goes on with the next serve. <kbd>RE</kbd> ends it."
+      }
+    },
+    {
+      "id": "tenis3-pmi80c",
+      "name": "TENIS3",
+      "board": "pmi80",
+      "firmware": [
+        "pmi80c"
+      ],
+      "format": "rom",
+      "start": "0660",
+      "author": {
+        "cs": "autor hry TENIS neznámý; TENIS3 od Nostalcompu (ve druhé EPROM PMI-80 C)",
+        "en": "author of TENIS unknown; TENIS3 by Nostalcomp (in the second EPROM of PMI-80 C)"
+      },
+      "help": {
+        "cs": "Nostalcompova verze TENIS3 hry TENIS z aplikačního listu, z druhé EPROM PMI-80 C. Po nápisu tEnIS 3 počítač jako levý hráč podává, vy jste pravý hráč: míček odpálíte klávesou, když k vám doletí. Po chybě se ukáže skóre a hra pokračuje dalším podáním. Konec <kbd>RE</kbd>.",
+        "en": "Nostalcomp's TENIS3, its version of TENIS from the application sheet, in the second EPROM of PMI-80 C. After tEnIS 3 the computer, the left player, serves; you are the right one: hit the ball with a key when it reaches you. After a miss the score is shown and play goes on with the next serve. <kbd>RE</kbd> ends it."
+      }
+    },
+    {
+      "id": "mikrovarhany",
+      "name": {
+        "cs": "Mikrovarhany",
+        "en": "Micro Organ"
+      },
+      "board": "pmi80",
+      "file": "mikrovarhany/mikrovarhany.asm",
+      "format": "asm",
+      "start": "1C00",
+      "author": {
+        "cs": "projekt Wolf80",
+        "en": "Wolf80 project"
+      },
+      "sound": true,
+      "help": {
+        "cs": "Jednohlasé varhany. Klávesy <kbd>0</kbd>–<kbd>F</kbd> hrají, dokud je držíte; na klávesnici počítače stačí držet číslici nebo písmeno A–F. Klávesa <kbd>=</kbd> přepíná stupnice: „uArHAnY“ je C dur od c1 (<kbd>0</kbd>) do d3 (<kbd>F</kbd>), „PuLtony“ jsou půltóny od c1 (<kbd>0</kbd>) do dis2 (<kbd>F</kbd>). Zvuk jde z výstupu na magnetofon K3 do (virtuálního) zesilovače. Během tónu je displej zhasnutý. Konec <kbd>RE</kbd>.",
+        "en": "A one-voice organ. Keys <kbd>0</kbd>–<kbd>F</kbd> play while held; on the PC keyboard hold a digit or a letter A–F. The <kbd>=</kbd> key switches the scale: \"uArHAnY\" is C major from c1 (<kbd>0</kbd>) to d3 (<kbd>F</kbd>), \"PuLtony\" are semitones from c1 (<kbd>0</kbd>) to d#2 (<kbd>F</kbd>). The sound comes from the tape output K3 into the (virtual) amplifier. The display is dark during a tone. <kbd>RE</kbd> ends it."
+      }
+    },
+    {
+      "id": "svetelny-had",
+      "name": {
+        "cs": "Světelný had",
+        "en": "Light Snake"
+      },
+      "board": "pmi80",
+      "file": "svetelny-had/pmi.bin",
+      "format": "bin",
+      "load": "1C00",
+      "start": "1C10",
+      "author": "Matěj \"Wolf\" Holyszewski",
+      "help": {
+        "cs": "Světelný had s hlavou a slábnoucím ocasem obíhá všech 63 segmentů devíti číslic; jas ocasu dělá softwarové PWM. Klávesnici nečte, konec klávesou <kbd>RE</kbd>. Vytvořeno s pomocí AI.",
+        "en": "A light snake with a head and a fading tail runs through all 63 segments of the nine digits; the tail's brightness is software PWM. It does not read the keyboard; <kbd>RE</kbd> ends it. Made with the help of AI."
+      }
+    },
+    {
+      "id": "aion-buzzer-80",
+      "name": "AION Buzzer 80",
+      "board": "pmi80",
+      "file": "aion-buzzer-80/AION-Buzzer-80-RAM-display.hex",
+      "format": "ihex",
+      "start": "1C00",
+      "version": "1.0.1",
+      "author": "Matěj \"Wolf\" Holyszewski",
+      "sound": true,
+      "help": {
+        "cs": "Hudební demo: dvouhlasá melodie s basou a bicími z výstupu na magnetofon K3, zvuk musí být zapnutý. Skladba trvá asi 76 s a opakuje se, konec <kbd>RE</kbd>. Displej zleva: AAA = adresa hraného kroku bez horní číslice 1, D = bicí (1 kopák, 2 virbl, 3 hi-hat), B = basový tón 1–9, F = melodický tón 0–F, P = pattern 0–B; pauza je prázdná. Vytvořeno přímo pro tento emulátor s pomocí AI.",
+        "en": "A music demo: a two-voice melody with bass and drums from the tape output K3; sound must be on. The song lasts about 76 s and loops; <kbd>RE</kbd> ends it. Display from the left: AAA = address of the row being played without its top digit 1, D = drum (1 kick, 2 snare, 3 hi-hat), B = bass note 1–9, F = melody note 0–F, P = pattern 0–B; a rest is blank. Made for this emulator with the help of AI."
+      }
+    },
+    {
+      "id": "ship-captain-crew-pmi80",
+      "name": {
+        "cs": "Loď, kapitán, posádka",
+        "en": "Ship, Captain, Crew"
+      },
+      "board": "pmi80",
+      "file": "ship-captain-crew/ship-captain-crew-pmi80.asm",
+      "format": "asm",
+      "start": "1C00",
+      "version": "0.1.0",
+      "author": "Matěj \"Wolf\" Holyszewski",
+      "help": {
+        "cs": "Původně kostková hra, zde pro 1 až 9 hráčů, kteří se střídají u jedné klávesnice. Hraje se na pevný počet kol a body ze všech kol se sčítají. V každém kole je třeba nejdříve hodit šestku (loď), pětku (kapitána) a čtyřku (posádku); zbylé dvě kostky jsou náklad a jejich součet jsou body. Po nápisu SHIP zvolte číslicí počet hráčů (PLAYErS, 1–9) a pak počet kol (roundS, 1–8). V každém kole máte nejvýš tři hody klávesou <kbd>=</kbd>. Šestka, pak pětka a pak čtyřka se samy odkládají doleva a mohou padnout i v jednom hodu; pětka se ale počítá až po šestce a čtyřka až po pětce. Jakmile máte všechny tři, můžete klávesou <kbd>S</kbd> přijmout aktuální náklad a ukončit svůj tah, nebo zbývající hody využít k pokusu o získání lepšího nákladu; pozor, můžete si tak i pohoršit. Bez celé trojice je kolo za nula bodů. Displej zleva: číslo hráče, počítadlo hodů, pět kostek (před hodem pomlčky) a vpravo hráčův průběžný součet bodů ze všech kol (00–96). Číslo hráče, odložené kostky a součet blikají. Po tahu zabliká náklad, přičte se a zabliká nový součet; pak je na řadě další hráč. Klávesa <kbd>A</kbd> ukáže asi na 2 s blikající r a číslo kola. Na konci se ukáže End, uprostřed číslo vítěze (0 = remíza) a vpravo jeho vítězný součet bodů. <kbd>=</kbd> začne novou partii se stejným nastavením, <kbd>F</kbd> partii opustí a vrátí volbu hráčů a kol. Bez zvuku. Konec <kbd>RE</kbd>.\n\nPůvod: Loď, kapitán, posádka (anglicky Ship, Captain and Crew) je tradiční kostková hra. Implementace pro PMI-80, Savia-84 a Stone 1 v rámci projektu Wolf80.",
+        "en": "Originally a dice game, here for 1 to 9 players taking turns at one keypad. It is played over a fixed number of rounds, and the points of all rounds add up. In each round you first need to roll a six (the ship), a five (the captain) and a four (the crew); the other two dice are the cargo, and their total is the points. After the title SHIP choose the number of players with a digit (PLAYErS, 1–9), then the number of rounds (roundS, 1–8). In each round you have at most three rolls, with <kbd>=</kbd>. The six, then the five, then the four are set aside to the left by themselves, and they may come in a single roll; but a five counts only after the six, and a four only after the five. Once you have all three, you can accept the current cargo with <kbd>S</kbd> and end your turn, or use the remaining rolls to try for a better cargo; beware, you may end up worse off. Without the whole trio the round scores zero points. The display from the left: the player's number, the roll counter, the five dice (dashes before a roll) and on the right the player's running total over all rounds (00–96). The player's number, the dice set aside and the total blink. After the turn the cargo blinks, is added, and the new total blinks; then the next player is on. Key <kbd>A</kbd> shows a blinking r and the round number for about 2 s. At the end End appears with the winner's number in the middle (0 = a tie) and the winner's total on the right. <kbd>=</kbd> starts a new match with the same settings, <kbd>F</kbd> leaves the match and goes back to choosing players and rounds. Silent. <kbd>RE</kbd> ends it.\n\nOrigin: Ship, Captain and Crew is a traditional dice game. Implemented for the PMI-80, the Savia-84 and the Stone 1 as part of the Wolf80 project."
+      }
+    },
+    {
+      "id": "lunar-lander-pmi80",
+      "name": "Lunar Lander",
+      "board": "pmi80",
+      "file": "lunar-lander/lunar-lander-pmi80.asm",
+      "format": "asm",
+      "start": "1C00",
+      "version": "0.1.1",
+      "author": {
+        "cs": "Jim Butterfield; port projekt Wolf80",
+        "en": "Jim Butterfield; ported by the Wolf80 project"
+      },
+      "sound": true,
+      "help": {
+        "cs": "Přistaňte s lunárním modulem měkce. Po nápisu LUnAr LAndEr visíte ve výšce 4500 stop a padáte. Číslice úplně vlevo ukazuje nastavený tah motoru, pak následuje výška (čtyři číslice) a vpravo rychlost pádu nebo stoupání (dvě číslice). Klávesami <kbd>1</kbd> až <kbd>9</kbd> nastavujete tah: <kbd>5</kbd> přesně vyrovnává gravitaci, menší číslo pád zrychluje, větší brzdí; <kbd>0</kbd> vypne motor natrvalo. <kbd>F</kbd> ukáže palivo (F800 = 800 liber), <kbd>A</kbd> až <kbd>E</kbd> zase výšku. Když palivo dojde, motor přestane táhnout. Při dosednutí rychlostí 5 nebo menší se ukáže SAFE, jinak dEAd; kdo vystoupá nad 8000 stop, také skončí dEAd. <kbd>=</kbd> začne nový let. Rada z knihy: začněte tahem 1, při rychlosti v devadesátkách přepněte na 5, ve výšce asi 1500 stop dejte 9 a při rychlosti 15 až 20 se vraťte na 5 nebo 6. Hra pípá z výstupu K3 (zapněte zvuk): dvakrát při přistání SAFE, hluboko při dEAd, jednou když dojde palivo. Konec <kbd>RE</kbd>.\n\nPůvod: Lunar Lander napsal Jim Butterfield pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502 (1976), a vyšel v knize The First Book of KIM (Jim Butterfield, Stan Ockers a Eric Rehnke, Hayden, 1977/78). Celý program měl kolem 220 bajtů a počítal desítkově, aby se čísla na displeji dala číst přímo. Námět je starší: první hru o přistání na Měsíci napsal roku 1969 student Jim Storer na počítači PDP-8 a od té doby vznikla v nesčetných podobách. Jim Butterfield (1936–2007) byl kanadský programátor, později známý hlavně z Commodoru; programy z knihy autoři uvolnili bez autorských omezení. Pro PMI-80, Savia-84 a Stone 1 ji projekt Wolf80 napsal znovu; navíc ukazuje tah motoru, odděluje výšku od rychlosti mezerou, pípá a má opravenou chybu originálu při rychlém stoupání.",
+        "en": "Land the lunar module gently. After the title LUnAr LAndEr you hang at 4500 feet, falling. The leftmost digit shows the engine thrust, then come the altitude (four digits) and, on the right, the rate of descent or climb (two digits). Keys <kbd>1</kbd> to <kbd>9</kbd> set the thrust: <kbd>5</kbd> exactly balances gravity, a lower number lets you fall faster, a higher one brakes; <kbd>0</kbd> shuts the engine off for good. <kbd>F</kbd> shows the fuel (F800 = 800 pounds), <kbd>A</kbd> to <kbd>E</kbd> bring the altitude back. When the fuel runs out the engine stops. Touching down at a rate of 5 or less shows SAFE, anything faster dEAd; climbing above 8000 feet also ends in dEAd. <kbd>=</kbd> starts a new flight. The book's advice: begin with thrust 1, switch to 5 when the rate reaches the nineties, press 9 at about 1500 feet, and go back to 5 or 6 once the rate is down to 15 to 20. The game beeps through the tape output K3 (turn the sound on): twice on a SAFE landing, low on dEAd, once when the fuel runs out. <kbd>RE</kbd> ends it.\n\nOrigin: Lunar Lander was written by Jim Butterfield for the KIM-1, MOS Technology's single-board 6502 computer (1976), and published in The First Book of KIM (Jim Butterfield, Stan Ockers and Eric Rehnke, Hayden, 1977/78). The whole program was about 220 bytes and calculated in decimal, so that the numbers on the display could be read directly. The idea is older: the first moon-landing game was written in 1969 by the student Jim Storer on a PDP-8, and it has appeared in countless forms since. Jim Butterfield (1936–2007) was a Canadian programmer, later best known from the Commodore world; the book's authors released its programs without copyright restrictions. The Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1; it also shows the thrust, separates the altitude from the rate with a gap, beeps, and fixes the original's bug in a fast climb."
+      }
+    },
+    {
+      "id": "multi-maze-pmi80",
+      "name": "Multi-Maze",
+      "board": "pmi80",
+      "file": "multi-maze/multi-maze-pmi80.asm",
+      "format": "asm",
+      "start": "1C00",
+      "version": "0.3.0",
+      "author": {
+        "cs": "Jim Butterfield (The First Book of KIM, 1977/78); port projekt Wolf80",
+        "en": "Jim Butterfield (The First Book of KIM, 1977/78); ported by the Wolf80 project"
+      },
+      "sound": true,
+      "help": {
+        "cs": "Najděte cestu z bludiště. Po nápisu MULtI-MAZE (ten čeká na libovolnou klávesu) jste blikající segment uprostřed displeje a kolem vás svítí stěny. Jedna číslice je jeden sloupec bludiště: horní segment je políčko nad vámi, prostřední váš řádek, dolní políčko pod vámi; rozsvícený segment je stěna. Vidíte jen úzký výřez, tři sloupce na každou stranu. <kbd>8</kbd> nebo <kbd>9</kbd> jde nahoru, <kbd>1</kbd> nebo <kbd>2</kbd> dolů, <kbd>4</kbd> vlevo a <kbd>6</kbd> vpravo, jeden krok na stisk; do stěny se nedá. Cesta ven vede vlevo. Když východem projdete, ukáže se volný prostor, pak OUt a počet vašich tahů (nejvýš 999). <kbd>=</kbd> kdykoli vytvoří novou obměnu původního bludiště. <kbd>S</kbd> přepne hru natrvalo na generovaná bludiště: pak <kbd>=</kbd> i <kbd>S</kbd> postaví úplně nové náhodné bludiště o 7 × 8 políčkách s jedinou cestou ven (displej přitom na třetinu sekundy zhasne); k původnímu bludišti se vrátíte novým spuštěním programu. Hra pípá z výstupu K3 (zapněte zvuk): hluboko, když narazíte do stěny, dvakrát vysoko na východu. Konec <kbd>RE</kbd>.\n\nPůvod: Multi-Maze napsal Jim Butterfield pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502 (1976), a vyšel v knize The First Book of KIM (Jim Butterfield, Stan Ockers a Eric Rehnke, Hayden, 1977/78, s. 88–90). Jedno ručně nakreslené bludiště se osmi náhodnými změnami stěn mění v 256 variant a vidí se jen úzkým okénkem displeje. Autoři knihy programy uvolnili bez autorských omezení, proto má port bludiště převzaté beze změny; projekt Wolf80 ho pro PMI-80, Savia-84 a Stone 1 napsal znovu. Oproti originálu má nápis, který čeká na klávesu (první bludiště je tak náhodné), sedm číslic s hráčem uprostřed místo šesti s hráčem na třetím místě, klávesy 8 a 2 navíc, na východu OUt a počet tahů kde originál ukáže jen volný prostor, zvuk a mód s generovanými bludišti.",
+        "en": "Find the way out of the maze. After the title MULtI-MAZE (it waits for any key) you are the blinking segment in the middle of the display, with walls lit around you. One digit is one column of the maze: the top segment is the square above you, the middle one your own row, the bottom one the square below you; a lit segment is a wall. You see only a narrow window, three columns on each side. <kbd>8</kbd> or <kbd>9</kbd> goes up, <kbd>1</kbd> or <kbd>2</kbd> down, <kbd>4</kbd> left and <kbd>6</kbd> right, one step per press; you cannot walk into a wall. The way out leads to the left. When you pass through the exit you see open space, then OUt and the number of your moves (999 at most). <kbd>=</kbd> makes a new variant of the original maze at any time. <kbd>S</kbd> switches to generated mazes for good: then <kbd>=</kbd> and <kbd>S</kbd> both build a completely new random maze of 7 × 8 cells with exactly one way out (the display goes dark for a third of a second); start the program again to get back to the original maze. The game beeps through the tape output K3 (turn the sound on): low when you bump into a wall, twice high at the exit. <kbd>RE</kbd> ends it.\n\nOrigin: Multi-Maze was written by Jim Butterfield for the KIM-1, MOS Technology's single-board 6502 computer (1976), and published in The First Book of KIM (Jim Butterfield, Stan Ockers and Eric Rehnke, Hayden, 1977/78, pp. 88–90). One hand-drawn maze becomes one of 256 variants through eight random wall changes, and you see it only through a narrow window of the display. The book's authors released its programs without copyright restrictions, so the port keeps the maze as published; the Wolf80 project rewrote the program for the PMI-80, the Savia-84 and the Stone 1. Unlike the original it has a title that waits for a key (so the first maze is random too), seven digits with the player in the middle instead of six with the player third, the extra keys 8 and 2, OUt and the move count at the exit where the original only shows open space, sound, and a mode with generated mazes."
+      }
+    },
+    {
+      "id": "wumpus-pmi80",
+      "name": "Wumpus",
+      "board": "pmi80",
+      "firmware": [
+        "factory"
+      ],
+      "file": "wumpus/wumpus-pmi80.asm",
+      "format": "asm",
+      "start": "1C00",
+      "version": "0.1.0",
+      "author": {
+        "cs": "Stan Ockers podle hry Gregoryho Yoba; port projekt Wolf80",
+        "en": "Stan Ockers after Gregory Yob's game; ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Lov Wumpuse v 16 jeskyních číslovaných 0–F; z každé vedou čtyři chodby. Po názvu WUMPUS hru spustíte libovolnou klávesou. Zpráva YOU ARE IN 9 – TUNNELS LEAD TO 68AC (jste v jeskyni 9, chodby vedou do 6, 8, A a C) roluje po znacích přes devět číslic, jeden krok za čtvrt sekundy, a během rolování klávesy neberou. Pak zůstane svítit konec zprávy se čtyřmi sousedními jeskyněmi: stiskem čísla jedné z nich se tam přesunete. Varování o sousední jeskyni: WUMPUS CLOSE (Wumpus je blízko), PIT CLOSE (jáma), BATS CLOSE (netopýři). Netopýři vás odnesou jinam (SUPERBAT SNATCH), jáma znamená konec (YYIIEEE FELL IN PIT), a když vejdete k Wumpusovi, probudíte ho: jednou ze čtyř vás sní (HA HA WUMPUS GOT YOU), jinak uteče (OOPS – BUMPED A WUMPUS). Máte tři plechovky uspávacího plynu: <kbd>=</kbd> a číslo sousední jeskyně (ROOM? = kam) hodí plechovku tam; hod nejde zrušit. Trefíte-li Wumpuse, vyhráváte (GREAT – YOU GET A HUG FROM WUMPUS); jinak se Wumpus přesune, případně až k vám (MISSED – ONLY 2 CANS LEFT). Do jeskyně s plynem nesmíte (GAS IN ROOM); po třetí netrefě je konec (OUT OF GAS). Prohra končí zprávou YOU LOSE dokola. Jiné klávesy znovu přehrají zprávu o poloze. Texty jsou anglicky jako v originále. Novou hru začnete klávesou <kbd>RE</kbd> a spuštěním programu znovu. Jen s továrním monitorem.\n\nPůvod: Hunt the Wumpus napsal v BASICu Gregory Yob; vyšla roku 1973 v časopise People's Computer Company a stala se jednou z prvních rozšířených počítačových her o průzkumu jeskyní. Pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502, ji upravil Stan Ockers a vyšla v knize The First Book of KIM (Jim Butterfield, Stan Ockers a Eric Rehnke, Hayden, 1977/78); vešla se i s texty do 1 KiB paměti a na šest číslic, po kterých texty rolují. Programy z knihy autoři uvolnili bez autorských omezení. Pro PMI-80 ji projekt Wolf80 napsal znovu, co nejblíž originálu. Oproti originálu zobrazuje úvodní název a už první hra má náhodné rozmístění hráče, Wumpuse, jam a netopýrů, překlep na neplatnou klávesu už hráče nepřesune, texty rolují přes devět číslic místo šesti a písmena U a W vypadají trochu jinak.",
+        "en": "Hunt the Wumpus in 16 caves numbered 0–F, with four tunnels from each. After the title WUMPUS, any key starts the game. The message YOU ARE IN 9 – TUNNELS LEAD TO 68AC scrolls by one character at a time across the nine digits, one step every quarter of a second, and keys are ignored while it scrolls. Then the end of the message stays lit with the four neighbouring caves: press the number of one of them to go there. Warnings about a neighbouring cave: WUMPUS CLOSE, PIT CLOSE, BATS CLOSE. Bats carry you elsewhere (SUPERBAT SNATCH), a pit is the end (YYIIEEE FELL IN PIT), and walking into the Wumpus wakes him: one time in four he eats you (HA HA WUMPUS GOT YOU), otherwise he runs off (OOPS – BUMPED A WUMPUS). You have three cans of sleeping gas: <kbd>=</kbd> and the number of a neighbouring cave (ROOM? asks where) throws a can there; a throw cannot be cancelled. Hit the Wumpus and you win (GREAT – YOU GET A HUG FROM WUMPUS); otherwise he moves, perhaps into your cave (MISSED – ONLY 2 CANS LEFT). You must not enter a gassed cave (GAS IN ROOM); the third miss ends the game (OUT OF GAS). A loss ends with YOU LOSE, repeated. Other keys replay the message about where you are. The texts are in English, as in the original. For a new game press <kbd>RE</kbd> and start the program again. Factory monitor only.\n\nOrigin: Hunt the Wumpus was written in BASIC by Gregory Yob, printed in 1973 in People's Computer Company, and became one of the first widely copied computer cave-exploring games. Stan Ockers adapted it for the KIM-1, MOS Technology's single-board 6502 computer; it was published in The First Book of KIM (Jim Butterfield, Stan Ockers and Eric Rehnke, Hayden, 1977/78), and with all its text it fits into 1 KiB of memory and six digits, over which the messages scroll. The book's authors released its programs without copyright restrictions. The Wolf80 project rewrote it for the PMI-80, keeping as close to the original as it could. Unlike the original, it shows a title, and even the first game places the player, the Wumpus, the pits and the bats at random; a mistyped key no longer moves the player, the texts scroll across nine digits instead of six, and the letters U and W look a little different."
+      }
+    },
+    {
+      "id": "bagels-pmi80",
+      "name": "Bagels",
+      "board": "pmi80",
+      "file": "bagels/bagels-pmi80.asm",
+      "format": "asm",
+      "start": "1C00",
+      "version": "0.1.1",
+      "author": {
+        "cs": "Jim Butterfield; port projekt Wolf80",
+        "en": "Jim Butterfield; ported by the Wolf80 project"
+      },
+      "sound": true,
+      "help": {
+        "cs": "Počítač si myslí tajný kód ze čtyř písmen A–F; písmena se mohou opakovat (třeba CACF nebo bbbb). Máte deset pokusů. Po nápisu bAGELS pište tip klávesami <kbd>A</kbd>–<kbd>F</kbd>, písmena se objevují zleva. Po čtvrtém se vpravo ukážou dvě číslice: kolik písmen je na správném místě a kolik jich v kódu je, ale jinde. Příklad: kód CbFb a tip bAFd dají 1 1 (F sedí, b je jinde). Výsledek 4 0 je výhra. Číslice úplně vlevo ukazuje, kolik pokusů zbude po tomto tipu. Po výsledku asi 3 s klávesy nereagují; pak písmeno <kbd>A</kbd>–<kbd>F</kbd> rovnou začne další tip (jiná klávesa jen smaže displej). Po desátém nezdařeném tipu se ukáže správný kód se čtverečkem a další stisk začne novou hru. Zadané písmeno nejde opravit. Hra pípá z výstupu K3 (zapněte zvuk): po každém tipu, dvakrát při výhře, hlouběji při prohře. Konec <kbd>RE</kbd>.\n\nPůvod: Bagels napsal Jim Butterfield pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502 (1976), a vyšel v knize The First Book of KIM (Jim Butterfield, Stan Ockers a Eric Rehnke, Hayden, 1977/78). Patří do rodiny her na hádání kódu, kam patří i Mastermind, u nás známý jako Logik; Butterfield ji vtěsnal do 236 bajtů a šesti číslic a písmena A–F se píšou přímo na hexadecimální klávesnici. Programy z knihy autoři uvolnili bez autorských omezení. Pro PMI-80, Savia-84 a Stone 1 ji projekt Wolf80 napsal znovu; navíc má mezeru před výsledkem, počítadlo pokusů a zvuk.",
+        "en": "The computer thinks of a secret code of four letters A–F; letters may repeat (CACF or bbbb, say). You have ten guesses. After the title bAGELS type a guess with keys <kbd>A</kbd>–<kbd>F</kbd>; the letters appear from the left. After the fourth, two digits appear on the right: how many letters are in the right place, and how many are in the code but elsewhere. Example: the code CbFb and the guess bAFd give 1 1 (the F fits, the b is elsewhere). A result of 4 0 wins. The leftmost digit shows how many guesses will be left after this one. After a result the keys rest for about 3 s; then a letter <kbd>A</kbd>–<kbd>F</kbd> starts the next guess at once (any other key just clears the display). After the tenth wrong guess the right code is shown with a small square, and the next key starts a new game. A letter you have typed cannot be corrected. The game beeps through the tape output K3 (turn the sound on): after each guess, twice on a win, lower on a loss. <kbd>RE</kbd> ends it.\n\nOrigin: Bagels was written by Jim Butterfield for the KIM-1, MOS Technology's single-board 6502 computer (1976), and published in The First Book of KIM (Jim Butterfield, Stan Ockers and Eric Rehnke, Hayden, 1977/78). It belongs to the family of code-guessing games that includes Mastermind; Butterfield squeezed it into 236 bytes and six digits, and the letters A–F are typed straight on the hex keypad. The book's authors released its programs without copyright restrictions. The Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1, adding a gap before the result, a guess counter and sound."
+      }
+    },
+    {
+      "id": "rock-climbing-pmi80",
+      "name": "Rock Climbing",
+      "board": "pmi80",
+      "file": "rock-climbing/rock-climbing-pmi80.asm",
+      "format": "asm",
+      "start": "1C00",
+      "version": "0.1.1",
+      "author": {
+        "cs": "Teruhisa Hišida podle knihy Kóičiho Kišidy; port projekt Wolf80",
+        "en": "Teruhisa Hishida after Kōichi Kishida's book; ported by the Wolf80 project"
+      },
+      "sound": true,
+      "help": {
+        "cs": "Hra pro dva hráče u jedné klávesnice: kdo první vyleze na 100 m, vyhrává. Vlevo je výška prvního hráče, vpravo druhého; na tahu je ten, jehož číslice blikají. Klávesa <kbd>L</kbd> zvolí lezení (rozsvítí se horní čárka), <kbd>S</kbd> odpočinek (dolní čárka); volbu lze změnit, <kbd>=</kbd> ji potvrdí. Lezení: počítač hodí dvěma kostkami. Padne-li na kterékoli jednička, spadnete na poslední zajištěnou výšku (kde jste naposledy odpočívali, na začátku 0); pád zůstane půl sekundy vidět a tah přejde na soupeře. Jinak se součet kostek přičte a lezete dál. Odpočinek: současná výška se stane zajištěnou a tah přejde na soupeře. Po dosažení cíle displej 2 s bliká, pak začne nová hra. Hra pípá z výstupu K3 (zapněte zvuk): při výstupu cvakne, při pádu pípne hluboko, při výhře dvakrát. Konec <kbd>RE</kbd>.\n\nPůvod: hra pochází z japonské knihy Maikon Game 21 (Sanpó, uváděno 1978), sbírky her, kterou sestavil Kóiči Kišida pro jednodeskovou stavebnici NEC TK-80 (1976); ta bývá považována za začátek osobních počítačů v Japonsku. Podle slovního popisu v knize hru napsal Teruhisa Hišida z firmy Chunichi Denko pro svou moderní stavebnici ND8080 napodobující TK-80 (sbírka aplikačních programů ND8080, 2016). Pro PMI-80, Savia-84 a Stone 1 ji podle pravidel napsal znovu projekt Wolf80; navíc má po pádu krátkou pauzu, zvuk a opravenou chybu, kvůli které vítěz místo 107 viděl 007.",
+        "en": "A game for two players at one keypad: whoever first climbs to 100 m wins. The first player's height is on the left, the second's on the right; the player whose digits blink is on the move. Key <kbd>L</kbd> chooses to climb (the top bar lights), <kbd>S</kbd> to rest (the bottom bar); you may change your mind, <kbd>=</kbd> confirms. Climbing: the computer rolls two dice. If either shows a one, you fall to your last secured height (where you last rested, 0 at the start); the fall stays visible for half a second and the turn passes. Otherwise the dice total is added and you climb on. Resting secures your current height and passes the turn. When someone reaches the top the display blinks for 2 s, then a new game begins. The game beeps through the tape output K3 (turn the sound on): a click on a climb, a low beep on a fall, two beeps on a win. <kbd>RE</kbd> ends it.\n\nOrigin: the game comes from the Japanese book Maikon Game 21 (Sanpō, given as 1978), a collection of games compiled by Kōichi Kishida for the NEC TK-80 single-board kit (1976), often seen as the start of personal computing in Japan. From the book's description Teruhisa Hishida of Chunichi Denko wrote it for his modern TK-80-style kit, the ND8080 (a collection of ND8080 application programs, 2016). The Wolf80 project rewrote it from the rules for the PMI-80, the Savia-84 and the Stone 1, adding a short pause after a fall and sound, and fixing a bug that showed the winner 007 instead of 107."
+      }
+    },
+    {
+      "id": "odd-couples-pmi80",
+      "name": "Odd Couples",
+      "board": "pmi80",
+      "file": "odd-couples/odd-couples-pmi80.asm",
+      "format": "asm",
+      "start": "1C00",
+      "version": "0.1.1",
+      "author": {
+        "cs": "M. Kišida, SRA Microcomputer Club; port projekt Wolf80",
+        "en": "M. Kishida, SRA Microcomputer Club; ported by the Wolf80 project"
+      },
+      "sound": true,
+      "help": {
+        "cs": "Pexeso na displeji: osm skrytých symbolů tvoří čtyři dvojice. Po nápisu Odd CouPLES začnete hru klávesou <kbd>=</kbd>. Klávesy <kbd>1</kbd>–<kbd>8</kbd> odkrývají symbol na odpovídající číslici zleva, vždy dva po sobě. Shodují-li se, zůstanou svítit a pokračujete další dvojicí; neshodují-li se, okamžitě zhasne všechno včetně dříve nalezených dvojic (rozmístění se nemění). Zhasne i všechno, zvolíte-li už odkrytou číslici. Vyhrajete, když najdete čtyři dvojice za sebou bez chyby. Skóre je počet pokusů o dvojici (nejlépe 4): po výhře svítí symboly 2 s, pak se ukáže skóre (nuly a vpravo počet pokusů). <kbd>S</kbd> ukáže skóre znovu, <kbd>=</kbd> začne novou hru. Hra pípá z výstupu K3 (zapněte zvuk): při shodě vysoko, při neshodě hluboko, při výhře dvakrát. Konec <kbd>RE</kbd>.\n\nPůvod: hru napsal M. Kišida z klubu SRA Microcomputer Club pro NEC TK-80 (1976), japonskou jednodeskovou stavebnici, jejíž hexa klávesnice a osm sedmisegmentových číslic stály u zrodu osobních počítačů v Japonsku; dochovala se díky knize Fukkatsu! TK-80 (ASCII, 2000). V originále druhý symbol neshodné dvojice zhasne dřív, než ho hráč stihne zahlédnout; port to zachovává. Pro PMI-80, Savia-84 a Stone 1 ji podle pravidel napsal znovu projekt Wolf80; skóre se po výhře ukáže samo a hra pípá.",
+        "en": "A memory game on the display: eight hidden symbols make four pairs. After the title Odd CouPLES, <kbd>=</kbd> starts the game. Keys <kbd>1</kbd>–<kbd>8</kbd> reveal the symbol on the matching digit from the left, two at a time. If they match, they stay lit and you go on to the next pair; if not, everything goes dark at once, earlier pairs included (the layout stays the same). Picking a digit that is already lit also clears everything. You win by finding four pairs in a row without a mistake. Your score is the number of pair attempts (4 is perfect): after a win the symbols stay lit for 2 s, then the score appears (zeros, with the attempt count on the right). <kbd>S</kbd> shows the score again, <kbd>=</kbd> starts a new game. The game beeps through the tape output K3 (turn the sound on): high on a match, low on a mismatch, twice on a win. <kbd>RE</kbd> ends it.\n\nOrigin: the game was written by M. Kishida of the SRA Microcomputer Club for the NEC TK-80 (1976), the Japanese single-board kit whose hex keypad and eight seven-segment digits stood at the birth of personal computing in Japan; it survives through the book Fukkatsu! TK-80 (ASCII, 2000). In the original the second symbol of a mismatched pair goes dark before the player can see it; the port keeps that. The Wolf80 project rewrote it from the rules for the PMI-80, the Savia-84 and the Stone 1; the score now appears by itself after a win, and the game beeps."
+      }
+    },
+    {
+      "id": "duck-shoot-pmi80",
+      "name": "Duck Shoot (Acorn)",
+      "board": "pmi80",
+      "file": "duck-shoot/duck-shoot-pmi80.asm",
+      "format": "asm",
+      "start": "1C00",
+      "version": "0.1.3",
+      "author": {
+        "cs": "Acorn Computers (příručka System 1, 1979); port projekt Wolf80",
+        "en": "Acorn Computers (System 1 manual, 1979); ported by the Wolf80 project"
+      },
+      "sound": true,
+      "help": {
+        "cs": "Po displeji letí zprava doleva kachna a za levým okrajem se objeví znovu vpravo. Sestřelíte ji klávesou s číslem její pozice: <kbd>0</kbd> je nejlevější číslice, <kbd>7</kbd> nejpravější. Výstřel krátce rozsvítí spodní segment číslice, na kterou míříte; netrefa nic nestojí. Po zásahu kachna asi sekundu leží, pak se ukáže číslo kola (kolik kachen jste už sestřelili) a vyletí další, o desetinu rychlejší: první letí jednu číslici za 0,32 s jako v originále, nejrychlejší za 0,04 s. <kbd>=</kbd> začne novou sérii od začátku. Hra pípá z výstupu K3 (zapněte zvuk): zásah dvakrát vysoko, netrefa hluboko. Konec <kbd>RE</kbd>.\n\nPůvod: Duck Shoot je krátká ukázková hra z příručky počítače Acorn System 1 (Acorn Computers, 1979), prvního výrobku cambridgeské firmy Acorn, ze které později vzešly počítače Atom a BBC Micro. Pro procesor 6502 zabrala 64 bajtů a ukazovala, že osm sedmisegmentových číslic a hexa klávesnice stačí na hru. V originále hra zásahem končí, nepípá a výstřel nijak neukazuje; projekt Wolf80 ji pro PMI-80, Savia-84 a Stone 1 napsal znovu a přidal kola se zrychlováním, zvuk a rozsvícení segmentu při výstřelu. Jiná verze z příručky stavebnice MK14 je tu jako samostatná hra.",
+        "en": "A duck flies across the display from right to left and comes back on the right after leaving on the left. Shoot it with the key of its position: <kbd>0</kbd> is the leftmost digit, <kbd>7</kbd> the rightmost. A shot briefly lights the bottom segment of the digit you aim at; a miss costs nothing. After a hit the duck lies there for about a second, then the round number (how many ducks you have shot) appears and the next duck flies a tenth faster: the first one takes 0.32 s per digit, as in the original, the fastest 0.04 s. <kbd>=</kbd> starts a new series from the beginning. The game beeps through the tape output K3 (turn the sound on): twice high on a hit, low on a miss. <kbd>RE</kbd> ends it.\n\nOrigin: Duck Shoot is a short demonstration game from the manual of the Acorn System 1 (Acorn Computers, 1979), the first product of the Cambridge firm Acorn, which later made the Atom and the BBC Micro. For the 6502 it took 64 bytes and showed that eight seven-segment digits and a hex keypad are enough for a game. In the original a hit ends the game, there is no sound and a shot shows nothing; the Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1 and added rounds that speed up, the beeps and the lit segment for a shot. A different version from the MK14 kit manual is here as a separate game."
+      }
+    },
+    {
+      "id": "duck-shoot-mk14-pmi80",
+      "name": "Duck Shoot (MK14)",
+      "board": "pmi80",
+      "file": "duck-shoot-mk14/duck-shoot-mk14-pmi80.asm",
+      "format": "asm",
+      "start": "1C00",
+      "version": "0.1.3",
+      "author": {
+        "cs": "Science of Cambridge (příručka MK14, 1978); port projekt Wolf80",
+        "en": "Science of Cambridge (MK14 manual, 1978); ported by the Wolf80 project"
+      },
+      "sound": true,
+      "help": {
+        "cs": "Po displeji letí zprava doleva kachny a za levým okrajem se objevují znovu vpravo; na začátku je jedna. Klávesa <kbd>0</kbd>–<kbd>7</kbd> vystřelí na pozici se stejným číslem (<kbd>0</kbd> je nejlevější číslice): je-li tam kachna, zmizí, není-li, jedna kachna přibude. Výstřel krátce rozsvítí spodní segment číslice, na kterou míříte. Cílem je vystřílet všechny kachny; hra nemá konec ani skóre, takže je to spíš zkouška, kolik kachen zvládnete udržet na uzdě. Hra pípá z výstupu K3 (zapněte zvuk): zásah dvakrát vysoko, netrefa hluboko. Konec <kbd>RE</kbd>.\n\nPůvod: hra je z příručky stavebnice MK14 (Science of Cambridge, 1978), první počítačové stavebnice Clivea Sinclaira s procesorem National Semiconductor SC/MP, předchůdkyně počítače ZX80; program měl asi 70 bajtů. V originále jsou pozice číslované obráceně (7 vlevo); port je čísluje zleva jako klávesnice. Kachny se posouvají zhruba jednou za 0,09 s, stejně rychle jako na MK14. Originál nepípá a výstřel nijak neukazuje; zvuk a rozsvícení segmentu při výstřelu přidal port. Projekt Wolf80 ji pro PMI-80, Savia-84 a Stone 1 napsal znovu. Jiná verze z příručky počítače Acorn System 1 je tu jako samostatná hra.",
+        "en": "Ducks fly across the display from right to left and reappear on the right after leaving on the left; there is one at the start. Keys <kbd>0</kbd>–<kbd>7</kbd> shoot at the position with that number (<kbd>0</kbd> is the leftmost digit): a duck there disappears, but a shot at an empty position adds a duck. A shot briefly lights the bottom segment of the digit you aim at. The aim is to shoot all the ducks; the game has no end and no score, so it is rather a test of how many ducks you can keep in check. The game beeps through the tape output K3 (turn the sound on): twice high on a hit, low on a miss. <kbd>RE</kbd> ends it.\n\nOrigin: the game comes from the manual of the MK14 kit (Science of Cambridge, 1978), Clive Sinclair's first computer kit, with a National Semiconductor SC/MP processor, and a forerunner of the ZX80; the program was about 70 bytes. The original numbers the positions the other way round (7 on the left); the port numbers them from the left like the keypad. The ducks move about every 0.09 s, as fast as on the MK14. The original has no sound and a shot shows nothing; the port added the beeps and the lit segment for a shot. The Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1. A different version from the Acorn System 1 manual is here as a separate game."
+      }
+    },
+    {
+      "id": "spiraal-pmi80",
+      "name": "Spiraal",
+      "board": "pmi80",
+      "file": "spiraal/spiraal-pmi80.asm",
+      "format": "asm",
+      "start": "1C00",
+      "version": "0.1.1",
+      "author": {
+        "cs": "A. W. den Hartog; port projekt Wolf80",
+        "en": "A. W. den Hartog; ported by the Wolf80 project"
+      },
+      "sound": true,
+      "help": {
+        "cs": "Reakční souboj dvou hráčů: levý mačká klávesu <kbd>0</kbd>, pravý klávesu <kbd>3</kbd>. Po nápisu SPIrAAL hru začne libovolná klávesa. Na displeji se kreslí spirála, a když je hotová, musí stisknout svou klávesu hráč, na jehož straně skončila (levý vlevo dole, pravý vpravo nahoře). Reagujte co nejpozději: čím déle váháte, tím rychleji se spirála kreslí soupeři a tím méně času má na reakci. Kdo stiskne příliš brzy (klávesa je dole už při dokončení spirály) nebo příliš pozdě (čas vyprší), dá soupeři bod. Po každém bodu se ukáže skóre, třeba 05  12 (levý, mezera, pravý), body jdou do 99 a pak od 00, a dál hraje ten, kdo bod získal. <kbd>=</kbd> vynuluje skóre a začne nový zápas. Hra pípá z výstupu K3 (zapněte zvuk): vysoko při včasné reakci, hluboko při bodu soupeři. Konec <kbd>RE</kbd>.\n\nPůvod: Spiraal napsal A. W. den Hartog pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502 (1976), a vyšla v nizozemském klubovém časopise De 6502 Kenner č. 25 (únor 1983). Nápad podle autora pochází z výukového počítače Hewlett-Packard s procesorem 8085. Časopis vydával nizozemský klub uživatelů KIM (KIM Gebruikers Club Nederland) od roku 1977 a otiskoval programy pro KIM i jeho následovníky; úprava hry pro Elektor Junior vyšla v čísle 27. Pro PMI-80, Savia-84 a Stone 1 ji podle pravidel napsal znovu projekt Wolf80; na rozdíl od originálu displej svítí i mezi kroky spirály, hra čeká na první stisk, skóre odděluje mezera místo písmen dd, nový zápas jde začít bez resetu a hra pípá.",
+        "en": "A reaction duel for two players: the left one presses key <kbd>0</kbd>, the right one key <kbd>3</kbd>. After the title SPIrAAL any key starts the game. A spiral is drawn on the display, and when it is finished the player on whose side it ended must press their key (left if it ended bottom left, right if top right). Press as late as you dare: the longer you wait, the faster the spiral is drawn for your opponent and the less time they have. Pressing too early (the key is already down when the spiral is complete) or too late (the time runs out) gives your opponent a point. After every point the score is shown, such as 05  12 (left, gap, right); it counts to 99 and then from 00, and the player who scored plays next. <kbd>=</kbd> clears the score and starts a new match. The game beeps through the tape output K3 (turn the sound on): high on a timely reaction, low when the opponent scores. <kbd>RE</kbd> ends it.\n\nOrigin: Spiraal was written by A. W. den Hartog for the KIM-1, MOS Technology's single-board 6502 computer (1976), and published in the Dutch club magazine De 6502 Kenner no. 25 (February 1983). The author says the idea came from a Hewlett-Packard teaching computer with an 8085. The magazine was published from 1977 by the Dutch KIM users' club (KIM Gebruikers Club Nederland) and printed programs for the KIM and its successors; a version for the Elektor Junior followed in issue 27. The Wolf80 project rewrote it from the rules for the PMI-80, the Savia-84 and the Stone 1; unlike the original, the display stays lit between the steps of the spiral, the game waits for a first key, a gap separates the score instead of the letters dd, a new match needs no reset, and the game beeps."
+      }
+    },
+    {
+      "id": "silver-dollar-pmi80",
+      "name": "Silver Dollar",
+      "board": "pmi80",
+      "file": "silver-dollar/silver-dollar-pmi80.asm",
+      "format": "asm",
+      "start": "1C00",
+      "version": "0.1.2",
+      "author": {
+        "cs": "nejspíš David Johnson-Davies (příručka MK14, 1978); port projekt Wolf80",
+        "en": "probably David Johnson-Davies (MK14 manual, 1978); ported by the Wolf80 project"
+      },
+      "sound": true,
+      "help": {
+        "cs": "Na dráze z osmi číslic leží pět mincí. Každá číslice má dvě políčka, levou a pravou svislou čárku nad podtržením, a mince je rozsvícená čárka. Mince se číslují zprava doleva 1 až 5; klávesa s číslem mince ji posune o políčko doprava. V jednom tahu smíte posouvat jen jednu minci, zato o kolik políček chcete; mince se nesmějí přeskakovat ani stát na sobě. Tah dokončíte klávesou <kbd>=</kbd>, pak táhne počítač. Prohrává ten, kdo nemůže táhnout (všechny mince jsou namačkané vpravo): hra ukáže YOU LoSE (prohráli jste) nebo I LoSE (prohrál počítač) a libovolná klávesa začne novou hru. <kbd>EX</kbd> začne novou hru kdykoli. Počítač hraje bez chyby, takže vyhrajete jen přesnou hrou od prvního tahu (nápověda: je to Nim v převleku). První hra začíná z postavení originálu, další z náhodného, které jde vždy vyhrát. Hra pípá z výstupu K3 (zapněte zvuk): vysoko při tahu počítače, hluboko při narazení mince nebo prohře, dvakrát při vaší výhře. <kbd>RE</kbd> hru ukončí.\n\nPůvod: Silver Dollar je jedna z her v příručce stavebnice MK14 (Science of Cambridge, 1978), první počítačové stavebnice Clivea Sinclaira s procesorem SC/MP; program napsal nejspíš David Johnson-Davies a zabíral asi 220 bajtů. Předlohou je matematická hra s mincemi na pásu, připisovaná J. H. Conwayovi, ve které se obvykle soupeří o jednu zvláštní „stříbrnou“ minci; příručka ji zjednodušila na „kdo nemůže táhnout, prohrál“, což se dá spočítat jako Nim, a proto počítač nechybuje. Pro PMI-80, Savia-84 a Stone 1 ji projekt Wolf80 napsal znovu; na rozdíl od originálu, který po prohře počítače skočil do monitoru, ohlásí konec hry a nabídne novou s náhodným postavením a pípá; písmeno V je v názvu nakreslené jako U.",
+        "en": "Five coins lie on a track of eight digits. Each digit holds two squares, a left and a right vertical bar above the underline, and a coin is a lit bar. The coins are numbered 1 to 5 from the right; the key with a coin's number pushes it one square to the right. In one turn you may move only one coin, but as many squares as you like; coins may not jump over each other or share a square. <kbd>=</kbd> ends your turn, then the computer moves. Whoever cannot move (all coins packed at the right) loses: the game shows YOU LoSE (you lost) or I LoSE (the computer lost), and any key starts a new game. <kbd>EX</kbd> starts a new game at any time. The computer never errs, so you win only by exact play from the first move (hint: it is Nim in disguise). The first game starts from the original position, later ones from a random position that can always be won. The game beeps through the tape output K3 (turn the sound on): high when the computer moves, low when a coin is blocked or you lose, twice when you win. <kbd>RE</kbd> ends it.\n\nOrigin: Silver Dollar is one of the games in the manual of the MK14 kit (Science of Cambridge, 1978), Clive Sinclair's first computer kit, with an SC/MP processor; the program was probably written by David Johnson-Davies and took about 220 bytes. It is based on a mathematical coin game played on a strip, credited to J. H. Conway, in which players usually compete for one special \"silver dollar\"; the manual reduced it to \"whoever cannot move loses\", which can be computed as Nim, which is why the computer never errs. The Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1; unlike the original, which jumped back into the monitor when the computer lost, it announces the end and offers a new game from a random position, and it beeps; the letter V in the title is drawn as a U."
+      }
+    },
+    {
+      "id": "cosmos-savia",
+      "name": "COSMOS",
+      "board": "savia84",
+      "file": "cosmos/cosmos-savia.asm",
+      "format": "asm",
+      "start": "1800",
+      "author": {
+        "cs": "Jiří Šutera; upravil a pro STONE převedl Nostalcomp; na Savia-84 převedl projekt Wolf80",
+        "en": "Jiří Šutera; changed and adapted for the STONE by Nostalcomp; moved to the Savia-84 by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Nostalcompova verze hry Jiřího Šutery z EPROM STONE-PMI, převedená na Savia-84: hra postupně zrychluje. Loď na levé číslici uhýbá meteoritům a asteroidům, dvě pravé číslice ukazují skóre. Po nápisech COSMOS a StArt hra začne sama. <kbd>4</kbd> nebo <kbd>8</kbd> = nahoru, <kbd>0</kbd> = dolů, <kbd>Ex</kbd> = vzdát. Po srážce se ukáže SCOrE a skóre, <kbd>dA</kbd> = hrát dál; při skóre FF svítí FuLL SEt, <kbd>dA</kbd> začne znovu. Konec <kbd>Reset</kbd>.",
+        "en": "Nostalcomp's version of Jiří Šutera's game from the STONE-PMI EPROM, moved to the Savia-84: it speeds up as it goes. A spaceship on the leftmost digit dodges meteors and asteroids, the two right digits show the score. After COSMOS and StArt the game begins by itself. <kbd>4</kbd> or <kbd>8</kbd> = up, <kbd>0</kbd> = down, <kbd>Ex</kbd> = give up. After a crash SCOrE and the score are shown, <kbd>dA</kbd> = play on; at the score FF it shows FuLL SEt, <kbd>dA</kbd> starts again. <kbd>Reset</kbd> ends it."
+      }
+    },
+    {
+      "id": "tenis3-savia",
+      "name": "TENIS3",
+      "board": "savia84",
+      "file": "tenis3/tenis3-savia.asm",
+      "format": "asm",
+      "start": "1800",
+      "author": {
+        "cs": "autor hry TENIS neznámý; TENIS3 od Nostalcompu; na Savia-84 převedl projekt Wolf80",
+        "en": "author of TENIS unknown; TENIS3 by Nostalcomp; moved to the Savia-84 by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Nostalcompova verze TENIS3 hry TENIS z aplikačního listu, z EPROM STONE-PMI, převedená na Savia-84. Po nápisu tEnIS 3 počítač jako levý hráč podává, vy jste pravý hráč: míček odpálíte klávesou, když k vám doletí. Po chybě se ukáže skóre a hra pokračuje dalším podáním. Konec <kbd>Reset</kbd>.",
+        "en": "Nostalcomp's TENIS3, its version of TENIS from the application sheet, from the STONE-PMI EPROM, moved to the Savia-84. After tEnIS 3 the computer, the left player, serves; you are the right one: hit the ball with a key when it reaches you. After a miss the score is shown and play goes on with the next serve. <kbd>Reset</kbd> ends it."
+      }
+    },
+    {
+      "id": "svetelny-had-savia",
+      "name": {
+        "cs": "Světelný had",
+        "en": "Light Snake"
+      },
+      "board": "savia84",
+      "file": "svetelny-had/savia.bin",
+      "format": "bin",
+      "load": "1C00",
+      "start": "1C10",
+      "author": "Matěj \"Wolf\" Holyszewski",
+      "help": {
+        "cs": "Světelný had s hlavou a slábnoucím ocasem obíhá všech 63 segmentů devíti číslic; jas ocasu dělá softwarové PWM. Klávesnici nečte, konec klávesou <kbd>Reset</kbd>. Vytvořeno s pomocí AI.",
+        "en": "A light snake with a head and a fading tail runs through all 63 segments of the nine digits; the tail's brightness is software PWM. It does not read the keyboard; <kbd>Reset</kbd> ends it. Made with the help of AI."
+      }
+    },
+    {
+      "id": "ship-captain-crew-savia",
+      "name": {
+        "cs": "Loď, kapitán, posádka",
+        "en": "Ship, Captain, Crew"
+      },
+      "board": "savia84",
+      "file": "ship-captain-crew/ship-captain-crew-savia.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.0",
+      "author": "Matěj \"Wolf\" Holyszewski",
+      "help": {
+        "cs": "Původně kostková hra, zde pro 1 až 9 hráčů, kteří se střídají u jedné klávesnice. Hraje se na pevný počet kol a body ze všech kol se sčítají. V každém kole je třeba nejdříve hodit šestku (loď), pětku (kapitána) a čtyřku (posádku); zbylé dvě kostky jsou náklad a jejich součet jsou body. Po nápisu SHIP zvolte číslicí počet hráčů (PLAYErS, 1–9) a pak počet kol (roundS, 1–8). V každém kole máte nejvýš tři hody klávesou <kbd>dA</kbd>. Šestka, pak pětka a pak čtyřka se samy odkládají doleva a mohou padnout i v jednom hodu; pětka se ale počítá až po šestce a čtyřka až po pětce. Jakmile máte všechny tři, můžete klávesou <kbd>–S</kbd> přijmout aktuální náklad a ukončit svůj tah, nebo zbývající hody využít k pokusu o získání lepšího nákladu; pozor, můžete si tak i pohoršit. Bez celé trojice je kolo za nula bodů. Displej zleva: číslo hráče, počítadlo hodů, pět kostek (před hodem pomlčky) a vpravo hráčův průběžný součet bodů ze všech kol (00–96). Číslo hráče, odložené kostky a součet blikají. Po tahu zabliká náklad, přičte se a zabliká nový součet; pak je na řadě další hráč. Klávesa <kbd>A</kbd> ukáže asi na 2 s blikající r a číslo kola. Na konci se ukáže End, uprostřed číslo vítěze (0 = remíza) a vpravo jeho vítězný součet bodů. <kbd>dA</kbd> začne novou partii se stejným nastavením, <kbd>F</kbd> partii opustí a vrátí volbu hráčů a kol. Bez zvuku. Konec <kbd>Reset</kbd>. Doporučen devítimístný displej.\n\nPůvod: Loď, kapitán, posádka (anglicky Ship, Captain and Crew) je tradiční kostková hra. Implementace pro PMI-80, Savia-84 a Stone 1 v rámci projektu Wolf80.",
+        "en": "Originally a dice game, here for 1 to 9 players taking turns at one keypad. It is played over a fixed number of rounds, and the points of all rounds add up. In each round you first need to roll a six (the ship), a five (the captain) and a four (the crew); the other two dice are the cargo, and their total is the points. After the title SHIP choose the number of players with a digit (PLAYErS, 1–9), then the number of rounds (roundS, 1–8). In each round you have at most three rolls, with <kbd>dA</kbd>. The six, then the five, then the four are set aside to the left by themselves, and they may come in a single roll; but a five counts only after the six, and a four only after the five. Once you have all three, you can accept the current cargo with <kbd>–S</kbd> and end your turn, or use the remaining rolls to try for a better cargo; beware, you may end up worse off. Without the whole trio the round scores zero points. The display from the left: the player's number, the roll counter, the five dice (dashes before a roll) and on the right the player's running total over all rounds (00–96). The player's number, the dice set aside and the total blink. After the turn the cargo blinks, is added, and the new total blinks; then the next player is on. Key <kbd>A</kbd> shows a blinking r and the round number for about 2 s. At the end End appears with the winner's number in the middle (0 = a tie) and the winner's total on the right. <kbd>dA</kbd> starts a new match with the same settings, <kbd>F</kbd> leaves the match and goes back to choosing players and rounds. Silent. <kbd>Reset</kbd> ends it. A nine-digit display is recommended.\n\nOrigin: Ship, Captain and Crew is a traditional dice game. Implemented for the PMI-80, the Savia-84 and the Stone 1 as part of the Wolf80 project."
+      }
+    },
+    {
+      "id": "lunar-lander-savia",
+      "name": "Lunar Lander",
+      "board": "savia84",
+      "file": "lunar-lander/lunar-lander-savia.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.1",
+      "author": {
+        "cs": "Jim Butterfield; port projekt Wolf80",
+        "en": "Jim Butterfield; ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Přistaňte s lunárním modulem měkce. Po nápisu LUnAr LAndEr visíte ve výšce 4500 stop a padáte. Číslice úplně vlevo ukazuje nastavený tah motoru, pak následuje výška (čtyři číslice) a vpravo rychlost pádu nebo stoupání (dvě číslice). Klávesami <kbd>1</kbd> až <kbd>9</kbd> nastavujete tah: <kbd>5</kbd> přesně vyrovnává gravitaci, menší číslo pád zrychluje, větší brzdí; <kbd>0</kbd> vypne motor natrvalo. <kbd>F</kbd> ukáže palivo (F800 = 800 liber), <kbd>A</kbd> až <kbd>E</kbd> zase výšku. Když palivo dojde, motor přestane táhnout. Při dosednutí rychlostí 5 nebo menší se ukáže SAFE, jinak dEAd; kdo vystoupá nad 8000 stop, také skončí dEAd. <kbd>dA</kbd> začne nový let. Rada z knihy: začněte tahem 1, při rychlosti v devadesátkách přepněte na 5, ve výšce asi 1500 stop dejte 9 a při rychlosti 15 až 20 se vraťte na 5 nebo 6. Konec <kbd>Reset</kbd>.\n\nPůvod: Lunar Lander napsal Jim Butterfield pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502 (1976), a vyšel v knize The First Book of KIM (Jim Butterfield, Stan Ockers a Eric Rehnke, Hayden, 1977/78). Celý program měl kolem 220 bajtů a počítal desítkově, aby se čísla na displeji dala číst přímo. Námět je starší: první hru o přistání na Měsíci napsal roku 1969 student Jim Storer na počítači PDP-8 a od té doby vznikla v nesčetných podobách. Jim Butterfield (1936–2007) byl kanadský programátor, později známý hlavně z Commodoru; programy z knihy autoři uvolnili bez autorských omezení. Pro PMI-80, Savia-84 a Stone 1 ji projekt Wolf80 napsal znovu; navíc ukazuje tah motoru, odděluje výšku od rychlosti mezerou a má opravenou chybu originálu při rychlém stoupání.",
+        "en": "Land the lunar module gently. After the title LUnAr LAndEr you hang at 4500 feet, falling. The leftmost digit shows the engine thrust, then come the altitude (four digits) and, on the right, the rate of descent or climb (two digits). Keys <kbd>1</kbd> to <kbd>9</kbd> set the thrust: <kbd>5</kbd> exactly balances gravity, a lower number lets you fall faster, a higher one brakes; <kbd>0</kbd> shuts the engine off for good. <kbd>F</kbd> shows the fuel (F800 = 800 pounds), <kbd>A</kbd> to <kbd>E</kbd> bring the altitude back. When the fuel runs out the engine stops. Touching down at a rate of 5 or less shows SAFE, anything faster dEAd; climbing above 8000 feet also ends in dEAd. <kbd>dA</kbd> starts a new flight. The book's advice: begin with thrust 1, switch to 5 when the rate reaches the nineties, press 9 at about 1500 feet, and go back to 5 or 6 once the rate is down to 15 to 20. <kbd>Reset</kbd> ends it.\n\nOrigin: Lunar Lander was written by Jim Butterfield for the KIM-1, MOS Technology's single-board 6502 computer (1976), and published in The First Book of KIM (Jim Butterfield, Stan Ockers and Eric Rehnke, Hayden, 1977/78). The whole program was about 220 bytes and calculated in decimal, so that the numbers on the display could be read directly. The idea is older: the first moon-landing game was written in 1969 by the student Jim Storer on a PDP-8, and it has appeared in countless forms since. Jim Butterfield (1936–2007) was a Canadian programmer, later best known from the Commodore world; the book's authors released its programs without copyright restrictions. The Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1; it also shows the thrust, separates the altitude from the rate with a gap, and fixes the original's bug in a fast climb."
+      }
+    },
+    {
+      "id": "multi-maze-savia",
+      "name": "Multi-Maze",
+      "board": "savia84",
+      "file": "multi-maze/multi-maze-savia.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.2.0",
+      "author": {
+        "cs": "Jim Butterfield (The First Book of KIM, 1977/78); port projekt Wolf80",
+        "en": "Jim Butterfield (The First Book of KIM, 1977/78); ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Najděte cestu z bludiště. Po nápisu MULtI-MAZE (ten čeká na libovolnou klávesu) jste blikající segment uprostřed displeje a kolem vás svítí stěny. Jedna číslice je jeden sloupec bludiště: horní segment je políčko nad vámi, prostřední váš řádek, dolní políčko pod vámi; rozsvícený segment je stěna. Vidíte jen úzký výřez, tři sloupce na každou stranu. <kbd>8</kbd> nebo <kbd>9</kbd> jde nahoru, <kbd>1</kbd> nebo <kbd>2</kbd> dolů, <kbd>4</kbd> vlevo a <kbd>6</kbd> vpravo, jeden krok na stisk; do stěny se nedá. Cesta ven vede vlevo. Když východem projdete, ukáže se volný prostor, pak OUt a počet vašich tahů (nejvýš 999). <kbd>dA</kbd> kdykoli vytvoří novou obměnu původního bludiště. <kbd>–S</kbd> přepne hru natrvalo na generovaná bludiště: pak <kbd>dA</kbd> i <kbd>–S</kbd> postaví úplně nové náhodné bludiště o 7 × 8 políčkách s jedinou cestou ven (displej přitom na šestinu sekundy zhasne); k původnímu bludišti se vrátíte novým spuštěním programu. Konec <kbd>Reset</kbd>.\n\nPůvod: Multi-Maze napsal Jim Butterfield pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502 (1976), a vyšel v knize The First Book of KIM (Jim Butterfield, Stan Ockers a Eric Rehnke, Hayden, 1977/78, s. 88–90). Jedno ručně nakreslené bludiště se osmi náhodnými změnami stěn mění v 256 variant a vidí se jen úzkým okénkem displeje. Autoři knihy programy uvolnili bez autorských omezení, proto má port bludiště převzaté beze změny; projekt Wolf80 ho pro PMI-80, Savia-84 a Stone 1 napsal znovu. Oproti originálu má nápis, který čeká na klávesu (první bludiště je tak náhodné), sedm číslic s hráčem uprostřed místo šesti s hráčem na třetím místě, klávesy 8 a 2 navíc a na východu OUt a počet tahů kde originál ukáže jen volný prostor, a mód s generovanými bludišti.",
+        "en": "Find the way out of the maze. After the title MULtI-MAZE (it waits for any key) you are the blinking segment in the middle of the display, with walls lit around you. One digit is one column of the maze: the top segment is the square above you, the middle one your own row, the bottom one the square below you; a lit segment is a wall. You see only a narrow window, three columns on each side. <kbd>8</kbd> or <kbd>9</kbd> goes up, <kbd>1</kbd> or <kbd>2</kbd> down, <kbd>4</kbd> left and <kbd>6</kbd> right, one step per press; you cannot walk into a wall. The way out leads to the left. When you pass through the exit you see open space, then OUt and the number of your moves (999 at most). <kbd>dA</kbd> makes a new variant of the original maze at any time. <kbd>–S</kbd> switches to generated mazes for good: then <kbd>dA</kbd> and <kbd>–S</kbd> both build a completely new random maze of 7 × 8 cells with exactly one way out (the display goes dark for a sixth of a second); start the program again to get back to the original maze. <kbd>Reset</kbd> ends it.\n\nOrigin: Multi-Maze was written by Jim Butterfield for the KIM-1, MOS Technology's single-board 6502 computer (1976), and published in The First Book of KIM (Jim Butterfield, Stan Ockers and Eric Rehnke, Hayden, 1977/78, pp. 88–90). One hand-drawn maze becomes one of 256 variants through eight random wall changes, and you see it only through a narrow window of the display. The book's authors released its programs without copyright restrictions, so the port keeps the maze as published; the Wolf80 project rewrote the program for the PMI-80, the Savia-84 and the Stone 1. Unlike the original it has a title that waits for a key (so the first maze is random too), seven digits with the player in the middle instead of six with the player third, the extra keys 8 and 2, and OUt and the move count at the exit where the original only shows open space, and a mode with generated mazes."
+      }
+    },
+    {
+      "id": "wumpus-savia",
+      "name": "Wumpus",
+      "board": "savia84",
+      "file": "wumpus/wumpus-savia.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.2",
+      "author": {
+        "cs": "Stan Ockers podle hry Gregoryho Yoba; port projekt Wolf80",
+        "en": "Stan Ockers after Gregory Yob's game; ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Lov Wumpuse v 16 jeskyních číslovaných 0–F; z každé vedou čtyři chodby. Po nápisu WUMPUS stiskněte libovolnou klávesu. Zpráva YOU ARE IN 9 – TUNNELS LEAD TO 68AC (jste v jeskyni 9, chodby vedou do 6, 8, A a C) roluje po znacích; držením libovolné klávesy se rolování zrychlí. Pak zůstanou svítit čtyři sousední jeskyně: stiskem čísla jedné z nich se tam přesunete. Varování o sousední jeskyni: WUMPUS CLOSE (Wumpus je blízko), PIT CLOSE (jáma), BATS CLOSE (netopýři). Netopýři vás odnesou jinam (SUPERBAT SNATCH), jáma znamená konec (YYIIEEE FELL IN PIT), a když vejdete k Wumpusovi, probudíte ho: jednou ze čtyř vás sní (HA HA WUMPUS GOT YOU), jinak uteče (OOPS – BUMPED A WUMPUS). Máte tři plechovky uspávacího plynu: <kbd>dA</kbd> a číslo sousední jeskyně (ROOM? = kam) hodí plechovku tam, další <kbd>dA</kbd> hod zruší. Trefíte-li Wumpuse, vyhráváte (GREAT – YOU GET A HUG FROM WUMPUS); jinak se Wumpus přesune, případně až k vám (MISSED – ONLY 2 CANS LEFT). Do jeskyně s plynem nesmíte (GAS IN ROOM); po třetí netrefě je konec (OUT OF GAS). Prohra končí zprávou YOU LOSE. Po konci hry <kbd>dA</kbd> začne novou. Jiné klávesy znovu přehrají zprávu o poloze. Texty jsou anglicky jako v originále. Konec <kbd>Reset</kbd>.\n\nPůvod: Hunt the Wumpus napsal v BASICu Gregory Yob; vyšla roku 1973 v časopise People's Computer Company a stala se jednou z prvních rozšířených počítačových her o průzkumu jeskyní. Pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502, ji upravil Stan Ockers a vyšla v knize The First Book of KIM (Jim Butterfield, Stan Ockers a Eric Rehnke, Hayden, 1977/78); vešla se i s texty do 1 KiB paměti a na šest číslic, po kterých texty rolují. Programy z knihy autoři uvolnili bez autorských omezení. Pro Savia-84 a Stone 1 ji projekt Wolf80 napsal znovu (PMI-80 má vlastní verzi, bližší originálu); navíc má úvodní nápis, zastavení zpráv na začátku a na konci kvůli lepší čitelnosti, zrychlení rolování, zrušení hodu, novou hru klávesou <kbd>dA</kbd> a opravenou chybu originálu, kvůli které překlep na neplatnou klávesu hráče přesunul.",
+        "en": "Hunt the Wumpus in 16 caves numbered 0–F, with four tunnels from each. After the title WUMPUS press any key. The message YOU ARE IN 9 – TUNNELS LEAD TO 68AC scrolls by one character at a time; holding any key speeds it up. Then the four neighbouring caves stay lit: press one of their numbers to go there. Warnings about a neighbouring cave: WUMPUS CLOSE, PIT CLOSE, BATS CLOSE. Bats carry you elsewhere (SUPERBAT SNATCH), a pit is the end (YYIIEEE FELL IN PIT), and walking into the Wumpus wakes him: one time in four he eats you (HA HA WUMPUS GOT YOU), otherwise he runs off (OOPS – BUMPED A WUMPUS). You have three cans of sleeping gas: <kbd>dA</kbd> and the number of a neighbouring cave (ROOM? asks where) throws a can there; <kbd>dA</kbd> again cancels the throw. Hit the Wumpus and you win (GREAT – YOU GET A HUG FROM WUMPUS); otherwise he moves, perhaps into your cave (MISSED – ONLY 2 CANS LEFT). You must not enter a gassed cave (GAS IN ROOM); the third miss ends the game (OUT OF GAS). A loss ends with YOU LOSE. After the end, <kbd>dA</kbd> starts a new game. Other keys replay the message about where you are. The texts are in English, as in the original. <kbd>Reset</kbd> ends it.\n\nOrigin: Hunt the Wumpus was written in BASIC by Gregory Yob, printed in 1973 in People's Computer Company, and became one of the first widely copied computer cave-exploring games. Stan Ockers adapted it for the KIM-1, MOS Technology's single-board 6502 computer; it was published in The First Book of KIM (Jim Butterfield, Stan Ockers and Eric Rehnke, Hayden, 1977/78), and with all its text it fits into 1 KiB of memory and six digits, over which the messages scroll. The book's authors released its programs without copyright restrictions. The Wolf80 project rewrote it for the Savia-84 and the Stone 1 (the PMI-80 has its own version, closer to the original); it adds the title, pauses at the start and end of each message so that it reads better, faster scrolling, cancelling a throw, a new game with <kbd>dA</kbd>, and a fix for the original's bug that moved the player on a mistyped key."
+      }
+    },
+    {
+      "id": "bagels-savia",
+      "name": "Bagels",
+      "board": "savia84",
+      "file": "bagels/bagels-savia.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.1",
+      "author": {
+        "cs": "Jim Butterfield; port projekt Wolf80",
+        "en": "Jim Butterfield; ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Počítač si myslí tajný kód ze čtyř písmen A–F; písmena se mohou opakovat (třeba CACF nebo bbbb). Máte deset pokusů. Po nápisu bAGELS pište tip klávesami <kbd>A</kbd>–<kbd>F</kbd>, písmena se objevují zleva. Po čtvrtém se vpravo ukážou dvě číslice: kolik písmen je na správném místě a kolik jich v kódu je, ale jinde. Příklad: kód CbFb a tip bAFd dají 1 1 (F sedí, b je jinde). Výsledek 4 0 je výhra. Číslice úplně vlevo ukazuje, kolik pokusů zbude po tomto tipu. Po výsledku asi 3 s klávesy nereagují; pak písmeno <kbd>A</kbd>–<kbd>F</kbd> rovnou začne další tip (jiná klávesa jen smaže displej). Po desátém nezdařeném tipu se ukáže správný kód se čtverečkem a další stisk začne novou hru. Zadané písmeno nejde opravit. Konec <kbd>Reset</kbd>.\n\nPůvod: Bagels napsal Jim Butterfield pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502 (1976), a vyšel v knize The First Book of KIM (Jim Butterfield, Stan Ockers a Eric Rehnke, Hayden, 1977/78). Patří do rodiny her na hádání kódu, kam patří i Mastermind, u nás známý jako Logik; Butterfield ji vtěsnal do 236 bajtů a šesti číslic a písmena A–F se píšou přímo na hexadecimální klávesnici. Programy z knihy autoři uvolnili bez autorských omezení. Pro PMI-80, Savia-84 a Stone 1 ji projekt Wolf80 napsal znovu; navíc má mezeru před výsledkem a počítadlo pokusů.",
+        "en": "The computer thinks of a secret code of four letters A–F; letters may repeat (CACF or bbbb, say). You have ten guesses. After the title bAGELS type a guess with keys <kbd>A</kbd>–<kbd>F</kbd>; the letters appear from the left. After the fourth, two digits appear on the right: how many letters are in the right place, and how many are in the code but elsewhere. Example: the code CbFb and the guess bAFd give 1 1 (the F fits, the b is elsewhere). A result of 4 0 wins. The leftmost digit shows how many guesses will be left after this one. After a result the keys rest for about 3 s; then a letter <kbd>A</kbd>–<kbd>F</kbd> starts the next guess at once (any other key just clears the display). After the tenth wrong guess the right code is shown with a small square, and the next key starts a new game. A letter you have typed cannot be corrected. <kbd>Reset</kbd> ends it.\n\nOrigin: Bagels was written by Jim Butterfield for the KIM-1, MOS Technology's single-board 6502 computer (1976), and published in The First Book of KIM (Jim Butterfield, Stan Ockers and Eric Rehnke, Hayden, 1977/78). It belongs to the family of code-guessing games that includes Mastermind; Butterfield squeezed it into 236 bytes and six digits, and the letters A–F are typed straight on the hex keypad. The book's authors released its programs without copyright restrictions. The Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1, adding a gap before the result and a guess counter."
+      }
+    },
+    {
+      "id": "rock-climbing-savia",
+      "name": "Rock Climbing",
+      "board": "savia84",
+      "file": "rock-climbing/rock-climbing-savia.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.1",
+      "author": {
+        "cs": "Teruhisa Hišida podle knihy Kóičiho Kišidy; port projekt Wolf80",
+        "en": "Teruhisa Hishida after Kōichi Kishida's book; ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Hra pro dva hráče u jedné klávesnice: kdo první vyleze na 100 m, vyhrává. Vlevo je výška prvního hráče, vpravo druhého; na tahu je ten, jehož číslice blikají. Klávesa <kbd>L</kbd> zvolí lezení (rozsvítí se horní čárka), <kbd>–S</kbd> odpočinek (dolní čárka); volbu lze změnit, <kbd>dA</kbd> ji potvrdí. Lezení: počítač hodí dvěma kostkami. Padne-li na kterékoli jednička, spadnete na poslední zajištěnou výšku (kde jste naposledy odpočívali, na začátku 0); pád zůstane půl sekundy vidět a tah přejde na soupeře. Jinak se součet kostek přičte a lezete dál. Odpočinek: současná výška se stane zajištěnou a tah přejde na soupeře. Po dosažení cíle displej 2 s bliká, pak začne nová hra. Konec <kbd>Reset</kbd>.\n\nPůvod: hra pochází z japonské knihy Maikon Game 21 (Sanpó, uváděno 1978), sbírky her, kterou sestavil Kóiči Kišida pro jednodeskovou stavebnici NEC TK-80 (1976); ta bývá považována za začátek osobních počítačů v Japonsku. Podle slovního popisu v knize hru napsal Teruhisa Hišida z firmy Chunichi Denko pro svou moderní stavebnici ND8080 napodobující TK-80 (sbírka aplikačních programů ND8080, 2016). Pro PMI-80, Savia-84 a Stone 1 ji podle pravidel napsal znovu projekt Wolf80; navíc má po pádu krátkou pauzu a opravenou chybu, kvůli které vítěz místo 107 viděl 007.",
+        "en": "A game for two players at one keypad: whoever first climbs to 100 m wins. The first player's height is on the left, the second's on the right; the player whose digits blink is on the move. Key <kbd>L</kbd> chooses to climb (the top bar lights), <kbd>–S</kbd> to rest (the bottom bar); you may change your mind, <kbd>dA</kbd> confirms. Climbing: the computer rolls two dice. If either shows a one, you fall to your last secured height (where you last rested, 0 at the start); the fall stays visible for half a second and the turn passes. Otherwise the dice total is added and you climb on. Resting secures your current height and passes the turn. When someone reaches the top the display blinks for 2 s, then a new game begins. <kbd>Reset</kbd> ends it.\n\nOrigin: the game comes from the Japanese book Maikon Game 21 (Sanpō, given as 1978), a collection of games compiled by Kōichi Kishida for the NEC TK-80 single-board kit (1976), often seen as the start of personal computing in Japan. From the book's description Teruhisa Hishida of Chunichi Denko wrote it for his modern TK-80-style kit, the ND8080 (a collection of ND8080 application programs, 2016). The Wolf80 project rewrote it from the rules for the PMI-80, the Savia-84 and the Stone 1, adding a short pause after a fall and fixing a bug that showed the winner 007 instead of 107."
+      }
+    },
+    {
+      "id": "odd-couples-savia",
+      "name": "Odd Couples",
+      "board": "savia84",
+      "file": "odd-couples/odd-couples-savia.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.1",
+      "author": {
+        "cs": "M. Kišida, SRA Microcomputer Club; port projekt Wolf80",
+        "en": "M. Kishida, SRA Microcomputer Club; ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Pexeso na displeji: osm skrytých symbolů tvoří čtyři dvojice. Po nápisu Odd CouPLES začnete hru klávesou <kbd>dA</kbd>. Klávesy <kbd>1</kbd>–<kbd>8</kbd> odkrývají symbol na odpovídající číslici zleva, vždy dva po sobě. Shodují-li se, zůstanou svítit a pokračujete další dvojicí; neshodují-li se, okamžitě zhasne všechno včetně dříve nalezených dvojic (rozmístění se nemění). Zhasne i všechno, zvolíte-li už odkrytou číslici. Vyhrajete, když najdete čtyři dvojice za sebou bez chyby. Skóre je počet pokusů o dvojici (nejlépe 4): po výhře svítí symboly 2 s, pak se ukáže skóre (nuly a vpravo počet pokusů). <kbd>–S</kbd> ukáže skóre znovu, <kbd>dA</kbd> začne novou hru. Konec <kbd>Reset</kbd>.\n\nPůvod: hru napsal M. Kišida z klubu SRA Microcomputer Club pro NEC TK-80 (1976), japonskou jednodeskovou stavebnici, jejíž hexa klávesnice a osm sedmisegmentových číslic stály u zrodu osobních počítačů v Japonsku; dochovala se díky knize Fukkatsu! TK-80 (ASCII, 2000). V originále druhý symbol neshodné dvojice zhasne dřív, než ho hráč stihne zahlédnout; port to zachovává. Pro PMI-80, Savia-84 a Stone 1 ji podle pravidel napsal znovu projekt Wolf80; skóre se po výhře ukáže samo.",
+        "en": "A memory game on the display: eight hidden symbols make four pairs. After the title Odd CouPLES, <kbd>dA</kbd> starts the game. Keys <kbd>1</kbd>–<kbd>8</kbd> reveal the symbol on the matching digit from the left, two at a time. If they match, they stay lit and you go on to the next pair; if not, everything goes dark at once, earlier pairs included (the layout stays the same). Picking a digit that is already lit also clears everything. You win by finding four pairs in a row without a mistake. Your score is the number of pair attempts (4 is perfect): after a win the symbols stay lit for 2 s, then the score appears (zeros, with the attempt count on the right). <kbd>–S</kbd> shows the score again, <kbd>dA</kbd> starts a new game. <kbd>Reset</kbd> ends it.\n\nOrigin: the game was written by M. Kishida of the SRA Microcomputer Club for the NEC TK-80 (1976), the Japanese single-board kit whose hex keypad and eight seven-segment digits stood at the birth of personal computing in Japan; it survives through the book Fukkatsu! TK-80 (ASCII, 2000). In the original the second symbol of a mismatched pair goes dark before the player can see it; the port keeps that. The Wolf80 project rewrote it from the rules for the PMI-80, the Savia-84 and the Stone 1; the score now appears by itself after a win."
+      }
+    },
+    {
+      "id": "duck-shoot-savia",
+      "name": "Duck Shoot (Acorn)",
+      "board": "savia84",
+      "file": "duck-shoot/duck-shoot-savia.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.3",
+      "author": {
+        "cs": "Acorn Computers (příručka System 1, 1979); port projekt Wolf80",
+        "en": "Acorn Computers (System 1 manual, 1979); ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Po displeji letí zprava doleva kachna a za levým okrajem se objeví znovu vpravo. Sestřelíte ji klávesou s číslem její pozice: <kbd>0</kbd> je nejlevější číslice, <kbd>7</kbd> nejpravější. Výstřel krátce rozsvítí spodní segment číslice, na kterou míříte; netrefa nic nestojí. Po zásahu kachna asi sekundu leží, pak se ukáže číslo kola (kolik kachen jste už sestřelili) a vyletí další, o desetinu rychlejší: první letí jednu číslici za 0,32 s jako v originále, nejrychlejší za 0,04 s. <kbd>dA</kbd> začne novou sérii od začátku. Konec <kbd>Reset</kbd>.\n\nPůvod: Duck Shoot je krátká ukázková hra z příručky počítače Acorn System 1 (Acorn Computers, 1979), prvního výrobku cambridgeské firmy Acorn, ze které později vzešly počítače Atom a BBC Micro. Pro procesor 6502 zabrala 64 bajtů a ukazovala, že osm sedmisegmentových číslic a hexa klávesnice stačí na hru. V originále hra zásahem končí a výstřel nijak neukazuje; projekt Wolf80 ji pro PMI-80, Savia-84 a Stone 1 napsal znovu a přidal kola se zrychlováním a rozsvícení segmentu při výstřelu. Jiná verze z příručky stavebnice MK14 je tu jako samostatná hra.",
+        "en": "A duck flies across the display from right to left and comes back on the right after leaving on the left. Shoot it with the key of its position: <kbd>0</kbd> is the leftmost digit, <kbd>7</kbd> the rightmost. A shot briefly lights the bottom segment of the digit you aim at; a miss costs nothing. After a hit the duck lies there for about a second, then the round number (how many ducks you have shot) appears and the next duck flies a tenth faster: the first one takes 0.32 s per digit, as in the original, the fastest 0.04 s. <kbd>dA</kbd> starts a new series from the beginning. <kbd>Reset</kbd> ends it.\n\nOrigin: Duck Shoot is a short demonstration game from the manual of the Acorn System 1 (Acorn Computers, 1979), the first product of the Cambridge firm Acorn, which later made the Atom and the BBC Micro. For the 6502 it took 64 bytes and showed that eight seven-segment digits and a hex keypad are enough for a game. In the original a hit ends the game and a shot shows nothing; the Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1 and added rounds that speed up and the lit segment for a shot. A different version from the MK14 kit manual is here as a separate game."
+      }
+    },
+    {
+      "id": "duck-shoot-mk14-savia",
+      "name": "Duck Shoot (MK14)",
+      "board": "savia84",
+      "file": "duck-shoot-mk14/duck-shoot-mk14-savia.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.3",
+      "author": {
+        "cs": "Science of Cambridge (příručka MK14, 1978); port projekt Wolf80",
+        "en": "Science of Cambridge (MK14 manual, 1978); ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Po displeji letí zprava doleva kachny a za levým okrajem se objevují znovu vpravo; na začátku je jedna. Klávesa <kbd>0</kbd>–<kbd>7</kbd> vystřelí na pozici se stejným číslem (<kbd>0</kbd> je nejlevější číslice): je-li tam kachna, zmizí, není-li, jedna kachna přibude. Výstřel krátce rozsvítí spodní segment číslice, na kterou míříte. Cílem je vystřílet všechny kachny; hra nemá konec ani skóre, takže je to spíš zkouška, kolik kachen zvládnete udržet na uzdě. Konec <kbd>Reset</kbd>.\n\nPůvod: hra je z příručky stavebnice MK14 (Science of Cambridge, 1978), první počítačové stavebnice Clivea Sinclaira s procesorem National Semiconductor SC/MP, předchůdkyně počítače ZX80; program měl asi 70 bajtů. V originále jsou pozice číslované obráceně (7 vlevo); port je čísluje zleva jako klávesnice. Kachny se posouvají zhruba jednou za 0,09 s, stejně rychle jako na MK14. Originál výstřel nijak neukazuje; rozsvícení segmentu při výstřelu přidal port. Projekt Wolf80 ji pro PMI-80, Savia-84 a Stone 1 napsal znovu. Jiná verze z příručky počítače Acorn System 1 je tu jako samostatná hra.",
+        "en": "Ducks fly across the display from right to left and reappear on the right after leaving on the left; there is one at the start. Keys <kbd>0</kbd>–<kbd>7</kbd> shoot at the position with that number (<kbd>0</kbd> is the leftmost digit): a duck there disappears, but a shot at an empty position adds a duck. A shot briefly lights the bottom segment of the digit you aim at. The aim is to shoot all the ducks; the game has no end and no score, so it is rather a test of how many ducks you can keep in check. <kbd>Reset</kbd> ends it.\n\nOrigin: the game comes from the manual of the MK14 kit (Science of Cambridge, 1978), Clive Sinclair's first computer kit, with a National Semiconductor SC/MP processor, and a forerunner of the ZX80; the program was about 70 bytes. The original numbers the positions the other way round (7 on the left); the port numbers them from the left like the keypad. The ducks move about every 0.09 s, as fast as on the MK14. In the original a shot shows nothing; the port added the lit segment for a shot. The Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1. A different version from the Acorn System 1 manual is here as a separate game."
+      }
+    },
+    {
+      "id": "spiraal-savia",
+      "name": "Spiraal",
+      "board": "savia84",
+      "file": "spiraal/spiraal-savia.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.1",
+      "author": {
+        "cs": "A. W. den Hartog; port projekt Wolf80",
+        "en": "A. W. den Hartog; ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Reakční souboj dvou hráčů: levý mačká klávesu <kbd>0</kbd>, pravý klávesu <kbd>3</kbd>. Po nápisu SPIrAAL hru začne libovolná klávesa. Na displeji se kreslí spirála, a když je hotová, musí stisknout svou klávesu hráč, na jehož straně skončila (levý vlevo dole, pravý vpravo nahoře). Reagujte co nejpozději: čím déle váháte, tím rychleji se spirála kreslí soupeři a tím méně času má na reakci. Kdo stiskne příliš brzy (klávesa je dole už při dokončení spirály) nebo příliš pozdě (čas vyprší), dá soupeři bod. Po každém bodu se ukáže skóre, třeba 05  12 (levý, mezera, pravý), body jdou do 99 a pak od 00, a dál hraje ten, kdo bod získal. <kbd>dA</kbd> vynuluje skóre a začne nový zápas. Konec <kbd>Reset</kbd>.\n\nPůvod: Spiraal napsal A. W. den Hartog pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502 (1976), a vyšla v nizozemském klubovém časopise De 6502 Kenner č. 25 (únor 1983). Nápad podle autora pochází z výukového počítače Hewlett-Packard s procesorem 8085. Časopis vydával nizozemský klub uživatelů KIM (KIM Gebruikers Club Nederland) od roku 1977 a otiskoval programy pro KIM i jeho následovníky; úprava hry pro Elektor Junior vyšla v čísle 27. Pro PMI-80, Savia-84 a Stone 1 ji podle pravidel napsal znovu projekt Wolf80; na rozdíl od originálu displej svítí i mezi kroky spirály, hra čeká na první stisk, skóre odděluje mezera místo písmen dd a nový zápas jde začít bez resetu.",
+        "en": "A reaction duel for two players: the left one presses key <kbd>0</kbd>, the right one key <kbd>3</kbd>. After the title SPIrAAL any key starts the game. A spiral is drawn on the display, and when it is finished the player on whose side it ended must press their key (left if it ended bottom left, right if top right). Press as late as you dare: the longer you wait, the faster the spiral is drawn for your opponent and the less time they have. Pressing too early (the key is already down when the spiral is complete) or too late (the time runs out) gives your opponent a point. After every point the score is shown, such as 05  12 (left, gap, right); it counts to 99 and then from 00, and the player who scored plays next. <kbd>dA</kbd> clears the score and starts a new match. <kbd>Reset</kbd> ends it.\n\nOrigin: Spiraal was written by A. W. den Hartog for the KIM-1, MOS Technology's single-board 6502 computer (1976), and published in the Dutch club magazine De 6502 Kenner no. 25 (February 1983). The author says the idea came from a Hewlett-Packard teaching computer with an 8085. The magazine was published from 1977 by the Dutch KIM users' club (KIM Gebruikers Club Nederland) and printed programs for the KIM and its successors; a version for the Elektor Junior followed in issue 27. The Wolf80 project rewrote it from the rules for the PMI-80, the Savia-84 and the Stone 1; unlike the original, the display stays lit between the steps of the spiral, the game waits for a first key, a gap separates the score instead of the letters dd, and a new match needs no reset."
+      }
+    },
+    {
+      "id": "silver-dollar-savia",
+      "name": "Silver Dollar",
+      "board": "savia84",
+      "file": "silver-dollar/silver-dollar-savia.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.2",
+      "author": {
+        "cs": "nejspíš David Johnson-Davies (příručka MK14, 1978); port projekt Wolf80",
+        "en": "probably David Johnson-Davies (MK14 manual, 1978); ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Na dráze z osmi číslic leží pět mincí. Každá číslice má dvě políčka, levou a pravou svislou čárku nad podtržením, a mince je rozsvícená čárka. Mince se číslují zprava doleva 1 až 5; klávesa s číslem mince ji posune o políčko doprava. V jednom tahu smíte posouvat jen jednu minci, zato o kolik políček chcete; mince se nesmějí přeskakovat ani stát na sobě. Tah dokončíte klávesou <kbd>dA</kbd>, pak táhne počítač. Prohrává ten, kdo nemůže táhnout (všechny mince jsou namačkané vpravo): hra ukáže YOU LoSE (prohráli jste) nebo I LoSE (prohrál počítač) a libovolná klávesa začne novou hru. <kbd>Ex</kbd> začne novou hru kdykoli. Počítač hraje bez chyby, takže vyhrajete jen přesnou hrou od prvního tahu (nápověda: je to Nim v převleku). První hra začíná z postavení originálu, další z náhodného, které jde vždy vyhrát. <kbd>Reset</kbd> hru ukončí.\n\nPůvod: Silver Dollar je jedna z her v příručce stavebnice MK14 (Science of Cambridge, 1978), první počítačové stavebnice Clivea Sinclaira s procesorem SC/MP; program napsal nejspíš David Johnson-Davies a zabíral asi 220 bajtů. Předlohou je matematická hra s mincemi na pásu, připisovaná J. H. Conwayovi, ve které se obvykle soupeří o jednu zvláštní „stříbrnou“ minci; příručka ji zjednodušila na „kdo nemůže táhnout, prohrál“, což se dá spočítat jako Nim, a proto počítač nechybuje. Pro PMI-80, Savia-84 a Stone 1 ji projekt Wolf80 napsal znovu; na rozdíl od originálu, který po prohře počítače skočil do monitoru, ohlásí konec hry a nabídne novou s náhodným postavením; písmeno V je v názvu nakreslené jako U.",
+        "en": "Five coins lie on a track of eight digits. Each digit holds two squares, a left and a right vertical bar above the underline, and a coin is a lit bar. The coins are numbered 1 to 5 from the right; the key with a coin's number pushes it one square to the right. In one turn you may move only one coin, but as many squares as you like; coins may not jump over each other or share a square. <kbd>dA</kbd> ends your turn, then the computer moves. Whoever cannot move (all coins packed at the right) loses: the game shows YOU LoSE (you lost) or I LoSE (the computer lost), and any key starts a new game. <kbd>Ex</kbd> starts a new game at any time. The computer never errs, so you win only by exact play from the first move (hint: it is Nim in disguise). The first game starts from the original position, later ones from a random position that can always be won. <kbd>Reset</kbd> ends it.\n\nOrigin: Silver Dollar is one of the games in the manual of the MK14 kit (Science of Cambridge, 1978), Clive Sinclair's first computer kit, with an SC/MP processor; the program was probably written by David Johnson-Davies and took about 220 bytes. It is based on a mathematical coin game played on a strip, credited to J. H. Conway, in which players usually compete for one special \"silver dollar\"; the manual reduced it to \"whoever cannot move loses\", which can be computed as Nim, which is why the computer never errs. The Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1; unlike the original, which jumped back into the monitor when the computer lost, it announces the end and offers a new game from a random position; the letter V in the title is drawn as a U."
+      }
+    },
+    {
+      "id": "cosmos-stone-pmi",
+      "name": "COSMOS",
+      "board": "stone1",
+      "firmware": [
+        "stone-pmi"
+      ],
+      "format": "rom",
+      "start": "0440",
+      "author": {
+        "cs": "Jiří Šutera; upravil a pro STONE převedl Nostalcomp (v EPROM STONE-PMI)",
+        "en": "Jiří Šutera; changed and adapted for the STONE by Nostalcomp (in the STONE-PMI EPROM)"
+      },
+      "help": {
+        "cs": "Nostalcompova verze hry Jiřího Šutery z druhé poloviny EPROM STONE-PMI: hra postupně zrychluje. Loď na levé číslici uhýbá meteoritům a asteroidům, dvě pravé číslice ukazují skóre. Po nápisech COSMOS a StArt hra začne sama. <kbd>4</kbd> nebo <kbd>8</kbd> = nahoru, <kbd>0</kbd> = dolů, <kbd>EX</kbd> = vzdát. Po srážce se ukáže SCOrE a skóre, <kbd>=</kbd> = hrát dál; při skóre FF svítí FuLL SEt, <kbd>=</kbd> začne znovu. Konec <kbd>RE</kbd>.",
+        "en": "Nostalcomp's version of Jiří Šutera's game in the second half of the STONE-PMI EPROM: it speeds up as it goes. A spaceship on the leftmost digit dodges meteors and asteroids, the two right digits show the score. After COSMOS and StArt the game begins by itself. <kbd>4</kbd> or <kbd>8</kbd> = up, <kbd>0</kbd> = down, <kbd>EX</kbd> = give up. After a crash SCOrE and the score are shown, <kbd>=</kbd> = play on; at the score FF it shows FuLL SEt, <kbd>=</kbd> starts again. <kbd>RE</kbd> ends it."
+      }
+    },
+    {
+      "id": "tenis3-stone-pmi",
+      "name": "TENIS3",
+      "board": "stone1",
+      "firmware": [
+        "stone-pmi"
+      ],
+      "format": "rom",
+      "start": "0660",
+      "author": {
+        "cs": "autor hry TENIS neznámý; TENIS3 od Nostalcompu (v EPROM STONE-PMI)",
+        "en": "author of TENIS unknown; TENIS3 by Nostalcomp (in the STONE-PMI EPROM)"
+      },
+      "help": {
+        "cs": "Nostalcompova verze TENIS3 hry TENIS z aplikačního listu, z druhé poloviny EPROM STONE-PMI. Po nápisu tEnIS 3 počítač jako levý hráč podává, vy jste pravý hráč: míček odpálíte klávesou, když k vám doletí. Po chybě se ukáže skóre a hra pokračuje dalším podáním. Konec <kbd>RE</kbd>.",
+        "en": "Nostalcomp's TENIS3, its version of TENIS from the application sheet, in the second half of the STONE-PMI EPROM. After tEnIS 3 the computer, the left player, serves; you are the right one: hit the ball with a key when it reaches you. After a miss the score is shown and play goes on with the next serve. <kbd>RE</kbd> ends it."
+      }
+    },
+    {
+      "id": "svetelny-had-stone1",
+      "name": {
+        "cs": "Světelný had",
+        "en": "Light Snake"
+      },
+      "board": "stone1",
+      "file": "svetelny-had/stone1.bin",
+      "format": "bin",
+      "load": "1C00",
+      "start": "1C10",
+      "author": "Matěj \"Wolf\" Holyszewski",
+      "help": {
+        "cs": "Světelný had s hlavou a slábnoucím ocasem obíhá všech 63 segmentů devíti číslic; jas ocasu dělá softwarové PWM. Klávesnici nečte, konec klávesou <kbd>RE</kbd>. Vytvořeno s pomocí AI.",
+        "en": "A light snake with a head and a fading tail runs through all 63 segments of the nine digits; the tail's brightness is software PWM. It does not read the keyboard; <kbd>RE</kbd> ends it. Made with the help of AI."
+      }
+    },
+    {
+      "id": "ship-captain-crew-stone1",
+      "name": {
+        "cs": "Loď, kapitán, posádka",
+        "en": "Ship, Captain, Crew"
+      },
+      "board": "stone1",
+      "file": "ship-captain-crew/ship-captain-crew-stone1.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.0",
+      "author": "Matěj \"Wolf\" Holyszewski",
+      "help": {
+        "cs": "Původně kostková hra, zde pro 1 až 9 hráčů, kteří se střídají u jedné klávesnice. Hraje se na pevný počet kol a body ze všech kol se sčítají. V každém kole je třeba nejdříve hodit šestku (loď), pětku (kapitána) a čtyřku (posádku); zbylé dvě kostky jsou náklad a jejich součet jsou body. Po nápisu SHIP zvolte číslicí počet hráčů (PLAYErS, 1–9) a pak počet kol (roundS, 1–8). V každém kole máte nejvýš tři hody klávesou <kbd>=</kbd>. Šestka, pak pětka a pak čtyřka se samy odkládají doleva a mohou padnout i v jednom hodu; pětka se ale počítá až po šestce a čtyřka až po pětce. Jakmile máte všechny tři, můžete klávesou <kbd>S</kbd> přijmout aktuální náklad a ukončit svůj tah, nebo zbývající hody využít k pokusu o získání lepšího nákladu; pozor, můžete si tak i pohoršit. Bez celé trojice je kolo za nula bodů. Displej zleva: číslo hráče, počítadlo hodů, pět kostek (před hodem pomlčky) a vpravo hráčův průběžný součet bodů ze všech kol (00–96). Číslo hráče, odložené kostky a součet blikají. Po tahu zabliká náklad, přičte se a zabliká nový součet; pak je na řadě další hráč. Klávesa <kbd>A</kbd> ukáže asi na 2 s blikající r a číslo kola. Na konci se ukáže End, uprostřed číslo vítěze (0 = remíza) a vpravo jeho vítězný součet bodů. <kbd>=</kbd> začne novou partii se stejným nastavením, <kbd>F</kbd> partii opustí a vrátí volbu hráčů a kol. Bez zvuku. Konec <kbd>RE</kbd>.\n\nPůvod: Loď, kapitán, posádka (anglicky Ship, Captain and Crew) je tradiční kostková hra. Implementace pro PMI-80, Savia-84 a Stone 1 v rámci projektu Wolf80.",
+        "en": "Originally a dice game, here for 1 to 9 players taking turns at one keypad. It is played over a fixed number of rounds, and the points of all rounds add up. In each round you first need to roll a six (the ship), a five (the captain) and a four (the crew); the other two dice are the cargo, and their total is the points. After the title SHIP choose the number of players with a digit (PLAYErS, 1–9), then the number of rounds (roundS, 1–8). In each round you have at most three rolls, with <kbd>=</kbd>. The six, then the five, then the four are set aside to the left by themselves, and they may come in a single roll; but a five counts only after the six, and a four only after the five. Once you have all three, you can accept the current cargo with <kbd>S</kbd> and end your turn, or use the remaining rolls to try for a better cargo; beware, you may end up worse off. Without the whole trio the round scores zero points. The display from the left: the player's number, the roll counter, the five dice (dashes before a roll) and on the right the player's running total over all rounds (00–96). The player's number, the dice set aside and the total blink. After the turn the cargo blinks, is added, and the new total blinks; then the next player is on. Key <kbd>A</kbd> shows a blinking r and the round number for about 2 s. At the end End appears with the winner's number in the middle (0 = a tie) and the winner's total on the right. <kbd>=</kbd> starts a new match with the same settings, <kbd>F</kbd> leaves the match and goes back to choosing players and rounds. Silent. <kbd>RE</kbd> ends it.\n\nOrigin: Ship, Captain and Crew is a traditional dice game. Implemented for the PMI-80, the Savia-84 and the Stone 1 as part of the Wolf80 project."
+      }
+    },
+    {
+      "id": "lunar-lander-stone1",
+      "name": "Lunar Lander",
+      "board": "stone1",
+      "file": "lunar-lander/lunar-lander-stone1.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.1",
+      "author": {
+        "cs": "Jim Butterfield; port projekt Wolf80",
+        "en": "Jim Butterfield; ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Přistaňte s lunárním modulem měkce. Po nápisu LUnAr LAndEr visíte ve výšce 4500 stop a padáte. Číslice úplně vlevo ukazuje nastavený tah motoru, pak následuje výška (čtyři číslice) a vpravo rychlost pádu nebo stoupání (dvě číslice). Klávesami <kbd>1</kbd> až <kbd>9</kbd> nastavujete tah: <kbd>5</kbd> přesně vyrovnává gravitaci, menší číslo pád zrychluje, větší brzdí; <kbd>0</kbd> vypne motor natrvalo. <kbd>F</kbd> ukáže palivo (F800 = 800 liber), <kbd>A</kbd> až <kbd>E</kbd> zase výšku. Když palivo dojde, motor přestane táhnout. Při dosednutí rychlostí 5 nebo menší se ukáže SAFE, jinak dEAd; kdo vystoupá nad 8000 stop, také skončí dEAd. <kbd>=</kbd> začne nový let. Rada z knihy: začněte tahem 1, při rychlosti v devadesátkách přepněte na 5, ve výšce asi 1500 stop dejte 9 a při rychlosti 15 až 20 se vraťte na 5 nebo 6. Konec <kbd>RE</kbd>.\n\nPůvod: Lunar Lander napsal Jim Butterfield pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502 (1976), a vyšel v knize The First Book of KIM (Jim Butterfield, Stan Ockers a Eric Rehnke, Hayden, 1977/78). Celý program měl kolem 220 bajtů a počítal desítkově, aby se čísla na displeji dala číst přímo. Námět je starší: první hru o přistání na Měsíci napsal roku 1969 student Jim Storer na počítači PDP-8 a od té doby vznikla v nesčetných podobách. Jim Butterfield (1936–2007) byl kanadský programátor, později známý hlavně z Commodoru; programy z knihy autoři uvolnili bez autorských omezení. Pro PMI-80, Savia-84 a Stone 1 ji projekt Wolf80 napsal znovu; navíc ukazuje tah motoru, odděluje výšku od rychlosti mezerou a má opravenou chybu originálu při rychlém stoupání.",
+        "en": "Land the lunar module gently. After the title LUnAr LAndEr you hang at 4500 feet, falling. The leftmost digit shows the engine thrust, then come the altitude (four digits) and, on the right, the rate of descent or climb (two digits). Keys <kbd>1</kbd> to <kbd>9</kbd> set the thrust: <kbd>5</kbd> exactly balances gravity, a lower number lets you fall faster, a higher one brakes; <kbd>0</kbd> shuts the engine off for good. <kbd>F</kbd> shows the fuel (F800 = 800 pounds), <kbd>A</kbd> to <kbd>E</kbd> bring the altitude back. When the fuel runs out the engine stops. Touching down at a rate of 5 or less shows SAFE, anything faster dEAd; climbing above 8000 feet also ends in dEAd. <kbd>=</kbd> starts a new flight. The book's advice: begin with thrust 1, switch to 5 when the rate reaches the nineties, press 9 at about 1500 feet, and go back to 5 or 6 once the rate is down to 15 to 20. <kbd>RE</kbd> ends it.\n\nOrigin: Lunar Lander was written by Jim Butterfield for the KIM-1, MOS Technology's single-board 6502 computer (1976), and published in The First Book of KIM (Jim Butterfield, Stan Ockers and Eric Rehnke, Hayden, 1977/78). The whole program was about 220 bytes and calculated in decimal, so that the numbers on the display could be read directly. The idea is older: the first moon-landing game was written in 1969 by the student Jim Storer on a PDP-8, and it has appeared in countless forms since. Jim Butterfield (1936–2007) was a Canadian programmer, later best known from the Commodore world; the book's authors released its programs without copyright restrictions. The Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1; it also shows the thrust, separates the altitude from the rate with a gap, and fixes the original's bug in a fast climb."
+      }
+    },
+    {
+      "id": "multi-maze-stone1",
+      "name": "Multi-Maze",
+      "board": "stone1",
+      "file": "multi-maze/multi-maze-stone1.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.2.0",
+      "author": {
+        "cs": "Jim Butterfield (The First Book of KIM, 1977/78); port projekt Wolf80",
+        "en": "Jim Butterfield (The First Book of KIM, 1977/78); ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Najděte cestu z bludiště. Po nápisu MULtI-MAZE (ten čeká na libovolnou klávesu) jste blikající segment uprostřed displeje a kolem vás svítí stěny. Jedna číslice je jeden sloupec bludiště: horní segment je políčko nad vámi, prostřední váš řádek, dolní políčko pod vámi; rozsvícený segment je stěna. Vidíte jen úzký výřez, tři sloupce na každou stranu. <kbd>9</kbd> jde nahoru, <kbd>1</kbd> dolů, <kbd>4</kbd> vlevo a <kbd>6</kbd> vpravo, jeden krok na stisk; do stěny se nedá. Cesta ven vede vlevo. Když východem projdete, ukáže se volný prostor, pak OUt a počet vašich tahů (nejvýš 999). <kbd>=</kbd> kdykoli vytvoří novou obměnu původního bludiště. <kbd>S</kbd> přepne hru natrvalo na generovaná bludiště: pak <kbd>=</kbd> i <kbd>S</kbd> postaví úplně nové náhodné bludiště o 7 × 8 políčkách s jedinou cestou ven (displej přitom na šestinu sekundy zhasne); k původnímu bludišti se vrátíte novým spuštěním programu. Konec <kbd>RE</kbd>.\n\nPůvod: Multi-Maze napsal Jim Butterfield pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502 (1976), a vyšel v knize The First Book of KIM (Jim Butterfield, Stan Ockers a Eric Rehnke, Hayden, 1977/78, s. 88–90). Jedno ručně nakreslené bludiště se osmi náhodnými změnami stěn mění v 256 variant a vidí se jen úzkým okénkem displeje. Autoři knihy programy uvolnili bez autorských omezení, proto má port bludiště převzaté beze změny; projekt Wolf80 ho pro PMI-80, Savia-84 a Stone 1 napsal znovu. Oproti originálu má nápis, který čeká na klávesu (první bludiště je tak náhodné), sedm číslic s hráčem uprostřed místo šesti s hráčem na třetím místě a na východu OUt a počet tahů kde originál ukáže jen volný prostor, a mód s generovanými bludišti.",
+        "en": "Find the way out of the maze. After the title MULtI-MAZE (it waits for any key) you are the blinking segment in the middle of the display, with walls lit around you. One digit is one column of the maze: the top segment is the square above you, the middle one your own row, the bottom one the square below you; a lit segment is a wall. You see only a narrow window, three columns on each side. <kbd>9</kbd> goes up, <kbd>1</kbd> down, <kbd>4</kbd> left and <kbd>6</kbd> right, one step per press; you cannot walk into a wall. The way out leads to the left. When you pass through the exit you see open space, then OUt and the number of your moves (999 at most). <kbd>=</kbd> makes a new variant of the original maze at any time. <kbd>S</kbd> switches to generated mazes for good: then <kbd>=</kbd> and <kbd>S</kbd> both build a completely new random maze of 7 × 8 cells with exactly one way out (the display goes dark for a sixth of a second); start the program again to get back to the original maze. <kbd>RE</kbd> ends it.\n\nOrigin: Multi-Maze was written by Jim Butterfield for the KIM-1, MOS Technology's single-board 6502 computer (1976), and published in The First Book of KIM (Jim Butterfield, Stan Ockers and Eric Rehnke, Hayden, 1977/78, pp. 88–90). One hand-drawn maze becomes one of 256 variants through eight random wall changes, and you see it only through a narrow window of the display. The book's authors released its programs without copyright restrictions, so the port keeps the maze as published; the Wolf80 project rewrote the program for the PMI-80, the Savia-84 and the Stone 1. Unlike the original it has a title that waits for a key (so the first maze is random too), seven digits with the player in the middle instead of six with the player third, and OUt and the move count at the exit where the original only shows open space, and a mode with generated mazes."
+      }
+    },
+    {
+      "id": "wumpus-stone1",
+      "name": "Wumpus",
+      "board": "stone1",
+      "file": "wumpus/wumpus-stone1.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.2",
+      "author": {
+        "cs": "Stan Ockers podle hry Gregoryho Yoba; port projekt Wolf80",
+        "en": "Stan Ockers after Gregory Yob's game; ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Lov Wumpuse v 16 jeskyních číslovaných 0–F; z každé vedou čtyři chodby. Po nápisu WUMPUS stiskněte libovolnou klávesu. Zpráva YOU ARE IN 9 – TUNNELS LEAD TO 68AC (jste v jeskyni 9, chodby vedou do 6, 8, A a C) roluje po znacích; držením libovolné klávesy se rolování zrychlí. Pak zůstanou svítit čtyři sousední jeskyně: stiskem čísla jedné z nich se tam přesunete. Varování o sousední jeskyni: WUMPUS CLOSE (Wumpus je blízko), PIT CLOSE (jáma), BATS CLOSE (netopýři). Netopýři vás odnesou jinam (SUPERBAT SNATCH), jáma znamená konec (YYIIEEE FELL IN PIT), a když vejdete k Wumpusovi, probudíte ho: jednou ze čtyř vás sní (HA HA WUMPUS GOT YOU), jinak uteče (OOPS – BUMPED A WUMPUS). Máte tři plechovky uspávacího plynu: <kbd>=</kbd> a číslo sousední jeskyně (ROOM? = kam) hodí plechovku tam, další <kbd>=</kbd> hod zruší. Trefíte-li Wumpuse, vyhráváte (GREAT – YOU GET A HUG FROM WUMPUS); jinak se Wumpus přesune, případně až k vám (MISSED – ONLY 2 CANS LEFT). Do jeskyně s plynem nesmíte (GAS IN ROOM); po třetí netrefě je konec (OUT OF GAS). Prohra končí zprávou YOU LOSE. Po konci hry <kbd>=</kbd> začne novou. Jiné klávesy znovu přehrají zprávu o poloze. Texty jsou anglicky jako v originále. Konec <kbd>RE</kbd>.\n\nPůvod: Hunt the Wumpus napsal v BASICu Gregory Yob; vyšla roku 1973 v časopise People's Computer Company a stala se jednou z prvních rozšířených počítačových her o průzkumu jeskyní. Pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502, ji upravil Stan Ockers a vyšla v knize The First Book of KIM (Jim Butterfield, Stan Ockers a Eric Rehnke, Hayden, 1977/78); vešla se i s texty do 1 KiB paměti a na šest číslic, po kterých texty rolují. Programy z knihy autoři uvolnili bez autorských omezení. Pro Savia-84 a Stone 1 ji projekt Wolf80 napsal znovu (PMI-80 má vlastní verzi, bližší originálu); navíc má úvodní nápis, zastavení zpráv na začátku a na konci kvůli lepší čitelnosti, zrychlení rolování, zrušení hodu, novou hru klávesou <kbd>=</kbd> a opravenou chybu originálu, kvůli které překlep na neplatnou klávesu hráče přesunul.",
+        "en": "Hunt the Wumpus in 16 caves numbered 0–F, with four tunnels from each. After the title WUMPUS press any key. The message YOU ARE IN 9 – TUNNELS LEAD TO 68AC scrolls by one character at a time; holding any key speeds it up. Then the four neighbouring caves stay lit: press one of their numbers to go there. Warnings about a neighbouring cave: WUMPUS CLOSE, PIT CLOSE, BATS CLOSE. Bats carry you elsewhere (SUPERBAT SNATCH), a pit is the end (YYIIEEE FELL IN PIT), and walking into the Wumpus wakes him: one time in four he eats you (HA HA WUMPUS GOT YOU), otherwise he runs off (OOPS – BUMPED A WUMPUS). You have three cans of sleeping gas: <kbd>=</kbd> and the number of a neighbouring cave (ROOM? asks where) throws a can there; <kbd>=</kbd> again cancels the throw. Hit the Wumpus and you win (GREAT – YOU GET A HUG FROM WUMPUS); otherwise he moves, perhaps into your cave (MISSED – ONLY 2 CANS LEFT). You must not enter a gassed cave (GAS IN ROOM); the third miss ends the game (OUT OF GAS). A loss ends with YOU LOSE. After the end, <kbd>=</kbd> starts a new game. Other keys replay the message about where you are. The texts are in English, as in the original. <kbd>RE</kbd> ends it.\n\nOrigin: Hunt the Wumpus was written in BASIC by Gregory Yob, printed in 1973 in People's Computer Company, and became one of the first widely copied computer cave-exploring games. Stan Ockers adapted it for the KIM-1, MOS Technology's single-board 6502 computer; it was published in The First Book of KIM (Jim Butterfield, Stan Ockers and Eric Rehnke, Hayden, 1977/78), and with all its text it fits into 1 KiB of memory and six digits, over which the messages scroll. The book's authors released its programs without copyright restrictions. The Wolf80 project rewrote it for the Savia-84 and the Stone 1 (the PMI-80 has its own version, closer to the original); it adds the title, pauses at the start and end of each message so that it reads better, faster scrolling, cancelling a throw, a new game with <kbd>=</kbd>, and a fix for the original's bug that moved the player on a mistyped key."
+      }
+    },
+    {
+      "id": "bagels-stone1",
+      "name": "Bagels",
+      "board": "stone1",
+      "file": "bagels/bagels-stone1.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.1",
+      "author": {
+        "cs": "Jim Butterfield; port projekt Wolf80",
+        "en": "Jim Butterfield; ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Počítač si myslí tajný kód ze čtyř písmen A–F; písmena se mohou opakovat (třeba CACF nebo bbbb). Máte deset pokusů. Po nápisu bAGELS pište tip klávesami <kbd>A</kbd>–<kbd>F</kbd>, písmena se objevují zleva. Po čtvrtém se vpravo ukážou dvě číslice: kolik písmen je na správném místě a kolik jich v kódu je, ale jinde. Příklad: kód CbFb a tip bAFd dají 1 1 (F sedí, b je jinde). Výsledek 4 0 je výhra. Číslice úplně vlevo ukazuje, kolik pokusů zbude po tomto tipu. Po výsledku asi 3 s klávesy nereagují; pak písmeno <kbd>A</kbd>–<kbd>F</kbd> rovnou začne další tip (jiná klávesa jen smaže displej). Po desátém nezdařeném tipu se ukáže správný kód se čtverečkem a další stisk začne novou hru. Zadané písmeno nejde opravit. Konec <kbd>RE</kbd>.\n\nPůvod: Bagels napsal Jim Butterfield pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502 (1976), a vyšel v knize The First Book of KIM (Jim Butterfield, Stan Ockers a Eric Rehnke, Hayden, 1977/78). Patří do rodiny her na hádání kódu, kam patří i Mastermind, u nás známý jako Logik; Butterfield ji vtěsnal do 236 bajtů a šesti číslic a písmena A–F se píšou přímo na hexadecimální klávesnici. Programy z knihy autoři uvolnili bez autorských omezení. Pro PMI-80, Savia-84 a Stone 1 ji projekt Wolf80 napsal znovu; navíc má mezeru před výsledkem a počítadlo pokusů.",
+        "en": "The computer thinks of a secret code of four letters A–F; letters may repeat (CACF or bbbb, say). You have ten guesses. After the title bAGELS type a guess with keys <kbd>A</kbd>–<kbd>F</kbd>; the letters appear from the left. After the fourth, two digits appear on the right: how many letters are in the right place, and how many are in the code but elsewhere. Example: the code CbFb and the guess bAFd give 1 1 (the F fits, the b is elsewhere). A result of 4 0 wins. The leftmost digit shows how many guesses will be left after this one. After a result the keys rest for about 3 s; then a letter <kbd>A</kbd>–<kbd>F</kbd> starts the next guess at once (any other key just clears the display). After the tenth wrong guess the right code is shown with a small square, and the next key starts a new game. A letter you have typed cannot be corrected. <kbd>RE</kbd> ends it.\n\nOrigin: Bagels was written by Jim Butterfield for the KIM-1, MOS Technology's single-board 6502 computer (1976), and published in The First Book of KIM (Jim Butterfield, Stan Ockers and Eric Rehnke, Hayden, 1977/78). It belongs to the family of code-guessing games that includes Mastermind; Butterfield squeezed it into 236 bytes and six digits, and the letters A–F are typed straight on the hex keypad. The book's authors released its programs without copyright restrictions. The Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1, adding a gap before the result and a guess counter."
+      }
+    },
+    {
+      "id": "rock-climbing-stone1",
+      "name": "Rock Climbing",
+      "board": "stone1",
+      "file": "rock-climbing/rock-climbing-stone1.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.1",
+      "author": {
+        "cs": "Teruhisa Hišida podle knihy Kóičiho Kišidy; port projekt Wolf80",
+        "en": "Teruhisa Hishida after Kōichi Kishida's book; ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Hra pro dva hráče u jedné klávesnice: kdo první vyleze na 100 m, vyhrává. Vlevo je výška prvního hráče, vpravo druhého; na tahu je ten, jehož číslice blikají. Klávesa <kbd>L</kbd> zvolí lezení (rozsvítí se horní čárka), <kbd>S</kbd> odpočinek (dolní čárka); volbu lze změnit, <kbd>=</kbd> ji potvrdí. Lezení: počítač hodí dvěma kostkami. Padne-li na kterékoli jednička, spadnete na poslední zajištěnou výšku (kde jste naposledy odpočívali, na začátku 0); pád zůstane půl sekundy vidět a tah přejde na soupeře. Jinak se součet kostek přičte a lezete dál. Odpočinek: současná výška se stane zajištěnou a tah přejde na soupeře. Po dosažení cíle displej 2 s bliká, pak začne nová hra. Konec <kbd>RE</kbd>.\n\nPůvod: hra pochází z japonské knihy Maikon Game 21 (Sanpó, uváděno 1978), sbírky her, kterou sestavil Kóiči Kišida pro jednodeskovou stavebnici NEC TK-80 (1976); ta bývá považována za začátek osobních počítačů v Japonsku. Podle slovního popisu v knize hru napsal Teruhisa Hišida z firmy Chunichi Denko pro svou moderní stavebnici ND8080 napodobující TK-80 (sbírka aplikačních programů ND8080, 2016). Pro PMI-80, Savia-84 a Stone 1 ji podle pravidel napsal znovu projekt Wolf80; navíc má po pádu krátkou pauzu a opravenou chybu, kvůli které vítěz místo 107 viděl 007.",
+        "en": "A game for two players at one keypad: whoever first climbs to 100 m wins. The first player's height is on the left, the second's on the right; the player whose digits blink is on the move. Key <kbd>L</kbd> chooses to climb (the top bar lights), <kbd>S</kbd> to rest (the bottom bar); you may change your mind, <kbd>=</kbd> confirms. Climbing: the computer rolls two dice. If either shows a one, you fall to your last secured height (where you last rested, 0 at the start); the fall stays visible for half a second and the turn passes. Otherwise the dice total is added and you climb on. Resting secures your current height and passes the turn. When someone reaches the top the display blinks for 2 s, then a new game begins. <kbd>RE</kbd> ends it.\n\nOrigin: the game comes from the Japanese book Maikon Game 21 (Sanpō, given as 1978), a collection of games compiled by Kōichi Kishida for the NEC TK-80 single-board kit (1976), often seen as the start of personal computing in Japan. From the book's description Teruhisa Hishida of Chunichi Denko wrote it for his modern TK-80-style kit, the ND8080 (a collection of ND8080 application programs, 2016). The Wolf80 project rewrote it from the rules for the PMI-80, the Savia-84 and the Stone 1, adding a short pause after a fall and fixing a bug that showed the winner 007 instead of 107."
+      }
+    },
+    {
+      "id": "odd-couples-stone1",
+      "name": "Odd Couples",
+      "board": "stone1",
+      "file": "odd-couples/odd-couples-stone1.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.1",
+      "author": {
+        "cs": "M. Kišida, SRA Microcomputer Club; port projekt Wolf80",
+        "en": "M. Kishida, SRA Microcomputer Club; ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Pexeso na displeji: osm skrytých symbolů tvoří čtyři dvojice. Po nápisu Odd CouPLES začnete hru klávesou <kbd>=</kbd>. Klávesy <kbd>1</kbd>–<kbd>8</kbd> odkrývají symbol na odpovídající číslici zleva, vždy dva po sobě. Shodují-li se, zůstanou svítit a pokračujete další dvojicí; neshodují-li se, okamžitě zhasne všechno včetně dříve nalezených dvojic (rozmístění se nemění). Zhasne i všechno, zvolíte-li už odkrytou číslici. Vyhrajete, když najdete čtyři dvojice za sebou bez chyby. Skóre je počet pokusů o dvojici (nejlépe 4): po výhře svítí symboly 2 s, pak se ukáže skóre (nuly a vpravo počet pokusů). <kbd>S</kbd> ukáže skóre znovu, <kbd>=</kbd> začne novou hru. Konec <kbd>RE</kbd>.\n\nPůvod: hru napsal M. Kišida z klubu SRA Microcomputer Club pro NEC TK-80 (1976), japonskou jednodeskovou stavebnici, jejíž hexa klávesnice a osm sedmisegmentových číslic stály u zrodu osobních počítačů v Japonsku; dochovala se díky knize Fukkatsu! TK-80 (ASCII, 2000). V originále druhý symbol neshodné dvojice zhasne dřív, než ho hráč stihne zahlédnout; port to zachovává. Pro PMI-80, Savia-84 a Stone 1 ji podle pravidel napsal znovu projekt Wolf80; skóre se po výhře ukáže samo.",
+        "en": "A memory game on the display: eight hidden symbols make four pairs. After the title Odd CouPLES, <kbd>=</kbd> starts the game. Keys <kbd>1</kbd>–<kbd>8</kbd> reveal the symbol on the matching digit from the left, two at a time. If they match, they stay lit and you go on to the next pair; if not, everything goes dark at once, earlier pairs included (the layout stays the same). Picking a digit that is already lit also clears everything. You win by finding four pairs in a row without a mistake. Your score is the number of pair attempts (4 is perfect): after a win the symbols stay lit for 2 s, then the score appears (zeros, with the attempt count on the right). <kbd>S</kbd> shows the score again, <kbd>=</kbd> starts a new game. <kbd>RE</kbd> ends it.\n\nOrigin: the game was written by M. Kishida of the SRA Microcomputer Club for the NEC TK-80 (1976), the Japanese single-board kit whose hex keypad and eight seven-segment digits stood at the birth of personal computing in Japan; it survives through the book Fukkatsu! TK-80 (ASCII, 2000). In the original the second symbol of a mismatched pair goes dark before the player can see it; the port keeps that. The Wolf80 project rewrote it from the rules for the PMI-80, the Savia-84 and the Stone 1; the score now appears by itself after a win."
+      }
+    },
+    {
+      "id": "duck-shoot-stone1",
+      "name": "Duck Shoot (Acorn)",
+      "board": "stone1",
+      "file": "duck-shoot/duck-shoot-stone1.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.3",
+      "author": {
+        "cs": "Acorn Computers (příručka System 1, 1979); port projekt Wolf80",
+        "en": "Acorn Computers (System 1 manual, 1979); ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Po displeji letí zprava doleva kachna a za levým okrajem se objeví znovu vpravo. Sestřelíte ji klávesou s číslem její pozice: <kbd>0</kbd> je nejlevější číslice, <kbd>7</kbd> nejpravější. Výstřel krátce rozsvítí spodní segment číslice, na kterou míříte; netrefa nic nestojí. Po zásahu kachna asi sekundu leží, pak se ukáže číslo kola (kolik kachen jste už sestřelili) a vyletí další, o desetinu rychlejší: první letí jednu číslici za 0,32 s jako v originále, nejrychlejší za 0,04 s. <kbd>=</kbd> začne novou sérii od začátku. Konec <kbd>RE</kbd>.\n\nPůvod: Duck Shoot je krátká ukázková hra z příručky počítače Acorn System 1 (Acorn Computers, 1979), prvního výrobku cambridgeské firmy Acorn, ze které později vzešly počítače Atom a BBC Micro. Pro procesor 6502 zabrala 64 bajtů a ukazovala, že osm sedmisegmentových číslic a hexa klávesnice stačí na hru. V originále hra zásahem končí a výstřel nijak neukazuje; projekt Wolf80 ji pro PMI-80, Savia-84 a Stone 1 napsal znovu a přidal kola se zrychlováním a rozsvícení segmentu při výstřelu. Jiná verze z příručky stavebnice MK14 je tu jako samostatná hra.",
+        "en": "A duck flies across the display from right to left and comes back on the right after leaving on the left. Shoot it with the key of its position: <kbd>0</kbd> is the leftmost digit, <kbd>7</kbd> the rightmost. A shot briefly lights the bottom segment of the digit you aim at; a miss costs nothing. After a hit the duck lies there for about a second, then the round number (how many ducks you have shot) appears and the next duck flies a tenth faster: the first one takes 0.32 s per digit, as in the original, the fastest 0.04 s. <kbd>=</kbd> starts a new series from the beginning. <kbd>RE</kbd> ends it.\n\nOrigin: Duck Shoot is a short demonstration game from the manual of the Acorn System 1 (Acorn Computers, 1979), the first product of the Cambridge firm Acorn, which later made the Atom and the BBC Micro. For the 6502 it took 64 bytes and showed that eight seven-segment digits and a hex keypad are enough for a game. In the original a hit ends the game and a shot shows nothing; the Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1 and added rounds that speed up and the lit segment for a shot. A different version from the MK14 kit manual is here as a separate game."
+      }
+    },
+    {
+      "id": "duck-shoot-mk14-stone1",
+      "name": "Duck Shoot (MK14)",
+      "board": "stone1",
+      "file": "duck-shoot-mk14/duck-shoot-mk14-stone1.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.3",
+      "author": {
+        "cs": "Science of Cambridge (příručka MK14, 1978); port projekt Wolf80",
+        "en": "Science of Cambridge (MK14 manual, 1978); ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Po displeji letí zprava doleva kachny a za levým okrajem se objevují znovu vpravo; na začátku je jedna. Klávesa <kbd>0</kbd>–<kbd>7</kbd> vystřelí na pozici se stejným číslem (<kbd>0</kbd> je nejlevější číslice): je-li tam kachna, zmizí, není-li, jedna kachna přibude. Výstřel krátce rozsvítí spodní segment číslice, na kterou míříte. Cílem je vystřílet všechny kachny; hra nemá konec ani skóre, takže je to spíš zkouška, kolik kachen zvládnete udržet na uzdě. Konec <kbd>RE</kbd>.\n\nPůvod: hra je z příručky stavebnice MK14 (Science of Cambridge, 1978), první počítačové stavebnice Clivea Sinclaira s procesorem National Semiconductor SC/MP, předchůdkyně počítače ZX80; program měl asi 70 bajtů. V originále jsou pozice číslované obráceně (7 vlevo); port je čísluje zleva jako klávesnice. Kachny se posouvají zhruba jednou za 0,09 s, stejně rychle jako na MK14. Originál výstřel nijak neukazuje; rozsvícení segmentu při výstřelu přidal port. Projekt Wolf80 ji pro PMI-80, Savia-84 a Stone 1 napsal znovu. Jiná verze z příručky počítače Acorn System 1 je tu jako samostatná hra.",
+        "en": "Ducks fly across the display from right to left and reappear on the right after leaving on the left; there is one at the start. Keys <kbd>0</kbd>–<kbd>7</kbd> shoot at the position with that number (<kbd>0</kbd> is the leftmost digit): a duck there disappears, but a shot at an empty position adds a duck. A shot briefly lights the bottom segment of the digit you aim at. The aim is to shoot all the ducks; the game has no end and no score, so it is rather a test of how many ducks you can keep in check. <kbd>RE</kbd> ends it.\n\nOrigin: the game comes from the manual of the MK14 kit (Science of Cambridge, 1978), Clive Sinclair's first computer kit, with a National Semiconductor SC/MP processor, and a forerunner of the ZX80; the program was about 70 bytes. The original numbers the positions the other way round (7 on the left); the port numbers them from the left like the keypad. The ducks move about every 0.09 s, as fast as on the MK14. In the original a shot shows nothing; the port added the lit segment for a shot. The Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1. A different version from the Acorn System 1 manual is here as a separate game."
+      }
+    },
+    {
+      "id": "spiraal-stone1",
+      "name": "Spiraal",
+      "board": "stone1",
+      "file": "spiraal/spiraal-stone1.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.1",
+      "author": {
+        "cs": "A. W. den Hartog; port projekt Wolf80",
+        "en": "A. W. den Hartog; ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Reakční souboj dvou hráčů: levý mačká klávesu <kbd>0</kbd>, pravý klávesu <kbd>3</kbd>. Po nápisu SPIrAAL hru začne libovolná klávesa. Na displeji se kreslí spirála, a když je hotová, musí stisknout svou klávesu hráč, na jehož straně skončila (levý vlevo dole, pravý vpravo nahoře). Reagujte co nejpozději: čím déle váháte, tím rychleji se spirála kreslí soupeři a tím méně času má na reakci. Kdo stiskne příliš brzy (klávesa je dole už při dokončení spirály) nebo příliš pozdě (čas vyprší), dá soupeři bod. Po každém bodu se ukáže skóre, třeba 05  12 (levý, mezera, pravý), body jdou do 99 a pak od 00, a dál hraje ten, kdo bod získal. <kbd>=</kbd> vynuluje skóre a začne nový zápas. Konec <kbd>RE</kbd>.\n\nPůvod: Spiraal napsal A. W. den Hartog pro KIM-1, jednodeskový počítač firmy MOS Technology s procesorem 6502 (1976), a vyšla v nizozemském klubovém časopise De 6502 Kenner č. 25 (únor 1983). Nápad podle autora pochází z výukového počítače Hewlett-Packard s procesorem 8085. Časopis vydával nizozemský klub uživatelů KIM (KIM Gebruikers Club Nederland) od roku 1977 a otiskoval programy pro KIM i jeho následovníky; úprava hry pro Elektor Junior vyšla v čísle 27. Pro PMI-80, Savia-84 a Stone 1 ji podle pravidel napsal znovu projekt Wolf80; na rozdíl od originálu displej svítí i mezi kroky spirály, hra čeká na první stisk, skóre odděluje mezera místo písmen dd a nový zápas jde začít bez resetu.",
+        "en": "A reaction duel for two players: the left one presses key <kbd>0</kbd>, the right one key <kbd>3</kbd>. After the title SPIrAAL any key starts the game. A spiral is drawn on the display, and when it is finished the player on whose side it ended must press their key (left if it ended bottom left, right if top right). Press as late as you dare: the longer you wait, the faster the spiral is drawn for your opponent and the less time they have. Pressing too early (the key is already down when the spiral is complete) or too late (the time runs out) gives your opponent a point. After every point the score is shown, such as 05  12 (left, gap, right); it counts to 99 and then from 00, and the player who scored plays next. <kbd>=</kbd> clears the score and starts a new match. <kbd>RE</kbd> ends it.\n\nOrigin: Spiraal was written by A. W. den Hartog for the KIM-1, MOS Technology's single-board 6502 computer (1976), and published in the Dutch club magazine De 6502 Kenner no. 25 (February 1983). The author says the idea came from a Hewlett-Packard teaching computer with an 8085. The magazine was published from 1977 by the Dutch KIM users' club (KIM Gebruikers Club Nederland) and printed programs for the KIM and its successors; a version for the Elektor Junior followed in issue 27. The Wolf80 project rewrote it from the rules for the PMI-80, the Savia-84 and the Stone 1; unlike the original, the display stays lit between the steps of the spiral, the game waits for a first key, a gap separates the score instead of the letters dd, and a new match needs no reset."
+      }
+    },
+    {
+      "id": "silver-dollar-stone1",
+      "name": "Silver Dollar",
+      "board": "stone1",
+      "file": "silver-dollar/silver-dollar-stone1.asm",
+      "format": "asm",
+      "start": "1800",
+      "version": "0.1.2",
+      "author": {
+        "cs": "nejspíš David Johnson-Davies (příručka MK14, 1978); port projekt Wolf80",
+        "en": "probably David Johnson-Davies (MK14 manual, 1978); ported by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Na dráze z osmi číslic leží pět mincí. Každá číslice má dvě políčka, levou a pravou svislou čárku nad podtržením, a mince je rozsvícená čárka. Mince se číslují zprava doleva 1 až 5; klávesa s číslem mince ji posune o políčko doprava. V jednom tahu smíte posouvat jen jednu minci, zato o kolik políček chcete; mince se nesmějí přeskakovat ani stát na sobě. Tah dokončíte klávesou <kbd>=</kbd>, pak táhne počítač. Prohrává ten, kdo nemůže táhnout (všechny mince jsou namačkané vpravo): hra ukáže YOU LoSE (prohráli jste) nebo I LoSE (prohrál počítač) a libovolná klávesa začne novou hru. <kbd>EX</kbd> začne novou hru kdykoli. Počítač hraje bez chyby, takže vyhrajete jen přesnou hrou od prvního tahu (nápověda: je to Nim v převleku). První hra začíná z postavení originálu, další z náhodného, které jde vždy vyhrát. <kbd>RE</kbd> hru ukončí.\n\nPůvod: Silver Dollar je jedna z her v příručce stavebnice MK14 (Science of Cambridge, 1978), první počítačové stavebnice Clivea Sinclaira s procesorem SC/MP; program napsal nejspíš David Johnson-Davies a zabíral asi 220 bajtů. Předlohou je matematická hra s mincemi na pásu, připisovaná J. H. Conwayovi, ve které se obvykle soupeří o jednu zvláštní „stříbrnou“ minci; příručka ji zjednodušila na „kdo nemůže táhnout, prohrál“, což se dá spočítat jako Nim, a proto počítač nechybuje. Pro PMI-80, Savia-84 a Stone 1 ji projekt Wolf80 napsal znovu; na rozdíl od originálu, který po prohře počítače skočil do monitoru, ohlásí konec hry a nabídne novou s náhodným postavením; písmeno V je v názvu nakreslené jako U.",
+        "en": "Five coins lie on a track of eight digits. Each digit holds two squares, a left and a right vertical bar above the underline, and a coin is a lit bar. The coins are numbered 1 to 5 from the right; the key with a coin's number pushes it one square to the right. In one turn you may move only one coin, but as many squares as you like; coins may not jump over each other or share a square. <kbd>=</kbd> ends your turn, then the computer moves. Whoever cannot move (all coins packed at the right) loses: the game shows YOU LoSE (you lost) or I LoSE (the computer lost), and any key starts a new game. <kbd>EX</kbd> starts a new game at any time. The computer never errs, so you win only by exact play from the first move (hint: it is Nim in disguise). The first game starts from the original position, later ones from a random position that can always be won. <kbd>RE</kbd> ends it.\n\nOrigin: Silver Dollar is one of the games in the manual of the MK14 kit (Science of Cambridge, 1978), Clive Sinclair's first computer kit, with an SC/MP processor; the program was probably written by David Johnson-Davies and took about 220 bytes. It is based on a mathematical coin game played on a strip, credited to J. H. Conway, in which players usually compete for one special \"silver dollar\"; the manual reduced it to \"whoever cannot move loses\", which can be computed as Nim, which is why the computer never errs. The Wolf80 project rewrote it for the PMI-80, the Savia-84 and the Stone 1; unlike the original, which jumped back into the monitor when the computer lost, it announces the end and offers a new game from a random position; the letter V in the title is drawn as a U."
+      }
+    }
+  ],
+  "withheldComment": "Entries not offered while the firmware they run on is withheld: the Stone 1's own monitor, until its author agrees to its publication (docs/stone1.md, \"The own monitor, withheld\"). To bring them back, move each back into 'programs' in front of its STONE-PMI counterpart (cosmos-stone-pmi, tenis3-stone-pmi).",
+  "withheld": [
+    {
+      "id": "cosmos-stone1",
+      "name": "COSMOS",
+      "board": "stone1",
+      "firmware": [
+        "stone1"
+      ],
+      "format": "asm",
+      "start": "1800",
+      "author": {
+        "cs": "Jiří Šutera; upravil a pro STONE převedl Nostalcomp; do RAM převedl projekt Wolf80",
+        "en": "Jiří Šutera; changed and adapted for the STONE by Nostalcomp; moved to RAM by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Nostalcompova verze hry Jiřího Šutery z EPROM STONE-PMI, převedená do RAM pro vlastní monitor Stone 1: hra postupně zrychluje. Loď na levé číslici uhýbá meteoritům a asteroidům, dvě pravé číslice ukazují skóre. Po nápisech COSMOS a StArt hra začne sama. <kbd>4</kbd> nebo <kbd>8</kbd> = nahoru, <kbd>0</kbd> = dolů, <kbd>EX</kbd> = vzdát. Po srážce se ukáže SCOrE a skóre, <kbd>=</kbd> = hrát dál; při skóre FF svítí FuLL SEt, <kbd>=</kbd> začne znovu. Konec <kbd>RE</kbd>.",
+        "en": "Nostalcomp's version of Jiří Šutera's game from the STONE-PMI EPROM, moved to RAM for the Stone 1's own monitor: it speeds up as it goes. A spaceship on the leftmost digit dodges meteors and asteroids, the two right digits show the score. After COSMOS and StArt the game begins by itself. <kbd>4</kbd> or <kbd>8</kbd> = up, <kbd>0</kbd> = down, <kbd>EX</kbd> = give up. After a crash SCOrE and the score are shown, <kbd>=</kbd> = play on; at the score FF it shows FuLL SEt, <kbd>=</kbd> starts again. <kbd>RE</kbd> ends it."
+      },
+      "file": "cosmos/cosmos-stone1.asm"
+    },
+    {
+      "id": "tenis3-stone1",
+      "name": "TENIS3",
+      "board": "stone1",
+      "firmware": [
+        "stone1"
+      ],
+      "format": "asm",
+      "start": "1800",
+      "author": {
+        "cs": "autor hry TENIS neznámý; TENIS3 od Nostalcompu; do RAM převedl projekt Wolf80",
+        "en": "author of TENIS unknown; TENIS3 by Nostalcomp; moved to RAM by the Wolf80 project"
+      },
+      "help": {
+        "cs": "Nostalcompova verze TENIS3 hry TENIS z aplikačního listu, z EPROM STONE-PMI, převedená do RAM pro vlastní monitor Stone 1. Po nápisu tEnIS 3 počítač jako levý hráč podává, vy jste pravý hráč: míček odpálíte klávesou, když k vám doletí. Po chybě se ukáže skóre a hra pokračuje dalším podáním. Konec <kbd>RE</kbd>.",
+        "en": "Nostalcomp's TENIS3, its version of TENIS from the application sheet, from the STONE-PMI EPROM, moved to RAM for the Stone 1's own monitor. After tEnIS 3 the computer, the left player, serves; you are the right one: hit the ball with a key when it reaches you. After a miss the score is shown and play goes on with the next serve. <kbd>RE</kbd> ends it."
+      },
+      "file": "tenis3/tenis3-stone1.asm"
+    }
+  ]
+}

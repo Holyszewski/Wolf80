@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "wolf80-web",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/serve.mjs", "8780"],
+      "port": 8780
+    }
+  ]
+}

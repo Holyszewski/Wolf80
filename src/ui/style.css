@@ -1,0 +1,275 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later
+   Copyright (C) 2026 Matěj "Wolf" Holyszewski
+   Flat, stylized look: solid colours and simple outlines, no textures, gradients or blurred
+   shadows (the keycaps' bevel is drawn as flat bands). */
+:root {
+  color-scheme: only dark; /* see the color-scheme meta in index.html */
+  --page: #15171a;
+  --panel: #1f2226;
+  --panel-2: #272b30;
+  --line: #3a3f46;
+  --text: #e8e6e1;
+  --muted: #a8adb4;
+  --accent: #3f8fd2;
+  --case: #f2c230;
+  --case-edge: #c79712;
+  --board: #7f7860;
+  --board-line: #988f76;
+  --cream: #f1e6c8;
+  --bezel: #140908;
+  --seg-on: #ff4a36;
+  --seg-off: #2a100e;
+  --seg-glow: rgba(255, 74, 54, .65);
+  --kbd-frame: #c8c9c4;
+  --kbd-edge: #a9aaa4;
+  --key-hex: #2f3236;
+  --key-hex-top: #4a4e54;
+  --key-hex-bottom: #1f2124;
+  --key-fn: #3f8fd2;
+  --key-fn-top: #7ab6e6;
+  --key-fn-bottom: #2f6fa8;
+  --key-text: #ffffff;
+  --key-down: #f2c230;
+  --mono: Consolas, "Cascadia Mono", "DejaVu Sans Mono", monospace;
+  /* the page around the computer (the panels); the light theme below redefines only these */
+  --heading: #f2c230;
+  --value: #f1e6c8;
+  --hl: #4a3d12;
+  --hl-text: #fff;
+  --mem-rom: #172b44; /* darker than the panels, so that the values stand out (the maintainer, 2026-10-26) */
+  --mem-ram: #1a3323;
+  --mem-none: #5b6068;
+  --ops-2: #2c3440;
+  --ops-3: #3a3326;
+  --btn-down: #1a1d21;
+  --btn-down-shadow: rgba(0, 0, 0, .6);
+}
+/* light theme (applyTheme in app.js): only the page around the computer changes, the computer
+   itself keeps the colours of the real one (the maintainer's decision, 2026-10-21) */
+:root[data-theme="light"] {
+  color-scheme: only light;
+  --page: #e4e6e9;
+  --panel: #f6f7f8;
+  --panel-2: #e9ebee;
+  --line: #c6cad0;
+  --text: #1d2126;
+  --muted: #5a616a;
+  --accent: #2f7cc0;
+  --heading: #8a5d00;
+  --value: #1d2a3a;
+  --hl: #f2d37a;
+  --hl-text: #1b1b1b;
+  --mem-rom: #d3e2f4;
+  --mem-ram: #d3ebd8;
+  --mem-none: #9aa0a8;
+  --ops-2: #dde5f0;
+  --ops-3: #f1e7d1;
+  --btn-down: #d3d7dc;
+  --btn-down-shadow: rgba(0, 0, 0, .2);
+}
+html, body { margin: 0; height: 100%; overscroll-behavior: none; overflow: hidden; }
+body { background: var(--page); color: var(--text); font: 14px/1.4 "Segoe UI", Arial, sans-serif; }
+/* The page always fits the window: the computer is scaled to the height (see fitCase in app.js),
+   the work area takes the remaining width, and only the panels scroll vertically. */
+.app { display: flex; gap: 12px; padding: 12px; height: 100%; box-sizing: border-box; align-items: stretch; }
+
+/* ---- work area ---- */
+.work { flex: 1 1 0; min-width: 0; max-width: 900px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; }
+.tabs { display: flex; gap: 4px; padding: 8px 8px 0; border-bottom: 1px solid var(--line); }
+.tab { background: transparent; color: var(--muted); border: 1px solid transparent; border-bottom: none; border-radius: 6px 6px 0 0; padding: 6px 14px; font: 600 14px/1 inherit; font-family: inherit; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--panel-2); color: var(--text); border-color: var(--line); }
+.tab-body { padding: 10px 14px; overflow-y: auto; flex: 1; }
+.tab-body h3 { font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--heading); margin: 12px 0 6px; }
+.tab-body h3:first-child { margin-top: 2px; }
+table.ref { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.ref td { padding: 3px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.ref td.k { white-space: nowrap; font-family: var(--mono); color: var(--value); width: 1%; }
+.tab-body p.note { color: var(--muted); font-size: 12.5px; margin: 6px 0; }
+
+/* opcode table */
+.ops { display: grid; grid-template-columns: 22px repeat(16, 1fr); gap: 1px; font: 10px/1.15 var(--mono); }
+.ops .h { color: var(--muted); text-align: center; padding: 2px 0; }
+.ops .c { background: var(--panel-2); padding: 2px 1px; text-align: center; min-height: 26px; display: flex; align-items: center; justify-content: center; word-break: break-word; }
+.ops .c.l2 { background: var(--ops-2); }
+.ops .c.l3 { background: var(--ops-3); }
+.ops .c.undoc { color: var(--muted); font-style: italic; }
+.ops .c.dim { opacity: .25; }
+.ops-tools { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin: 4px 0; }
+.ops-tools .find { width: 170px; font-family: inherit; }
+.btn.small { padding: 4px 9px; font-size: 12px; }
+.oplist { columns: 220px; column-gap: 20px; font: 13px/1.6 var(--mono); }
+.op { display: grid; grid-template-columns: 28px 1fr 34px 46px; gap: 6px; break-inside: avoid; border-bottom: 1px solid var(--panel-2); padding: 0 2px; }
+/* Z80 codes carry their prefixes ("DD CB d 06") and states like "16/21" */
+.oplist.z80 { columns: 300px; }
+.oplist.z80 .op { grid-template-columns: 84px 1fr 34px 52px; }
+.op b { color: var(--heading); font-weight: 700; }
+.op .n { color: var(--muted); text-align: right; font-size: 12px; }
+.op.undoc { color: var(--muted); font-style: italic; }
+
+/* debug */
+.regs { display: grid; grid-template-columns: repeat(6, auto); gap: 4px 10px; font: 13px var(--mono); justify-content: start; }
+.regs .k { color: var(--muted); text-align: right; }
+.regs .v { color: var(--value); }
+.flags { display: flex; gap: 6px; margin: 6px 0; font: 12px var(--mono); }
+.flags span { padding: 2px 6px; border: 1px solid var(--line); border-radius: 4px; color: var(--muted); }
+.flags span.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.dis { font: 13px/1.5 var(--mono); }
+.dis .ln { display: grid; grid-template-columns: 50px 90px 1fr; padding: 0 4px; border-radius: 3px; }
+.dis .ln.pc { background: var(--hl); color: var(--hl-text); }
+.dis .a { color: var(--muted); }
+.mem-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 4px 0; font-size: 13px; }
+.mem-keys { display: flex; gap: 6px; }
+.mem-head input { width: 60px; }
+/* only as wide as its cells, so the mouse wheel beside them scrolls the panel (app.js pages the view) */
+.mem { width: max-content; max-width: 100%; font: 13px/1.45 var(--mono); user-select: text; }
+.mem .row { display: flex; gap: 0; flex-wrap: nowrap; margin: 0; }
+.mem .a { flex: none; color: var(--muted); width: 52px; }
+/* the memory areas are told apart by the background of whole rows; the legend uses the same colours */
+.mem .bytes { display: flex; min-width: 0; color: var(--value); }
+.mem .bytes.none { color: var(--mem-none); }
+.mem .rom, .mem-key.rom { background: var(--mem-rom); }
+.mem .ram, .mem-key.ram { background: var(--mem-ram); }
+.mem .b { width: 23px; text-align: center; }
+.mem-key { font: 600 12px/1 var(--mono); color: var(--value); padding: 5px 9px; border: 1px solid transparent; border-radius: 4px; cursor: pointer; }
+.mem-key:hover { border-color: var(--muted); }
+.mem-key:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mem .b.pc { background: var(--hl); color: var(--hl-text); }
+.mem .b.sp { outline: 1px solid var(--accent); }
+
+/* ---- the computer in its case ---- */
+.stage { flex: none; position: relative; }
+.case { width: 560px; position: absolute; left: 0; top: 0; transform-origin: 0 0; background: var(--case); border: 3px solid var(--case-edge); border-radius: 14px; padding: 22px; margin-top: 12px; }
+.hinge { position: absolute; top: -14px; width: 46px; height: 12px; background: var(--case); border: 3px solid var(--case-edge); border-bottom: none; border-radius: 6px 6px 0 0; }
+.hinge.left { left: 70px; }
+.hinge.right { right: 70px; }
+.board { background: var(--board); border: 2px solid var(--board-line); border-radius: 6px; padding: 18px 22px 24px; }
+.brand { display: flex; align-items: center; gap: 14px; padding-bottom: 10px; border-bottom: 4px solid var(--case); margin-bottom: 18px; }
+.brand .mark { font: 900 54px/1 "Arial Black", "Segoe UI", Arial, sans-serif; color: var(--cream); letter-spacing: -1px; }
+.brand .mark { white-space: nowrap; flex: none; transform-origin: 0 50%; } /* a long name is narrowed by fitBrand, never lowered */
+.brand .bar { width: 2px; height: 40px; background: var(--cream); opacity: .8; }
+.brand .sub { font: 700 16px/1.25 "Segoe UI", Arial, sans-serif; letter-spacing: 5px; color: var(--cream); text-align: left; white-space: nowrap; flex: none; }
+
+.display { background: var(--bezel); border: 3px solid #000; border-radius: 8px; padding: 14px 12px; display: flex; gap: 4px; justify-content: center; }
+.display svg { width: 50px; height: 84px; }
+.display .seg { fill: var(--seg-on); }
+.display .lit { filter: drop-shadow(0 0 2.5px var(--seg-glow)); }
+.display .ghost { fill: var(--seg-off); }
+/* Samsung Internet only (class set in index.html): its dark mode, which ignores color-scheme,
+   turned the dark unlit segments light grey, so every digit looked like a lit 8. There they are
+   the lit colour, faint, which it keeps bright; on the bezel it is the same dark red. Kept to
+   this browser so that the display stays exactly as it is everywhere else (the maintainer). */
+.samsung-internet .display .ghost { fill: var(--seg-on); opacity: .1; }
+
+/* the grey panel is an SVG outline behind the keys, drawn by drawKeyboardFrame in app.js */
+.keyboard { position: relative; isolation: isolate; margin: 20px auto 0; padding: 14px 18px 32px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px 14px; width: 420px; }
+.kbd-frame { position: absolute; left: 0; top: 0; z-index: -1; overflow: visible; }
+.kbd-frame path { fill: var(--kbd-frame); stroke: var(--kbd-edge); stroke-width: 2; stroke-linejoin: round; }
+.kcell { display: flex; flex-direction: column; align-items: center; }
+.kcell .lab { height: 16px; font: 700 11px/16px "Segoe UI", Arial, sans-serif; color: #2b2d30; letter-spacing: .5px; }
+/* keycaps with the bevel of the real ones as flat bands: a light strip on top, a dark one at the
+   bottom (the maintainer's choice, variant B of the mockup); a held key sinks and loses them */
+.key { width: 66px; height: 54px; padding: 0 0 6px; border-radius: 5px; border: 1px solid #1b1d20; background: var(--key-hex); color: var(--key-text); font: 700 22px/1 "Segoe UI", Arial, sans-serif; cursor: pointer; touch-action: none; user-select: none;
+  box-shadow: inset 0 3px 0 var(--key-hex-top), inset 0 -9px 0 var(--key-hex-bottom); }
+.key.fn { background: var(--key-fn); border-color: #245c8c; font-size: 18px; box-shadow: inset 0 3px 0 var(--key-fn-top), inset 0 -9px 0 var(--key-fn-bottom); }
+.key.down { background: var(--key-down); color: #1b1b1b; padding-bottom: 0; transform: translateY(3px); box-shadow: inset 0 3px 0 #b88f12, inset 0 -3px 0 #d6a91f; }
+.key:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.key.long { font-size: 15px; }
+/* a key the board does not have (the Savia-84 has no interrupt key): a blank cap in its place */
+.key.blank { display: block; box-sizing: border-box; cursor: default; opacity: .55; }
+/* the Savia-84's own arrangement: six columns of full-size keys with the spacing and edges of the
+   PMI-80 layout (gaps 14 and 18 px, about 21 px at the sides and 30 px at the top and bottom). The
+   panel is wider (508 px, the board has 512) and 74 px lower than the PMI-80's (404 px); the
+   margins take the difference, so the computer keeps its size */
+.keyboard.board-layout { grid-template-columns: repeat(6, 66px); gap: 18px 14px; width: 466px; padding: 30px 21px; margin: 57px auto 37px; }
+.keyboard.board-layout .kcell .lab { display: none; }
+
+/* ---- side panel ---- */
+.side { width: clamp(300px, 24vw, 400px); flex: none; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px 16px; overflow-y: auto; box-sizing: border-box; }
+.side h2 { font-size: 15px; margin: 14px 0 6px; }
+.side h2:first-child { margin-top: 4px; }
+.small, .side .small p { font-size: 12.5px; color: var(--muted); }
+.row { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+.btn { background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 7px 12px; font: 600 13px/1.2 inherit; font-family: inherit; cursor: pointer; }
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn:disabled { opacity: .45; cursor: default; }
+/* press feedback: the button sinks in while held, and a ring fades out after the click (app.js
+   adds .flash), so actions without a visible result still confirm that they happened */
+.btn { transition: background-color .08s, transform .06s, box-shadow .08s; }
+.btn:active:not(:disabled) { transform: translateY(1px) scale(.98); background: var(--btn-down); box-shadow: inset 0 2px 4px var(--btn-down-shadow); }
+.btn.primary:active:not(:disabled) { background: #2d6ea6; }
+.btn.flash { animation: btn-flash .45s ease-out; }
+@keyframes btn-flash {
+  0% { box-shadow: 0 0 0 3px rgba(63, 143, 210, .9); }
+  100% { box-shadow: 0 0 0 3px rgba(63, 143, 210, 0); }
+}
+.btn:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn.sound { width: 100%; margin-top: 4px; }
+.btn.sound.on { background: #1f7a3f; border-color: #1f7a3f; color: #fff; }
+.btn.sound.on:active { background: #186332; }
+.status { font: 12.5px var(--mono); color: var(--muted); margin: 4px 0; min-height: 18px; }
+.field { display: flex; align-items: center; gap: 8px; margin: 5px 0; font-size: 13px; }
+.field > span:first-child { width: 70px; color: var(--muted); }
+.field .val { color: var(--text); }
+.check { display: flex; align-items: center; gap: 6px; margin: 5px 0; font-size: 13px; cursor: pointer; } /* at the left edge, under the field labels (the maintainer, 2026-10-26) */
+.check[hidden], .field[hidden] { display: none; }
+.check input { width: auto; margin: 0; } /* not the 64 px of the text fields */
+select, input, textarea { background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 5px; padding: 5px 7px; font: 13px inherit; font-family: inherit; }
+input { width: 64px; font-family: var(--mono); }
+textarea { width: 100%; box-sizing: border-box; font-family: var(--mono); margin-top: 6px; }
+.programs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.programs > p { grid-column: 1 / -1; margin: 0; }
+.programs .btn { text-align: left; }
+.programs .btn.sel { border-color: var(--heading); }
+.guide { margin-top: 8px; font-size: 13px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; }
+.guide:empty { display: none; }
+.guide p { margin: 6px 0 0; }
+.keys-help { font-size: 12.5px; color: var(--muted); }
+kbd { font: 11px var(--mono); border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; color: var(--text); background: var(--panel-2); }
+/* a key of the emulated computer inside a program's help: a small keycap in the colours of the real
+   one (flat bands as on the big keys), unlike the plain kbd of the PC keyboard */
+/* its box is no taller than a line of text (and the negative margin keeps it off the line box), so
+   a paragraph keeps its line spacing */
+kbd.mkey { display: inline-block; min-width: 1.5em; height: 15px; margin: -3px 0; box-sizing: border-box; padding: 0 5px; border: 1px solid #1b1d20; border-radius: 4px; text-align: center; font: 700 11px/12px var(--mono); color: var(--key-text); background: var(--key-hex); box-shadow: inset 0 2px 0 var(--key-hex-top), inset 0 -3px 0 var(--key-hex-bottom); }
+kbd.mkey.fn { border-color: #245c8c; background: var(--key-fn); box-shadow: inset 0 2px 0 var(--key-fn-top), inset 0 -3px 0 var(--key-fn-bottom); }
+kbd.mkey[title] { cursor: help; }
+details { margin: 10px 0; border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; }
+summary { cursor: pointer; font-weight: 600; }
+details h3.sub { font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--heading); margin: 12px 0 2px; }
+details h3.sub + p.small { margin: 2px 0 4px; }
+.lic summary { font-weight: 400; font-size: 12.5px; }
+.lic pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 11px/1.35 var(--mono); max-height: 220px; overflow: hidden auto; margin: 6px 0 2px; }
+.about ul { padding-left: 18px; margin: 6px 0; }
+.about li { margin: 2px 0; }
+.side a { color: var(--accent); }
+.about .ref { color: var(--accent); cursor: help; border-bottom: 1px dotted var(--accent); }
+.about .ref:hover, .about .ref:focus { color: var(--text); outline: none; }
+.ref-tip { box-sizing: border-box; position: fixed; z-index: 50; max-width: 300px; padding: 6px 9px; font-size: 12px; line-height: 1.35; background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 5px; pointer-events: none; }
+.ref-tip[hidden] { display: none; }
+.lang .flag { width: 18px; height: 12px; vertical-align: -1px; margin-right: 4px; border-radius: 1px; outline: 1px solid rgba(128,128,128,.5); }
+.lang { display: flex; gap: 6px; justify-content: flex-end; margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--line); }
+.lang.theme { margin-top: 6px; padding-top: 0; border-top: none; }
+.msg { font-size: 12.5px; color: var(--heading); min-height: 16px; }
+
+/* ---- small screens (setLayout in app.js): the side panel is the work area's first tab, the
+   whole page scrolls, and the computer is either above the work area (stack) or on its left
+   (beside), sticking to the top of the window there ---- */
+.view-probe { position: fixed; left: 0; top: 0; width: 0; height: 100vh; height: 100svh; visibility: hidden; pointer-events: none; }
+.compact-only { display: none; }
+html.compact .compact-only { display: block; }
+/* the overflow goes on html only (it passes to the window): an overflow on body would make it a
+   scroll container of its own and the sticky computer would stop sticking */
+html.compact { height: auto; overflow-x: hidden; overflow-y: auto; scrollbar-gutter: stable; }
+html.compact body { height: auto; overflow: visible; }
+.compact .app { height: auto; min-height: 100%; }
+.compact .stage { order: -1; }
+.compact .work { max-width: none; overflow: visible; }
+.compact .tab-body { flex: none; overflow-x: auto; overflow-y: hidden; }
+.compact .side { width: auto; background: none; border: none; border-radius: 0; padding: 0; overflow: visible; }
+.stack .app { flex-direction: column; }
+.stack .stage { align-self: center; }
+.stack .work { flex: none; }
+.beside .app { align-items: flex-start; }
+.beside .stage { position: sticky; top: 0; }
+#offlineRow { margin-top: 12px; }
+#offlineRow .btn { display: inline-block; text-decoration: none; }

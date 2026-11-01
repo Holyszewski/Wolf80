@@ -1,0 +1,43 @@
+Wolf80 {version} - who made what is inside
+
+The emulator (its processor cores, the emulated boards and the user interface) is by
+Matěj "Wolf" Holyszewski, made with the help of the AI Claude (Anthropic), and is
+licensed under GPL-3.0-or-later (LICENSE.txt).
+
+The monitors and many of the programs listed here are the work of other authors. They are
+included with credit and are not covered by the emulator's licence. The same credits are
+in the application, under "About the emulator" and in the notes of each program. Thanks to
+Nostalcomp for preserving and sharing much of this software.
+
+
+MONITORS (ROM images)
+
+PMI-80
+  Factory monitor
+      TESLA Piešťany, 1982. The commonly shared image, as published by Nostalcomp
+      (https://www.nostalcomp.cz/), who compared it with the ROM of an original PMI-80.
+  PMI-80 C
+      Nostalcomp's adaptation of the factory monitor (2019), with a second EPROM holding
+      the games COSMOS and TENIS3; its scrolling text was changed for this emulator.
+
+Savia-84
+  Factory monitor
+      Ing. Václav Kraus, for the Savia-84 designed by Jaroslav Tomáš Hyan; printed in the
+      book Radioamatérské konstrukce 4 (SNTL, Prague 1990). The image was shared by
+      Nostalcomp.
+
+Stone 1 (a computer by Radek Veselý, http://www.malecky.cz/stone1/)
+  STONE-PMI
+      Nostalcomp's adaptation of the PMI-80 factory monitor for the Stone 1 (2019), with
+      the games COSMOS and TENIS3.
+
+
+PROGRAMS
+
+"Ported by the Wolf80 project": the game was written anew for these computers after the
+rules of the original. The game itself is the work of the authors named; the new program
+is the emulator author's (GPL-3.0-or-later).
+"Moved to RAM" or "moved to the Savia-84": the original program was adapted to run there.
+It stays the work of its authors.
+
+{programs}

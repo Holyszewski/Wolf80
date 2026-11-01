@@ -1,0 +1,10 @@
+CLAUDE.local.md
+dist/
+node_modules/
+desktop/build/
+third_party/*
+!third_party/README.md
+desktop/toolchain.local.json
+programs/cosmos/cosmos.hex
+programs/tenis/
+local/

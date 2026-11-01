@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- the page is dark by design: browsers that darken pages on their own (Samsung Internet) must leave it as it is -->
+<meta name="color-scheme" content="only dark">
+<!-- Samsung Internet recolours pages in its dark mode whatever they declare; style.css adapts the display there -->
+<script>if (/SamsungBrowser/.test(navigator.userAgent)) document.documentElement.classList.add('samsung-internet');</script>
+<!-- the light theme is set before the page is drawn, so it does not flash dark first (applyTheme in app.js does the rest) -->
+<script>try { var t = localStorage.getItem('wolf80-theme'); if (t === 'system') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; if (t === 'light') { document.documentElement.dataset.theme = 'light'; document.querySelector('meta[name="color-scheme"]').content = 'only light'; } } catch (e) { /* storage blocked */ }</script>
+<meta name="wolf80-version" content="{{VERSION}}">
+<title>Wolf80</title>
+<!--STYLE-->
+</head>
+<body>
+<!-- Texts come from src/ui/i18n.js through the data-i18n* attributes (see there). -->
+<div class="app" id="app">
+
+  <section class="work" data-i18n-aria="work.aria">
+    <nav class="tabs" role="tablist">
+      <button type="button" role="tab" class="tab compact-only" data-tab="ovladani" aria-selected="false" data-i18n="tab.ovladani"></button>
+      <button type="button" role="tab" class="tab" data-tab="tahak" aria-selected="true" data-i18n="tab.tahak"></button>
+      <button type="button" role="tab" class="tab" data-tab="instrukce" aria-selected="false" data-i18n="tab.instrukce"></button>
+      <button type="button" role="tab" class="tab" data-tab="ladeni" aria-selected="false" data-i18n="tab.ladeni"></button>
+    </nav>
+    <!-- on a small screen the side panel moves here (setLayout in app.js) -->
+    <div class="tab-body" id="tab-ovladani" role="tabpanel" hidden></div>
+    <div class="tab-body" id="tab-tahak" role="tabpanel"></div>
+    <div class="tab-body" id="tab-instrukce" role="tabpanel" hidden></div>
+    <div class="tab-body" id="tab-ladeni" role="tabpanel" hidden>
+      <h3 data-i18n="run.title"></h3>
+      <div class="row">
+        <button type="button" class="btn primary" id="runBtn" data-i18n-title="run.runTip"></button>
+        <button type="button" class="btn" id="stepBtn" data-i18n="run.step" data-i18n-title="run.stepTip"></button>
+        <button type="button" class="btn" id="powerBtn" data-i18n="run.power" data-i18n-title="run.powerTip"></button>
+      </div>
+      <p class="status" id="status" role="status"></p>
+    </div>
+  </section>
+
+  <div class="stage" id="stage">
+  <!-- aria-label: the board's name, set by app.js (case.aria) -->
+  <section class="case" id="case">
+    <div class="hinge left" aria-hidden="true"></div>
+    <div class="hinge right" aria-hidden="true"></div>
+    <div class="board">
+      <header class="brand">
+        <span class="mark" id="brandMark">PMI-80</span>
+        <span class="bar" aria-hidden="true"></span>
+        <span class="sub" data-i18n-html="brand.subHtml"></span>
+      </header>
+      <div class="display" id="display" role="img" data-i18n-aria="display.aria"></div>
+      <div class="keyboard" id="keyboard" role="group" data-i18n-aria="keyboard.aria"></div>
+    </div>
+  </section>
+  </div>
+
+  <aside class="side" id="side">
+    <button type="button" class="btn sound on" id="soundBtn" aria-pressed="true"></button>
+
+    <h2 data-i18n="board.title"></h2>
+    <!-- the texts that depend on the board (monitor names, clock, help) are set by app.js -->
+    <div class="field"><span data-i18n="board.board"></span><select id="boardSel"><option value="pmi80">PMI-80</option><option value="savia84">Savia-84</option><option value="stone1">Stone 1</option></select></div>
+    <div class="field"><span data-i18n="board.monitor"></span><select id="romSel"></select></div>
+    <div class="field"><span data-i18n="board.clock"></span><span class="val" id="clockVal"></span></div>
+    <div class="field savia-only" hidden><span data-i18n="board.layout"></span><select id="layoutSel"><option value="pmi" data-i18n="board.layoutPmi"></option><option value="board" data-i18n="board.layoutBoard"></option></select></div>
+    <label class="check savia-only" hidden data-i18n-title="board.nineDigitsTip"><input type="checkbox" id="nineDigits"> <span data-i18n="board.nineDigits"></span></label>
+
+    <h2 data-i18n="prog.title"></h2>
+    <p class="small" id="progHelp"></p>
+    <div class="programs" id="programs"></div>
+    <div class="guide" id="programGuide" aria-live="polite"></div>
+
+    <h2 data-i18n="keys.title"></h2>
+    <p class="keys-help" id="keysHelp"></p>
+
+    <details>
+      <summary data-i18n="mem.summary"></summary>
+      <h3 class="sub" data-i18n="mem.loadTitle"></h3>
+      <p class="small" id="loadHelp"></p>
+      <div class="field"><span data-i18n="mem.addr"></span><input id="loadAddr" value="1C00" maxlength="4" spellcheck="false" data-i18n-aria="mem.addrAria"></div>
+      <div class="row">
+        <button type="button" class="btn" id="loadFile" data-i18n="mem.loadFile" data-i18n-title="mem.loadFileTip"></button>
+      </div>
+      <textarea id="hexText" rows="3" spellcheck="false" data-i18n-placeholder="mem.hexPlaceholder"></textarea>
+      <div class="row"><button type="button" class="btn" id="writeHex" data-i18n="mem.writeHex"></button></div>
+      <h3 class="sub" data-i18n="mem.exportTitle"></h3>
+      <p class="small" data-i18n="mem.exportHelp"></p>
+      <div class="field"><span data-i18n="mem.fromTo"></span><input id="expFrom" value="1C00" maxlength="4" spellcheck="false" data-i18n-aria="mem.fromAria"><input id="expTo" value="1FFF" maxlength="4" spellcheck="false" data-i18n-aria="mem.toAria"></div>
+      <div class="row">
+        <button type="button" class="btn" id="expHex" data-i18n="mem.expHex" data-i18n-title="mem.expHexTip"></button>
+        <button type="button" class="btn" id="expBin" data-i18n="mem.expBin" data-i18n-title="mem.expBinTip"></button>
+      </div>
+      <div class="field" id="wavRow"><span data-i18n="mem.tapeNumber"></span><input id="expNumber" value="00" maxlength="2" spellcheck="false" data-i18n-aria="mem.tapeNumberAria"><button type="button" class="btn" id="expWav" data-i18n="mem.expWav" data-i18n-title="mem.expWavTip"></button></div>
+      <p class="msg" id="memMsg" role="status"></p>
+      <p class="small" id="wavHelp" data-i18n="mem.wavHelp"></p>
+    </details>
+
+    <details id="aboutPc">
+      <summary data-i18n="aboutPc.summary"></summary>
+      <div class="about small" data-board="pmi80" data-i18n-html="aboutPc.pmi80Html"></div>
+      <div class="about small" data-board="savia84" data-i18n-html="aboutPc.savia84Html" hidden></div>
+      <div class="about small" data-board="stone1" data-i18n-html="aboutPc.stone1Html" hidden></div>
+    </details>
+
+    <details>
+      <summary data-i18n="aboutEmu.summary"></summary>
+      <div class="small" data-i18n-html="aboutEmu.html"></div>
+      <p class="small" data-i18n-html="aboutEmu.licenseHtml"></p>
+      <details class="lic"><summary data-i18n="aboutEmu.licenseFull"></summary><pre id="licGplText"></pre></details>
+      <div id="offlineRow" hidden>
+        <a class="btn primary" id="offlineBtn" href="https://github.com/Holyszewski/Wolf80/releases/latest/download/Wolf80-offline.html" data-i18n="aboutEmu.offline"></a>
+        <p class="small" data-i18n-html="aboutEmu.offlineNote"></p>
+      </div>
+    </details>
+
+    <div class="lang" role="group" data-i18n-aria="lang.aria">
+      <button type="button" class="btn small" data-lang="en" lang="en"><svg class="flag" viewBox="0 0 60 30" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0,0 60,30M60,0 0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 60,30M60,0 0,30" stroke="#c8102e" stroke-width="2"/><path d="M30,0V30M0,15H60" stroke="#fff" stroke-width="10"/><path d="M30,0V30M0,15H60" stroke="#c8102e" stroke-width="6"/></svg> English</button>
+      <button type="button" class="btn small" data-lang="cs" lang="cs"><svg class="flag" viewBox="0 0 3 2" aria-hidden="true"><rect width="3" height="1" fill="#fff"/><rect y="1" width="3" height="1" fill="#d7141a"/><path d="M0,0 1.5,1 0,2z" fill="#11457e"/></svg> Čeština</button>
+    </div>
+    <div class="lang theme" role="group" data-i18n-aria="theme.aria">
+      <button type="button" class="btn small" data-theme-pick="light" data-i18n="theme.light"></button>
+      <button type="button" class="btn small" data-theme-pick="dark" data-i18n="theme.dark"></button>
+      <button type="button" class="btn small" data-theme-pick="system" data-i18n="theme.system" data-i18n-title="theme.systemTip"></button>
+    </div>
+  </aside>
+</div>
+<input type="file" id="fileInput" hidden>
+<!--LICENSE-->
+<!--SCRIPT-->
+</body>
+</html>

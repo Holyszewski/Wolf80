@@ -1,0 +1,110 @@
+POLL:   PUSH D
+        CALL SCAN
+        MOV B,A
+        LDA LAST_RAW
+        CMP B
+        JZ SAME_RAW
+        MOV A,B
+        STA LAST_RAW
+        MVI A,3
+        STA SAMPLES
+SAME_RAW:
+        LDA SAMPLES
+        ORA A
+        JZ NO_EVENT
+        DCR A
+        STA SAMPLES
+        JNZ NO_EVENT
+        MOV A,B
+        INR A
+        JNZ PRESSED
+        MVI A,1
+        STA ARMED
+        JMP NO_EVENT
+PRESSED:
+        LDA ARMED
+        ORA A
+        JZ NO_EVENT
+        XRA A
+        STA ARMED
+        MOV A,B
+        JMP POLL_DONE
+NO_EVENT:
+        MVI A,0FFh
+POLL_DONE:
+        POP D
+        RET
+
+; Active-low segment bytes always have PA7=0. Blank before changing columns.
+SCAN:   LXI H,RNG
+        INR M
+        LDA TICKS
+        INR A
+        STA TICKS
+        LXI H,DISPLAY
+        MVI B,0
+        MVI C,0FFh
+COLUMN: MVI A,7Fh
+        OUT 0F8h
+        MOV A,B
+@INVERT@
+        ANI 0Fh
+        OUT 0FAh
+        CALL VISIBLE
+        OUT 0F8h
+        MVI D,DWELL
+DWELL_LOOP:
+        DCR D
+        JNZ DWELL_LOOP
+        MOV A,C
+        INR A
+        JNZ COLUMN_NEXT
+        IN 0FAh
+        MOV E,A
+        ANI 40h
+        MOV A,B
+        JZ KEY_FOUND
+        MOV A,E
+        ANI 20h
+        MOV A,B
+        JZ KEY_ROW1
+        MOV A,E
+        ANI 10h
+        JNZ COLUMN_NEXT
+        MOV A,B
+        ADI 9
+KEY_ROW1:
+        ADI 9
+KEY_FOUND:
+        PUSH H
+        MOV E,A
+        MVI D,0
+        LXI H,KEYS
+        DAD D
+        MOV C,M
+        POP H
+COLUMN_NEXT:
+        INX H
+        INR B
+        MOV A,B
+        CPI 9
+        JNZ COLUMN
+        MVI A,7Fh
+        OUT 0F8h
+        MOV A,C
+        RET
+
+; Bit 7 in the buffer marks a digit for blinking; PA7 always stays low.
+VISIBLE:
+        MOV A,M
+        ORA A
+        JP STEADY
+        LDA TICKS
+        MOV E,A
+        LDA RATE
+        ANA E
+        MVI A,7Fh
+        RNZ
+STEADY: MOV A,M
+        ANI 7Fh
+        RET

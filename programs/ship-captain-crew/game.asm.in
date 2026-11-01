@@ -1,0 +1,425 @@
+; SPDX-License-Identifier: GPL-3.0-or-later
+; Copyright (C) 2026 Matěj "Wolf" Holyszewski
+; Ship, Captain, Crew, version 0.1.0. Original implementation of the traditional dice game.
+; @BOARD@. Intel 8080 / Wolf80 assembler syntax, no Z80 extensions.
+; Start @ORIGIN@; own I/O, no monitor calls. Reset exits.
+; 1-9 players, 1-8 rounds. = roll, S bank, A round, F setup.
+; Player, banked dice and cumulative score blink; roll counter and free dice stay steady.
+; Versions:
+; 0.1.0  first numbered version; cumulative scores, qualified cargo animations, roll counter
+; Earlier development builds were unversioned.
+; RAM: code START..CODE_END-1, variables VARS..VARS_END-1.
+; Stack reserved 1FF0h..1FFFh, SP=2000h. Manual bytes follow END.
+        ORG @ORIGIN@
+STACK_TOP EQU 2000h
+DWELL EQU @DWELL@
+START:  DI
+        LXI SP,STACK_TOP
+        MVI A,@CWR@
+        OUT 0FBh
+        LXI H,VARS
+        MVI B,VARS_END-VARS
+        XRA A
+INIT:   MOV M,A
+        INX H
+        DCR B
+        JNZ INIT
+        CALL CLEAR
+        LXI H,SHIP
+        CALL PROMPT
+        CALL DELAY
+        CALL SELECT
+MAIN:   CALL POLL
+        CALL HANDLE
+        JMP MAIN
+HANDLE:
+        CPI 0Fh
+        JZ SELECT
+        MOV C,A
+        LDA STATE
+        ORA A
+        JZ CHOOSE
+        CPI 4
+        JZ CHOOSE
+        CPI 3
+        JZ RESULTS_KEY
+        MOV A,C
+        CPI 0Ah
+        JZ INFO
+        CPI 10h
+        JZ ROLL
+        CPI 14h
+        RNZ
+        LDA BANKED
+        CPI 3
+        RNZ
+        JMP FINISH
+CHOOSE: MOV A,C
+        ORA A
+        RZ
+        CPI 10
+        RNC
+        MOV B,A
+        LDA STATE
+        ORA A
+        JNZ SET_ROUNDS
+        MOV A,B
+        STA PLAYERS
+        CALL CONFIRM
+        MVI A,4
+        STA STATE
+        LXI H,ROUND_PROMPT
+        JMP PROMPT
+SET_ROUNDS:
+        MOV A,B
+        CPI 9
+        RNC
+        STA ROUNDS
+        CALL CONFIRM
+NEW_ROUND:
+        LDA ROUNDS
+        STA ROUNDS_LEFT
+        LXI H,SCORES
+        MVI B,9
+        XRA A
+RESET_SCORES:
+        MOV M,A
+        INX H
+        DCR B
+        JNZ RESET_SCORES
+ROUND_START:
+        MVI A,1
+        STA PLAYER
+        XRA A
+        STA BEST
+        JMP TURN
+RESULTS_KEY:
+        MOV A,C
+        CPI 10h
+        JZ NEW_ROUND
+        RET
+RESULTS:
+        MVI A,3
+        STA STATE
+        LXI H,END_TEXT
+        CALL PROMPT
+        LDA WINNER
+        CALL GLYPH
+        STA DISPLAY+4
+        LDA BEST
+        CALL DECIMAL
+        JMP UNTAG
+INFO:   LDA ROUNDS_LEFT
+        MOV B,A
+        LDA ROUNDS
+        SUB B
+        INR A
+        CALL GLYPH
+        STA DISPLAY+8
+        MVI A,0AFh
+        STA DISPLAY+7
+        CALL DELAY
+REDRAW: JMP DRAW
+CONFIRM:
+        CALL GLYPH
+        STA DISPLAY+8
+        JMP DELAY
+SELECT: XRA A
+        STA STATE
+        CALL CLEAR
+        LXI H,TITLE
+        JMP PROMPT
+PROMPT:
+        LXI D,DISPLAY
+        MVI B,7
+TITLE_COPY:
+        MOV A,M
+        STAX D
+        INX H
+        INX D
+        DCR B
+        JNZ TITLE_COPY
+        MVI A,7Fh
+        STA DISPLAY+7
+        STA DISPLAY+8
+        RET
+TURN:   MVI A,1
+        STA STATE
+        MVI A,3
+        STA LEFT
+        XRA A
+        STA BANKED
+        STA SCORE
+        LXI H,DICE
+        MVI B,5
+TURN_CLEAR:
+        MOV M,A
+        INX H
+        DCR B
+        JNZ TURN_CLEAR
+        JMP DRAW
+; Every unbanked die is rerolled, including both cargo dice.
+ROLL:   LHLD TICKS
+        LDA RNG
+        XRA L
+        ORI 1
+SEED_OK:
+        STA RNG
+        LDA BANKED
+        MOV E,A
+        MVI D,0
+        LXI H,DICE
+        DAD D
+        MVI A,5
+        SUB E
+        MOV B,A
+ROLL_LOOP:
+        CALL DIE
+        MOV M,A
+        INX H
+        DCR B
+        JNZ ROLL_LOOP
+        CALL QUALIFY
+        LDA LEFT
+        DCR A
+        STA LEFT
+        JZ FINISH
+        JMP REDRAW
+; Move the required 6, then 5, then 4 into the banked prefix.
+; Search the entire unbanked suffix, not just dice in display order.
+QUALIFY:
+        LDA BANKED
+        CPI 3
+        JZ CARGO
+        MOV E,A
+        MVI D,0
+        LXI H,DICE
+        DAD D
+        PUSH H
+        MVI A,5
+        SUB E
+        MOV B,A
+        INR A
+        MOV C,A
+SEARCH: MOV A,M
+        CMP C
+        JZ FOUND
+        INX H
+        DCR B
+        JNZ SEARCH
+        POP H
+        XRA A
+        STA SCORE
+        RET
+FOUND:  POP D
+        LDAX D
+        MOV M,A
+        MOV A,C
+        STAX D
+        LDA BANKED
+        INR A
+        STA BANKED
+        JMP QUALIFY
+CARGO:  LXI H,DICE+3
+        MOV A,M
+        INX H
+        ADD M
+        STA SCORE
+        RET
+FINISH: CALL DRAW_STEADY
+        LXI H,DISPLAY+5
+; SCORE is zero until QUALIFY has banked all three required dice.
+; A failed turn must not label the two rightmost dice as cargo.
+        LDA SCORE
+        ORA A
+        CNZ ANIMATE
+        LDA PLAYER
+        DCR A
+        CALL SCORE_PTR
+        LDA SCORE
+        ADD M
+        MOV M,A
+        MOV B,A
+        LDA BEST
+        CMP B
+        JC NEW_BEST
+        JNZ ADDED
+        XRA A
+        STA WINNER
+        JMP ADDED
+NEW_BEST:
+        MOV A,B
+        STA BEST
+        LDA PLAYER
+        STA WINNER
+ADDED:  CALL DRAW_STEADY
+        LXI H,DISPLAY+7
+        CALL ANIMATE
+ADVANCE:
+        LDA PLAYERS
+        MOV B,A
+        LDA PLAYER
+        CMP B
+        JZ NEXT_ROUND
+        INR A
+        STA PLAYER
+        JMP TURN
+NEXT_ROUND:
+        LDA ROUNDS_LEFT
+        DCR A
+        STA ROUNDS_LEFT
+        JZ RESULTS
+        JMP ROUND_START
+DRAW:   LDA PLAYER
+        CALL GLYPH
+        STA DISPLAY
+        LDA LEFT
+        ADI 10
+        CALL GLYPH
+        STA DISPLAY+1
+        LXI D,DICE
+        LXI B,DISPLAY+2
+DRAW_DIE:
+        LDAX D
+        ORA A
+        MVI A,3Fh
+        JZ DIE_GLYPH
+        LDAX D
+        CALL GLYPH
+DIE_GLYPH:
+        ANI 7Fh
+        STAX B
+        INX D
+        INX B
+        MOV A,C
+        CPI (DISPLAY+7) & 0FFh
+        JNZ DRAW_DIE
+        LDA BANKED
+        MOV B,A
+        LXI H,DISPLAY+2
+        CALL TAG
+        LDA PLAYER
+        DCR A
+        CALL SCORE_PTR
+        MOV A,M
+        JMP DECIMAL
+; Decimal score, never hexadecimal A/B/C.
+DECIMAL:
+        MVI B,0
+TENS:
+        CPI 10
+        JC ONES
+        SUI 10
+        INR B
+        JMP TENS
+ONES:   CALL GLYPH
+        STA DISPLAY+8
+        MOV A,B
+        CALL GLYPH
+        STA DISPLAY+7
+        RET
+SCORE_PTR:
+        LXI H,SCORES
+INDEX_ADDR:
+        ADD L
+        MOV L,A
+        RET
+; Maximal 8-bit LFSR, rejecting 253..255: 252 equiprobable states / 6.
+; Timing of the player's roll perturbs the nonzero state (not cryptographic).
+DIE:    LDA RNG
+        ORA A
+        RAR
+        JNC RANDOM_STORE
+        XRI 0B8h
+RANDOM_STORE:
+        STA RNG
+        CPI 253
+        JNC DIE
+MOD6:   CPI 7
+        RC
+        SUI 6
+        JMP MOD6
+CLEAR:  MVI C,7Fh
+        JMP WHOLE
+GLYPH:  LXI H,FONT
+        ADD L
+        MOV L,A
+        MOV A,M
+        RET
+; High bit is a display-only blink flag, never sent to PA7.
+TAG:    MOV A,B
+        ORA A
+        RZ
+        MVI C,80h
+        JMP MASK
+DRAW_STEADY:
+        CALL DRAW
+UNTAG:  MVI C,0
+WHOLE:  LXI H,DISPLAY
+        MVI B,9
+MASK:   MOV A,M
+        ANI 7Fh
+        ORA C
+        MOV M,A
+        INX H
+        DCR B
+        JNZ MASK
+        RET
+ANIMATE:
+        MVI B,2
+        CALL TAG
+DELAY:  XRA A
+        STA TICKS
+        MVI A,80h
+        STA RATE
+        LXI D,384
+DELAY_LOOP:
+        CALL POLL
+        DCX D
+        MOV A,D
+        ORA E
+        JNZ DELAY_LOOP
+        MVI A,40h
+        STA RATE
+        XRA A
+        STA ARMED
+        MVI A,0FEh
+        STA LAST_RAW
+        RET
+@IO@
+FONT:   DB 0C0h,0F9h,0A4h,0B0h,99h,92h,82h,0F8h,80h,90h
+; LEFT=0/1/2/3: a+g+d / g+d / d / blank. Never blink.
+ROLL_MARKS: DB 36h,37h,77h,7Fh
+TITLE:  DB 0Ch,47h,08h,11h,06h,2Fh,12h
+SHIP:   DB 7Fh,7Fh,12h,09h,79h,0Ch,7Fh
+END_TEXT: DB 06h,2Bh,21h,7Fh,7Fh,7Fh,7Fh
+ROUND_PROMPT: DB 2Fh,23h,63h,2Bh,21h,12h,7Fh
+KEYS:   DB 0,4,8,11h,0Dh,0Ch,9,5,1
+        DB 2,6,0Ah,1Ah,0Fh,0Eh,0Bh,7,3
+        DB 0FFh,14h,13h,0FFh,17h,12h,0FFh,0FFh,10h
+@SIGNATURE@
+CODE_END:
+VARS:
+DISPLAY: DS 9
+DICE: DS 5
+SCORES: DS 9
+TICKS: DS 1
+RATE: DS 1
+RNG: DS 1
+STATE: DS 1
+PLAYERS: DS 1
+ROUNDS: DS 1
+ROUNDS_LEFT: DS 1
+PLAYER: DS 1
+LEFT: DS 1
+BANKED: DS 1
+SCORE: DS 1
+BEST: DS 1
+WINNER: DS 1
+LAST_RAW: DS 1
+SAMPLES: DS 1
+ARMED: DS 1
+VARS_END:
+        END
+
+
