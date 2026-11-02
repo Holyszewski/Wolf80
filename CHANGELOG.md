@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.0.3 – 2026-11-02
+
 - A development guide, `docs/development.md`: the source, building, testing and the conventions the code follows; the READMEs and `CONTRIBUTING.md` link to it.
 - About the computer cites its sources as superscripts, and the basic specifications of the boards no longer cite one at every line.
 
