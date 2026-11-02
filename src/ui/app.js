@@ -1081,8 +1081,9 @@ function startApp() {
 
   // ---------- source references ----------
   // The catalogue texts cite sources as "[1, 2]" and end with an <ol class="refs"> of them. The list
-  // is taken out of the page and each number becomes a hoverable (or focusable) mark whose tooltip
-  // is the source; a non-numeric part such as "p. 132" stays as plain text.
+  // is taken out of the page, each citation becomes a superscript joined to the preceding word, and
+  // each number in it a hoverable (or focusable) mark whose tooltip is the source; a non-numeric
+  // part such as "p. 132" stays as plain text.
   const refTip = el('div', { class: 'ref-tip', role: 'tooltip' });
   refTip.hidden = true;
   document.body.appendChild(refTip);
@@ -1107,15 +1108,15 @@ function startApp() {
     for (const node of nodes) {
       const frag = document.createDocumentFragment();
       let last = 0;
-      for (const m of node.nodeValue.matchAll(/\[(\d+(?:, [^\]]+)?)\]/g)) {
-        frag.append(node.nodeValue.slice(last, m.index), '[');
+      for (const m of node.nodeValue.matchAll(/\s*\[(\d+(?:, [^\]]+)?)\]/g)) {
+        const sup = el('sup', { class: 'cite' });
         m[1].split(', ').forEach((part, i) => {
-          if (i) frag.append(', ');
+          if (i) sup.append(', ');
           const src = /^\d+$/.test(part) ? sources[Number(part) - 1] : undefined;
-          if (!src) { frag.append(part); return; }
-          frag.append(el('span', { class: 'ref', tabindex: '0', 'data-src': src, 'aria-label': `${part}: ${src}`, text: part }));
+          if (!src) { sup.append(part); return; }
+          sup.append(el('span', { class: 'ref', tabindex: '0', 'data-src': src, 'aria-label': `${part}: ${src}`, text: part }));
         });
-        frag.append(']');
+        frag.append(node.nodeValue.slice(last, m.index), sup);
         last = m.index + m[0].length;
       }
       frag.append(node.nodeValue.slice(last));

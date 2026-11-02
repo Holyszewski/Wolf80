@@ -242,6 +242,7 @@ details h3.sub + p.small { margin: 2px 0 4px; }
 .about ul { padding-left: 18px; margin: 6px 0; }
 .about li { margin: 2px 0; }
 .side a { color: var(--accent); }
+.about sup.cite { font-size: 0.72em; line-height: 0; margin-left: 1px; }
 .about .ref { color: var(--accent); cursor: help; border-bottom: 1px dotted var(--accent); }
 .about .ref:hover, .about .ref:focus { color: var(--text); outline: none; }
 .ref-tip { box-sizing: border-box; position: fixed; z-index: 50; max-width: 300px; padding: 6px 9px; font-size: 12px; line-height: 1.35; background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 5px; pointer-events: none; }

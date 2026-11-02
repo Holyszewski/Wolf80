@@ -12,14 +12,14 @@ export const UI_LANGS = ['en', 'cs'];
 const PMI80_ABOUT_EN = `
 <p><b>PMI-80</b> is a school single-board microcomputer developed and, from 1982, made by TESLA Piešťany [1, 2]. Ing. Roman Kišš designed the prototype at the turn of 1980 and 1981 [2, 3]. It served for teaching and demonstrating microcomputers with the 8080 processor [4] and came in an A4 case together with its user's manual [4]. It cost 4,770 Kčs and about 5,000 were made [2].</p>
 <ul>
-  <li>MHB8080A processor, 10 MHz crystal, 1.111 MHz clock (900 ns period) [1, 4].</li>
-  <li>1 KB ROM with the monitor (MHB 8608), a socket for another 1 KB EPROM [1].</li>
-  <li>1 KB RAM (2× MHB 2114) at 1C00–1FFF [1, 4].</li>
-  <li>Nine-digit seven-segment LED display VQD30, multiplexed [1].</li>
-  <li>25 keys: 16 hexadecimal, 7 function keys, RESET and interrupt [1].</li>
-  <li>An MHB 8255A with eight user lines on connector K2; a second 8255 can be added [1].</li>
-  <li>Tape recorder interface (output K3, about 5 kHz) [4].</li>
-  <li>Power +5 V / 0.7 A, +12 V / 0.2 A, −5 V / 0.1 A; board 145 × 245 mm [1].</li>
+  <li>MHB8080A processor, 10 MHz crystal, 1.111 MHz clock (900 ns period).</li>
+  <li>1 KB ROM with the monitor (MHB 8608), a socket for another 1 KB EPROM.</li>
+  <li>1 KB RAM (2× MHB 2114) at 1C00–1FFF.</li>
+  <li>Nine-digit seven-segment LED display VQD30, multiplexed.</li>
+  <li>25 keys: 16 hexadecimal, 7 function keys, RESET and interrupt.</li>
+  <li>An MHB 8255A with eight user lines on connector K2; a second 8255 can be added.</li>
+  <li>Tape recorder interface (output K3, about 5 kHz).</li>
+  <li>Power +5 V / 0.7 A, +12 V / 0.2 A, −5 V / 0.1 A; board 145 × 245 mm.</li>
 </ul>
 <p>Trivia: the display, its MH1082 decoder and a slightly modified keyboard come from the TESLA OKU 205 calculator [2, 5], a clone of the American Litronix 2230 calculator [6].</p>
 <ol class="refs">
@@ -34,14 +34,14 @@ const PMI80_ABOUT_EN = `
 const PMI80_ABOUT_CS = `
 <p><b>PMI-80</b> je školní jednodeskový mikropočítač, který vyvinul a od roku 1982 vyráběl k. p. TESLA Piešťany [1, 2]. Prototyp navrhl na přelomu let 1980 a 1981 Ing. Roman Kišš [2, 3]. Sloužil k výuce a předvádění mikropočítačů s procesorem 8080 [4] a dodával se v kufříku formátu A4 spolu s uživatelskou příručkou [4]. Stál 4 770 Kčs a vyrobilo se ho asi 5 000 kusů [2].</p>
 <ul>
-  <li>Procesor MHB8080A, krystal 10 MHz, takt 1,111 MHz (perioda 900 ns) [1, 4].</li>
-  <li>ROM 1 KB s monitorem (MHB 8608), patice pro další 1 KB EPROM [1].</li>
-  <li>RAM 1 KB (2× MHB 2114) na adresách 1C00–1FFF [1, 4].</li>
-  <li>Devítimístný sedmisegmentový displej LED VQD30, multiplexovaný [1].</li>
-  <li>25 kláves: 16 šestnáctkových, 7 funkčních, RESET a přerušení [1].</li>
-  <li>Obvod MHB 8255A s osmi linkami pro uživatele na konektoru K2; druhý 8255 lze doplnit [1].</li>
-  <li>Připojení magnetofonu (výstup K3, kmitočet asi 5 kHz) [4].</li>
-  <li>Napájení +5 V / 0,7 A, +12 V / 0,2 A, −5 V / 0,1 A; deska 145 × 245 mm [1].</li>
+  <li>Procesor MHB8080A, krystal 10 MHz, takt 1,111 MHz (perioda 900 ns).</li>
+  <li>ROM 1 KB s monitorem (MHB 8608), patice pro další 1 KB EPROM.</li>
+  <li>RAM 1 KB (2× MHB 2114) na adresách 1C00–1FFF.</li>
+  <li>Devítimístný sedmisegmentový displej LED VQD30, multiplexovaný.</li>
+  <li>25 kláves: 16 šestnáctkových, 7 funkčních, RESET a přerušení.</li>
+  <li>Obvod MHB 8255A s osmi linkami pro uživatele na konektoru K2; druhý 8255 lze doplnit.</li>
+  <li>Připojení magnetofonu (výstup K3, kmitočet asi 5 kHz).</li>
+  <li>Napájení +5 V / 0,7 A, +12 V / 0,2 A, −5 V / 0,1 A; deska 145 × 245 mm.</li>
 </ul>
 <p>Zajímavost: displej, jeho dekodér MH1082 a mírně upravená klávesnice pocházejí z kalkulačky TESLA OKU 205 [2, 5], která je klonem americké kalkulačky Litronix 2230 [6].</p>
 <ol class="refs">
@@ -56,14 +56,14 @@ const PMI80_ABOUT_CS = `
 const SAVIA84_ABOUT_EN = `
 <p><b>Savia-84</b> is a single-board microcomputer with the Z80 processor, meant for school and demonstration use [1]. Its designer is Jaroslav Tomáš Hyan [2]; the construction guide was published in the book Radioamatérské konstrukce 4 (SNTL, 1990) [1, 2]. The service program (monitor) was written by Ing. Václav Kraus of ČVUT-FEL [1, p. 132]. The computer probably dates from 1984 [2].</p>
 <ul>
-  <li>Z80 processor; per the schematic a 4 MHz crystal divided by two, i.e. 2 MHz. The book allows 1–8 MHz crystals, so the real clock depends on the build [1].</li>
-  <li>The basic version has ten integrated circuits [1].</li>
-  <li>1 KB EPROM (2758) at 0000–03FF, 2 KB RAM (6116) at 1800–1FFF; A15 is not decoded [1].</li>
-  <li>An 8255A: display segments, port B with eight LEDs for demonstrations, digit select through a 74145, and the keyboard [1].</li>
-  <li>The book describes an eight-digit LED display and the message SAVIA 84; the factory monitor drives nine positions and shows SLAVIA 84 [1].</li>
-  <li>24 keys: 16 hexadecimal, Ad, dA, Ex, Br, R, L, S and Reset [1].</li>
-  <li>The tape interface was dropped (the book suggests PC7 for input, PA6 and PA7 for output); the space for its program in the ROM stayed empty [1].</li>
-  <li>Power +5 V / 0.5 A [1].</li>
+  <li>Z80 processor; per the schematic a 4 MHz crystal divided by two, i.e. 2 MHz. The book allows 1–8 MHz crystals, so the real clock depends on the build.</li>
+  <li>The basic version has ten integrated circuits.</li>
+  <li>1 KB EPROM (2758) at 0000–03FF, 2 KB RAM (6116) at 1800–1FFF; A15 is not decoded.</li>
+  <li>An 8255A: display segments, port B with eight LEDs for demonstrations, digit select through a 74145, and the keyboard.</li>
+  <li>The book describes an eight-digit LED display and the message SAVIA 84; the factory monitor drives nine positions and shows SLAVIA 84.</li>
+  <li>24 keys: 16 hexadecimal, Ad, dA, Ex, Br, R, L, S and Reset.</li>
+  <li>The tape interface was dropped (the book suggests PC7 for input, PA6 and PA7 for output); the space for its program in the ROM stayed empty.</li>
+  <li>Power +5 V / 0.5 A.</li>
 </ul>
 <ol class="refs">
   <li>Radioamatérské konstrukce 4, SNTL, Prague 1990, ISBN 80-03-00208-7, the chapter on the Savia microcomputer, pp. 124–145.</li>
@@ -73,14 +73,14 @@ const SAVIA84_ABOUT_EN = `
 const SAVIA84_ABOUT_CS = `
 <p><b>Savia-84</b> je jednodeskový mikropočítač s procesorem Z80, určený pro školní a předváděcí účely [1]. Autorem konstrukce je Jaroslav Tomáš Hyan [2]; návod ke stavbě vyšel v knize Radioamatérské konstrukce 4 (SNTL, 1990) [1, 2]. Autorem obslužného programu je Ing. Václav Kraus z ČVUT-FEL [1, s. 132]. Počítač pravděpodobně pochází z roku 1984 [2].</p>
 <ul>
-  <li>Procesor Z80; podle schématu krystal 4 MHz dělený dvěma, tedy 2 MHz. Kniha připouští krystaly 1–8 MHz, skutečný takt záleží na stavbě [1].</li>
-  <li>Základní provedení má deset integrovaných obvodů [1].</li>
-  <li>EPROM 1 KB (2758) na 0000–03FF, RAM 2 KB (6116) na 1800–1FFF; A15 se nedekóduje [1].</li>
-  <li>Obvod 8255A: segmenty displeje, port B s osmi LED pro předvádění, výběr číslice přes 74145 a klávesnice [1].</li>
-  <li>Kniha popisuje osmimístný displej LED a nápis SAVIA 84; tovární monitor obsluhuje devět pozic a ukazuje SLAVIA 84 [1].</li>
-  <li>24 kláves: 16 šestnáctkových, Ad, dA, Ex, Br, R, L, S a Reset [1].</li>
-  <li>Od připojení magnetofonu se upustilo (kniha pro ně navrhuje vstup PC7, výstup PA6 a PA7); místo pro jeho program v ROM zůstalo prázdné [1].</li>
-  <li>Napájení +5 V / 0,5 A [1].</li>
+  <li>Procesor Z80; podle schématu krystal 4 MHz dělený dvěma, tedy 2 MHz. Kniha připouští krystaly 1–8 MHz, skutečný takt záleží na stavbě.</li>
+  <li>Základní provedení má deset integrovaných obvodů.</li>
+  <li>EPROM 1 KB (2758) na 0000–03FF, RAM 2 KB (6116) na 1800–1FFF; A15 se nedekóduje.</li>
+  <li>Obvod 8255A: segmenty displeje, port B s osmi LED pro předvádění, výběr číslice přes 74145 a klávesnice.</li>
+  <li>Kniha popisuje osmimístný displej LED a nápis SAVIA 84; tovární monitor obsluhuje devět pozic a ukazuje SLAVIA 84.</li>
+  <li>24 kláves: 16 šestnáctkových, Ad, dA, Ex, Br, R, L, S a Reset.</li>
+  <li>Od připojení magnetofonu se upustilo (kniha pro ně navrhuje vstup PC7, výstup PA6 a PA7); místo pro jeho program v ROM zůstalo prázdné.</li>
+  <li>Napájení +5 V / 0,5 A.</li>
 </ul>
 <ol class="refs">
   <li>Radioamatérské konstrukce 4, SNTL, Praha 1990, ISBN 80-03-00208-7, kapitola o mikropočítači Savia, s. 124–145.</li>
@@ -90,37 +90,35 @@ const SAVIA84_ABOUT_CS = `
 const STONE1_ABOUT_EN = `
 <p><b>Stone 1</b> is a single-board computer by Radek Veselý, "a retro computer from the Stone Age", crossed from the PMI-80 and its cousin the Savia-84; it was published on malecky.cz with his consent, with its own monitor [1, 2].</p>
 <ul>
-  <li>Z80 processor, 2 MHz crystal [1].</li>
-  <li>2 KB EPROM 2716 at 0000–07FF, 2 KB RAM 6116 at 1800–1FFF; the address decoder is complete, so unlike the models the memories are not mirrored [1].</li>
-  <li>An 8255 wired as on the models, repeated every 8 port addresses (F8–FB as usual) [1].</li>
-  <li>Nine-digit seven-segment display and 25 keys, RESET and interrupt included; the digit select is inverted as on the PMI-80 [1].</li>
-  <li>Board 197 × 113 mm, power 5 V / about 350 mA [1].</li>
-  <li>A PMI variant (a 1 MHz crystal, tape circuits added, pull-ups on the data bus for the interrupt key) and a Savia variant (four wire links instead of IC9, without the second digit and the I key) [1].</li>
-  <li>The own monitor (573 bytes) filters the keys, returns properly from editing, keeps its own stack and has no tape routines yet; the monitors of both models can be used too [1, 2].</li>
-  <li>STONE-PMI, Nostalcomp's adaptation of the PMI-80 monitor for the Z80 with a game menu (COSMOS, TENIS3), is another monitor for it [3].</li>
+  <li>Z80 processor, 2 MHz crystal.</li>
+  <li>2 KB EPROM 2716 at 0000–07FF, 2 KB RAM 6116 at 1800–1FFF; the address decoder is complete, so unlike the models the memories are not mirrored.</li>
+  <li>An 8255 wired as on the models, repeated every 8 port addresses (F8–FB as usual).</li>
+  <li>Nine-digit seven-segment display and 25 keys, RESET and interrupt included; the digit select is inverted as on the PMI-80.</li>
+  <li>Board 197 × 113 mm, power 5 V / about 350 mA.</li>
+  <li>A PMI variant (a 1 MHz crystal, tape circuits added, pull-ups on the data bus for the interrupt key) and a Savia variant (four wire links instead of IC9, without the second digit and the I key).</li>
+  <li>The own monitor (573 bytes) filters the keys, returns properly from editing, keeps its own stack and has no tape routines yet; the monitors of both models can be used too.</li>
+  <li>STONE-PMI, Nostalcomp's adaptation of the PMI-80 monitor for the Z80 with a game menu (COSMOS, TENIS3), is another monitor for it.</li>
 </ul>
 <ol class="refs">
   <li>malecky.cz: Stone 1 (updated 2018).</li>
   <li>malecky.cz: Monitor pro Stone 1, with the commented listing.</li>
-  <li>Nostalcomp: Monitor STONE_PMI (description, PDF, spring 2019), published on the OldComp.cz forum, 7 May 2019.</li>
 </ol>`;
 
 const STONE1_ABOUT_CS = `
 <p><b>Stone 1</b> je jednodeskový počítač Radka Veselého, „retro počítač z doby kamenné“, kříženec PMI-80 a jeho bratránka Savia-84; s jeho souhlasem byl zveřejněn na malecky.cz, i s vlastním monitorem [1, 2].</p>
 <ul>
-  <li>Procesor Z80, krystal 2 MHz [1].</li>
-  <li>EPROM 2716 o 2 KB na 0000–07FF, RAM 6116 o 2 KB na 1800–1FFF; adresový dekodér je úplný, takže se paměti na rozdíl od předloh nezrcadlí [1].</li>
-  <li>Obvod 8255 zapojený jako u předloh, opakuje se po 8 adresách portů (obvykle F8–FB) [1].</li>
-  <li>Devítimístný sedmisegmentový displej a 25 tlačítek včetně RESET a přerušení; výběr číslice je invertovaný jako u PMI-80 [1].</li>
-  <li>Deska 197 × 113 mm, napájení 5 V / asi 350 mA [1].</li>
-  <li>Varianta PMI (krystal 1 MHz, doplněné obvody pro magnetofon, pull-up rezistory na datové sběrnici pro tlačítko přerušení) a varianta SAVIA (čtyři drátové propojky místo IC9, bez druhé číslice a tlačítka I) [1].</li>
-  <li>Vlastní monitor (573 bajtů) filtruje klávesy, korektně se vrací z editace, má vlastní zásobník a zatím neumí magnetofon; použít lze i monitory obou předloh [1, 2].</li>
-  <li>Dalším monitorem pro něj je STONE-PMI, Nostalcompova úprava monitoru PMI-80 pro Z80 s nabídkou her (COSMOS, TENIS3) [3].</li>
+  <li>Procesor Z80, krystal 2 MHz.</li>
+  <li>EPROM 2716 o 2 KB na 0000–07FF, RAM 6116 o 2 KB na 1800–1FFF; adresový dekodér je úplný, takže se paměti na rozdíl od předloh nezrcadlí.</li>
+  <li>Obvod 8255 zapojený jako u předloh, opakuje se po 8 adresách portů (obvykle F8–FB).</li>
+  <li>Devítimístný sedmisegmentový displej a 25 tlačítek včetně RESET a přerušení; výběr číslice je invertovaný jako u PMI-80.</li>
+  <li>Deska 197 × 113 mm, napájení 5 V / asi 350 mA.</li>
+  <li>Varianta PMI (krystal 1 MHz, doplněné obvody pro magnetofon, pull-up rezistory na datové sběrnici pro tlačítko přerušení) a varianta SAVIA (čtyři drátové propojky místo IC9, bez druhé číslice a tlačítka I).</li>
+  <li>Vlastní monitor (573 bajtů) filtruje klávesy, korektně se vrací z editace, má vlastní zásobník a zatím neumí magnetofon; použít lze i monitory obou předloh.</li>
+  <li>Dalším monitorem pro něj je STONE-PMI, Nostalcompova úprava monitoru PMI-80 pro Z80 s nabídkou her (COSMOS, TENIS3).</li>
 </ul>
 <ol class="refs">
   <li>malecky.cz: Stone 1 (aktualizace 2018).</li>
   <li>malecky.cz: Monitor pro Stone 1, s komentovaným výpisem.</li>
-  <li>Nostalcomp: Monitor STONE_PMI (popis, PDF, jaro 2019), zveřejněno na fóru OldComp.cz 7. 5. 2019.</li>
 </ol>`;
 
 export const UI_TEXT = {
