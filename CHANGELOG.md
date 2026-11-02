@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- A development guide, `docs/development.md`: the source, building, testing and the conventions the code follows; the READMEs and `CONTRIBUTING.md` link to it.
+
 ## 1.0.2 – 2026-11-01
 
 - On the first visit the page opens in Czech when the browser is set to Czech or Slovak, otherwise in English; a language chosen with the switch still wins and is remembered.

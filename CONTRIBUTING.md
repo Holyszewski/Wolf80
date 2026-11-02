@@ -17,6 +17,9 @@ To agree, add this comment to your pull request:
 
 ## Pull requests
 
+How the source is laid out, how to build and test it and the conventions it follows are in the
+[development guide](docs/development.md).
+
 - Keep code, comments, documentation and commit messages in English.
 - Plain ES modules, no third-party packages, Node.js 20 or newer.
 - Run the tests of the part you changed (`node --test tests/<file>.test.mjs`), or all of them with

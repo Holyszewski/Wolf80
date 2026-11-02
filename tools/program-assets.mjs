@@ -10,7 +10,7 @@
 // 'ihex' path. The build fails when that HEX is missing or does not match its source.
 // `node tools/build.mjs --with-sources` adds the source to each such entry as `source` (gzip,
 // base64; programSource() in src/machine/programs.js unpacks it), for a future in-app source view.
-// The maintainer's decision and its background are in CLAUDE.md (Demo programs) and
+// Why: docs/development.md (Demo programs) and
 // programs/README.md.
 import fs from 'node:fs';
 import zlib from 'node:zlib';

@@ -79,7 +79,7 @@ function assets(withSources) {
   // The assembler sources of the demo programs are not embedded by default (471 kB of 834 kB, read by
   // nothing but the assembler at load time): an 'asm' entry goes in as its Intel HEX, format 'ihex',
   // and the build fails when that HEX is stale. --with-sources adds the gzipped source of each as
-  // `source`. The maintainer's decision and its background: CLAUDE.md (Demo programs), programs/README.md.
+  // `source`. Why: docs/development.md (Demo programs), programs/README.md.
   const programs = embedPrograms(catalog, { withSources });
   return `globalThis.WOLF80_ASSETS = ${JSON.stringify({ roms, programs })};\n`;
 }

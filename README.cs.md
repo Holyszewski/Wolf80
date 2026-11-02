@@ -106,6 +106,7 @@ Dokumentace v repozitáři je anglicky:
   deska emulována, s mírou jistoty a zdrojem každého údaje.
 - [Ukázkové programy](programs/README.md) a [extras](extras/README.md): původ každého programu.
 - [Obrazy ROM](roms/README.md): původ každé ROM.
+- [Průvodce vývojem](docs/development.md): zdrojový kód, sestavení, testy a konvence.
 - [Seznam změn](CHANGELOG.md)
 
 ## Poděkování

@@ -104,6 +104,7 @@ The Windows EXE is built by `node tools/build-desktop.mjs`; the toolchain is des
   is modelled, with the certainty and source of every fact.
 - [Demo programs](programs/README.md) and [extras](extras/README.md): origin of every program.
 - [ROM images](roms/README.md): origin of every ROM.
+- [Development guide](docs/development.md): the source, building, testing and conventions.
 - [Changelog](CHANGELOG.md)
 
 ## Thanks and credits
