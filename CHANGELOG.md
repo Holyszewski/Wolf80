@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extras: a calibrated PMI-80 clock (`extras/clock/clock-cal-pmi80.asm`, `-pmi80c` for PMI-80 C, 93 bytes) that corrects for the board's own crystal; the correction is the program's last two bytes, in hundredths of a second a day, from -50 to +49.99 s, and as typed in it does nothing. `extras/clock/README.md` explains step by step how to work it out.
+
 ## 1.0.3 – 2026-11-02
 
 - A development guide, `docs/development.md`: the source, building, testing and the conventions the code follows; the READMEs and `CONTRIBUTING.md` link to it.

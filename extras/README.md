@@ -16,3 +16,4 @@ A program by another author names its author and source, with a link, in its hea
 |---|---|---|
 | `clock/clock-pmi80.asm` | PMI-80, factory monitor | A clock showing HH-MM-SS, 60 bytes from 1C00, the start time at 1D00-1D02. Exact to the state at 10 MHz / 9: it counts the length of the monitor's DISP routine. |
 | `clock/clock-pmi80c.asm` | PMI-80, PMI-80 C monitor | The same clock trimmed for the shorter DISP of the PMI-80 C, 61 bytes. |
+| `clock/clock-cal-pmi80.asm`, `clock/clock-cal-pmi80c.asm` | PMI-80, factory or PMI-80 C monitor | The clock with a correction for the board's own crystal, 93 bytes. The correction is the program's last two bytes: 50 00 as typed in, which does nothing, or 50.00 plus the seconds a day the plain clock gains on that board (minus those it loses), in steps of 0.01 s a day. How to work it out: `clock/README.md`. |
