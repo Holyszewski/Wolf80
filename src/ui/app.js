@@ -11,7 +11,7 @@ import { PMI80_TAPE_MAX_BLOCKS, pmi80TapeBlocks, pmi80TapeWav } from '../board/p
 import { I8080_OPCODES, disassemble } from '../core/i8080-disasm.js';
 import { Z80_OPCODES, Z80_MAIN_OPCODES, disassembleZ80 } from '../core/z80-disasm.js';
 import { Glow } from '../machine/display.js';
-import { blockRanges, parseIntelHex, parsePlainHex, toIntelHex } from '../machine/memfile.js';
+import { blockRanges, parseIntelHex, parsePlainHex, toIntelHex, toIntelHexBlocks } from '../machine/memfile.js';
 import { startProgram } from '../machine/programs.js';
 import { AudioOut } from './audio.js';
 import { uiText } from './i18n.js';
@@ -82,6 +82,16 @@ function startApp() {
   // the firmware chosen last for each board, remembered per browser; the first one by default
   const pickFirmware = () => profile.firmware.find(f => f.id === stored(`wolf80-firmware-${boardId}`)) ?? profile.firmware[0];
   let firmware = pickFirmware();
+  // the custom ROM of each board, remembered per browser as { name, hex } (Intel HEX of the blocks
+  // as loaded, RAM bytes included, so that the report stays the same); null: none
+  const pickCustomRom = () => {
+    try {
+      const { name, hex } = JSON.parse(stored(`wolf80-customrom-${boardId}`));
+      return { name: String(name), blocks: parseIntelHex(hex) };
+    } catch { return null; }
+  };
+  let customRom = pickCustomRom();
+  const createMachine = () => firmware.create(ROMS, customRom ? { customRom: customRom.blocks } : {});
   let statesPerMs = profile.clockHz / 1000;
   // shortest key press the firmware sees: 50 ms, or longer for a debouncing firmware
   const minHold = () => Math.round(Math.max(50, firmware.holdMs) * statesPerMs);
@@ -91,7 +101,7 @@ function startApp() {
   let keyLayout = stored('wolf80-savia-layout') === 'board' ? 'board' : 'pmi';
 
   const audio = new AudioOut(profile.clockHz);
-  let machine = firmware.create(ROMS);
+  let machine = createMachine();
   let running = true;
   let lastNow = performance.now();
   const heldSince = new Map();      // key -> machine time of the press
@@ -133,7 +143,7 @@ function startApp() {
   function newMachine() {
     releaseAll();
     pendingRelease.clear();
-    machine = firmware.create(ROMS);
+    machine = createMachine();
     glow.reset(); // the new machine's first frame shows its true brightness at once
     audio.reset();
   }
@@ -583,6 +593,48 @@ function startApp() {
   $('writeHex').addEventListener('click', () => {
     try { writeBlocks([{ addr: parseAddr('loadAddr'), bytes: parsePlainHex($('hexText').value) }]); } catch (err) { sayError(err); }
   });
+  // Custom ROM: read in place of the ROM wherever it has a byte (src/machine/custom-rom.js); loading
+  // or removing it starts the machine again, as a change of the firmware does.
+  function showCustomRom() {
+    const c = machine.customRom;
+    $('customSummary').textContent = customRom ? t('mem.customSummaryOn', { name: customRom.name }) : t('mem.customSummary');
+    $('customRemove').hidden = !customRom;
+    $('customNote').hidden = !customRom;
+    if (customRom) $('customNote').textContent = t('board.customRomNote', { name: customRom.name });
+    customChip.hidden = !c;
+    if (c) customChip.title = t('dbg.customTip', { addr: h4(c.start) });
+    const where = spans => spans.map(r => `${h4(r.from)}–${h4(r.to)}`).join(', ');
+    $('customMsg').textContent = !c ? '' : [
+      c.overRom.length ? t('mem.customOver', { where: where(c.overRom) }) : '',
+      c.empty.length ? t('mem.customEmpty', { where: where(c.empty) }) : '',
+      c.leftOut.length ? t('mem.customLeftOut', { where: where(c.leftOut) }) : '',
+    ].filter(Boolean).join(' ');
+  }
+  $('customLoad').addEventListener('click', () => $('customInput').click());
+  $('customInput').addEventListener('change', async () => {
+    const f = $('customInput').files[0];
+    $('customInput').value = '';
+    if (!f) return;
+    try {
+      const data = new Uint8Array(await f.arrayBuffer());
+      const text = new TextDecoder().decode(data.slice(0, 64));
+      const blocks = /\.(hex|ihx)$/i.test(f.name) || text.trimStart().startsWith(':')
+        ? parseIntelHex(new TextDecoder().decode(data))
+        : [{ addr: parseAddr('customAddr'), bytes: data }];
+      if (!firmware.create(ROMS, { customRom: blocks }).customRom.size) throw new Error(t('mem.customNothing'));
+      store(`wolf80-customrom-${boardId}`, JSON.stringify({ name: f.name, hex: toIntelHexBlocks(blocks) }));
+      setBoard(boardId);
+      setRunning(true);
+      // shown even when the browser keeps nothing (storage blocked or full): this visit uses it
+      if (!customRom) { customRom = { name: f.name, blocks }; newMachine(); boardTexts(); }
+    } catch (err) { $('customMsg').textContent = t('mem.error', { msg: err.message }); }
+  });
+  $('customRemove').addEventListener('click', () => {
+    try { localStorage.removeItem(`wolf80-customrom-${boardId}`); } catch { /* storage blocked */ }
+    setBoard(boardId);
+    setRunning(true);
+    if (customRom) { customRom = null; newMachine(); boardTexts(); }
+  });
   function exportRange() {
     const from = parseAddr('expFrom'), to = parseAddr('expTo');
     if (to < from) throw new Error(t('mem.endBeforeStart'));
@@ -933,6 +985,7 @@ function startApp() {
     return b;
   };
   const ramChip = memJump('mem-key ram', 'dbg.ram', null, () => profile.ram[0]);
+  const customChip = memJump('mem-key custom', 'dbg.custom', null, () => machine.customRom?.start ?? 0);
   $('tab-ladeni').append(
     h3('dbg.regs'), dbg.regs, dbg.flags,
     h3('dbg.ppi'), dbg.ppi,
@@ -941,7 +994,7 @@ function startApp() {
     el('div', { class: 'mem-head' }, [el('span', { 'data-i18n': 'dbg.addr' }), dbg.addr,
       memJump('btn small', 'dbg.memPrev', 'dbg.memPrevTip', a => a - 0x400), memJump('btn small', 'dbg.memNext', 'dbg.memNextTip', a => a + 0x400),
       el('span', { class: 'note', 'data-i18n': 'dbg.memNote' }),
-      el('span', { class: 'mem-keys' }, [memJump('mem-key rom', 'dbg.rom', 'dbg.romTip', () => 0x0000), ramChip])]),
+      el('span', { class: 'mem-keys' }, [memJump('mem-key rom', 'dbg.rom', 'dbg.romTip', () => 0x0000), ramChip, customChip])]),
     dbg.mem,
     el('p', { class: 'note', 'data-i18n': 'dbg.later' }),
   );
@@ -974,7 +1027,8 @@ function startApp() {
     }
     dbg.dis.replaceChildren(...lines);
     // ROM, RAM and unpopulated areas start and end on whole kilobytes, so a row of 16 bytes always
-    // lies in one of them and gets its background as a whole
+    // lies in one of them and gets its background as a whole; the bytes of a custom ROM, which may
+    // start and end anywhere, get their own
     const rows = [];
     for (let r = 0; r < 16; r++) {
       const base = (memStart + r * 16) & 0xffff;
@@ -984,6 +1038,7 @@ function startApp() {
         let cls = 'b';
         if (x === c.pc) cls += ' pc';
         if (x === c.sp) cls += ' sp';
+        if (machine.customRom?.covers(x)) cls += ' custom';
         cells.push(el('span', { class: cls, text: h2(machine.read(x)) }));
       }
       rows.push(el('div', { class: 'row' }, [el('span', { class: 'a', text: h4(base) }), el('span', { class: 'bytes ' + machine.region(base) }, cells)]));
@@ -1016,6 +1071,7 @@ function startApp() {
     $('loadHelp').textContent = t('mem.loadHelp', { keys: t(ui.runText) });
     $('keysHelp').innerHTML = t(ui.keysHelp);
     ramChip.title = t('dbg.ramTip', { addr: h4(profile.ram[0]) });
+    showCustomRom();
     for (const [b, p] of programBtns) { b.textContent = loc(p.name); b.title = t('prog.startTip', { addr: p.start }); }
     showOpsTexts();
     showSound();
@@ -1025,6 +1081,7 @@ function startApp() {
     profile = BOARD_PROFILES[boardId];
     ui = BOARD_UI[boardId];
     firmware = pickFirmware();
+    customRom = pickCustomRom();
     statesPerMs = profile.clockHz / 1000;
     MIN_HOLD = minHold();
     audio.clockHz = profile.clockHz;

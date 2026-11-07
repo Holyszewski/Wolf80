@@ -9,6 +9,7 @@ import { I8080 } from '../core/i8080.js';
 import { I8255 } from '../machine/i8255.js';
 import { MuxDisplay } from '../machine/display.js';
 import { EdgeRecorder } from '../machine/audio-render.js';
+import { CustomRom } from '../machine/custom-rom.js';
 
 // 10 MHz crystal divided by 9 in the MH8224 clock generator.
 export const PMI80_CLOCK_HZ = 10e6 / 9;
@@ -50,8 +51,9 @@ export function pmi80RunKeys(start) {
 export class Pmi80 {
   // rom: the 1 KiB monitor; rom2: optional second EPROM at 0400h; ramFill: RAM contents at
   // power on, a byte or a function of the RAM offset (default: POWER_ON_RAM, the pattern seen on a
-  // real board; the real 2114 chips differ from unit to unit).
-  constructor({ rom, rom2 = null, ramFill = POWER_ON_RAM } = {}) {
+  // real board; the real 2114 chips differ from unit to unit); customRom: optional blocks
+  // [{ addr, bytes }] read in place of the ROMs and unpopulated addresses (src/machine/custom-rom.js).
+  constructor({ rom, rom2 = null, ramFill = POWER_ON_RAM, customRom = null } = {}) {
     this.rom = loadRom(rom);
     this.rom2 = rom2 ? loadRom(rom2) : null;
     this.ram = new Uint8Array(0x400);
@@ -73,6 +75,8 @@ export class Pmi80 {
       onOutput: () => this.updateDisplay(),
     });
     this.updateDisplay();
+    this.customRom = null;
+    if (customRom) this.customRom = new CustomRom(customRom, a => this.mirror(a), a => this.region(a));
   }
 
   get cycles() { return this.cpu.cycles; }
@@ -81,6 +85,7 @@ export class Pmi80 {
   // decoder is blocked. read() is the side-effect free view for the debug API; an unpopulated
   // address shows FFh there, while the CPU gets the stale bus value (busRead).
   read(addr) {
+    if (this.customRom?.covers(addr)) return this.customRom.at(addr);
     if (addr >= 0x4000) return 0xff;
     const a = addr & 0x1fff;
     if (a < 0x0400) return this.rom[a];
@@ -90,13 +95,21 @@ export class Pmi80 {
   }
 
   populated(addr) {
+    if (this.customRom?.covers(addr)) return true;
     if (addr >= 0x4000) return false;
     const a = addr & 0x1fff;
     return a < 0x0400 || (a < 0x0800 && this.rom2 !== null) || a >= 0x1c00;
   }
 
-  // What is at an address, for the memory view: 'rom', 'ram' or 'none'.
+  // The address the decoder sees (the one in 0000h-1FFFh for a mirror); from 4000h on, where no
+  // chip is selected, the address itself.
+  mirror(addr) {
+    return addr < 0x4000 ? addr & 0x1fff : addr;
+  }
+
+  // What is at an address, for the memory view: 'rom', 'ram' or 'none' (the custom ROM is 'rom').
   region(addr) {
+    if (this.customRom?.covers(addr)) return 'rom';
     if (!this.populated(addr)) return 'none';
     return (addr & 0x1fff) >= 0x1c00 ? 'ram' : 'rom';
   }

@@ -23,7 +23,7 @@ const sha256 = data => crypto.createHash('sha256').update(data).digest('hex');
 const MODULES = [
   'src/core/i8080.js', 'src/core/i8080-disasm.js', 'src/core/z80.js', 'src/core/z80-disasm.js', 'src/asm/asm8080.js',
   'src/machine/i8255.js', 'src/machine/display.js', 'src/machine/audio-render.js',
-  'src/machine/memfile.js', 'src/machine/programs.js',
+  'src/machine/memfile.js', 'src/machine/programs.js', 'src/machine/custom-rom.js',
   'src/board/pmi80.js', 'src/board/pmi80-tape.js', 'src/board/savia84.js', 'src/board/stone1.js', 'src/board/profiles.js',
   'src/ui/i18n.js', 'src/ui/audio.js', 'src/ui/app.js',
 ];

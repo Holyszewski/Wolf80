@@ -20,8 +20,8 @@ export const stone1RunKeys = pmi80RunKeys;
 // of the Savia-84 model; what differs is overridden here.
 export class Stone1 extends Savia84 {
   // rom: the 2 KiB image of the 2716 (the whole of it is decoded).
-  constructor({ rom, ramFill } = {}) {
-    super({ rom, decoder: 'nostalcomp', ramFill });
+  constructor({ rom, ramFill, customRom } = {}) {
+    super({ rom, decoder: 'nostalcomp', ramFill, customRom });
     // nothing drives the data bus during the interrupt acknowledge; the page says that pull-ups
     // are needed for the I key, and the board's monitor expects RST 38h (assumed: FFh)
     this.cpu.intVector = 0xff;
@@ -34,6 +34,10 @@ export class Stone1 extends Savia84 {
 
   ramOffset(addr) {
     return addr >= 0x1800 && addr < 0x2000 ? addr - 0x1800 : -1;
+  }
+
+  mirror(addr) {
+    return addr;
   }
 
   // The index is inverted (IC9) before the 74145, as on the PMI-80: the monitors write ~E.

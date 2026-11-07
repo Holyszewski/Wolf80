@@ -10,6 +10,7 @@ import { Z80 } from '../core/z80.js';
 import { I8255 } from '../machine/i8255.js';
 import { MuxDisplay } from '../machine/display.js';
 import { EdgeRecorder } from '../machine/audio-render.js';
+import { CustomRom } from '../machine/custom-rom.js';
 import { PMI80_MATRIX } from './pmi80.js';
 
 // The book's crystal of 4 MHz divided by two, or a 2 MHz crystal without the divider (both give
@@ -50,8 +51,10 @@ export class Savia84 {
   // rom: the monitor image (the first 1 KiB is used by the book's decoder, all 2 KiB by the
   // variant); decoder: 'book' (the circuit diagram of the book) or 'nostalcomp' (the
   // simplification published by Nostalcomp: 3205 moved to A11-A13, a 2 KiB EPROM 2716);
-  // ramFill: RAM contents at power on, a byte or a function of the RAM offset.
-  constructor({ rom, decoder = 'book', ramFill = SAVIA84_POWER_ON_RAM } = {}) {
+  // ramFill: RAM contents at power on, a byte or a function of the RAM offset; customRom: optional
+  // blocks [{ addr, bytes }] read in place of the ROM and unpopulated addresses
+  // (src/machine/custom-rom.js).
+  constructor({ rom, decoder = 'book', ramFill = SAVIA84_POWER_ON_RAM, customRom = null } = {}) {
     this.decoder = decoder;
     this.rom = new Uint8Array(0x800).fill(0xff);
     this.rom.set(rom.subarray(0, decoder === 'book' ? 0x400 : 0x800));
@@ -73,6 +76,8 @@ export class Savia84 {
       onOutput: () => this.updateDisplay(),
     });
     this.updateDisplay();
+    this.customRom = null;
+    if (customRom) this.customRom = new CustomRom(customRom, a => this.mirror(a), a => this.region(a));
   }
 
   get cycles() { return this.cpu.cycles; }
@@ -95,7 +100,13 @@ export class Savia84 {
     return a >= 0x1800 && a < 0x2000 ? a - 0x1800 : -1;
   }
 
+  // The address the decoder sees: A15 is ignored.
+  mirror(addr) {
+    return addr & 0x7fff;
+  }
+
   read(addr) {
+    if (this.customRom?.covers(addr)) return this.customRom.at(addr);
     const r = this.romOffset(addr);
     if (r >= 0) return this.rom[r];
     const m = this.ramOffset(addr);
@@ -103,11 +114,13 @@ export class Savia84 {
   }
 
   populated(addr) {
+    if (this.customRom?.covers(addr)) return true;
     return this.romOffset(addr) >= 0 || this.ramOffset(addr) >= 0;
   }
 
-  // What is at an address, for the memory view: 'rom', 'ram' or 'none'.
+  // What is at an address, for the memory view: 'rom', 'ram' or 'none' (the custom ROM is 'rom').
   region(addr) {
+    if (this.customRom?.covers(addr)) return 'rom';
     return this.romOffset(addr) >= 0 ? 'rom' : this.ramOffset(addr) >= 0 ? 'ram' : 'none';
   }
 

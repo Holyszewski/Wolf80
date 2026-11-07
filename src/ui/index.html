@@ -78,6 +78,7 @@
     <!-- the texts that depend on the board (monitor names, clock, help) are set by app.js -->
     <div class="field"><span data-i18n="board.board"></span><select id="boardSel"><option value="pmi80">PMI-80</option><option value="savia84">Savia-84</option><option value="stone1">Stone 1</option></select></div>
     <div class="field"><span data-i18n="board.monitor"></span><select id="romSel"></select></div>
+    <p class="small custom-note" id="customNote" hidden></p>
     <div class="field"><span data-i18n="board.clock"></span><span class="val" id="clockVal"></span></div>
     <div class="field savia-only" hidden><span data-i18n="board.layout"></span><select id="layoutSel"><option value="pmi" data-i18n="board.layoutPmi"></option><option value="board" data-i18n="board.layoutBoard"></option></select></div>
     <label class="check savia-only" hidden data-i18n-title="board.nineDigitsTip"><input type="checkbox" id="nineDigits"> <span data-i18n="board.nineDigits"></span></label>
@@ -110,6 +111,16 @@
       <div class="field" id="wavRow"><span data-i18n="mem.tapeNumber"></span><input id="expNumber" value="00" maxlength="2" spellcheck="false" data-i18n-aria="mem.tapeNumberAria"><button type="button" class="btn" id="expWav" data-i18n="mem.expWav" data-i18n-title="mem.expWavTip"></button></div>
       <p class="msg" id="memMsg" role="status"></p>
       <p class="small" id="wavHelp" data-i18n="mem.wavHelp"></p>
+      <details class="nested" id="customRom">
+        <summary id="customSummary"></summary>
+        <p class="small" data-i18n="mem.customHelp"></p>
+        <div class="field"><span data-i18n="mem.customAddr"></span><input id="customAddr" value="0000" maxlength="4" spellcheck="false" data-i18n-aria="mem.customAddrAria"></div>
+        <div class="row">
+          <button type="button" class="btn" id="customLoad" data-i18n="mem.customLoad" data-i18n-title="mem.customLoadTip"></button>
+          <button type="button" class="btn" id="customRemove" data-i18n="mem.customRemove" data-i18n-title="mem.customRemoveTip" hidden></button>
+        </div>
+        <p class="msg" id="customMsg" role="status"></p>
+      </details>
     </details>
 
     <details id="aboutPc">
@@ -142,6 +153,7 @@
   </aside>
 </div>
 <input type="file" id="fileInput" hidden>
+<input type="file" id="customInput" hidden>
 <!--LICENSE-->
 <!--SCRIPT-->
 </body>
