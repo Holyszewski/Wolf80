@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.1.1 – 2026-11-21
+
 - Extras: AION Buzzer 80 for a 1 KiB EPROM in the second socket of the PMI-80 (`extras/aion-buzzer-80-eprom/`): the source, the image to program as BIN and Intel HEX, and a guide. It starts with `EX 0400 =`, does not depend on the monitor and has been tried on a real board.
 
 ## 1.1.0 – 2026-11-07
