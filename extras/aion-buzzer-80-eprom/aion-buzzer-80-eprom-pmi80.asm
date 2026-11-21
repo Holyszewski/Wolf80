@@ -1,0 +1,439 @@
+; AION Buzzer 80, version 1.0.1, for a 1 KiB EPROM in the second socket of the PMI-80
+; (0400h-07FFh): a music demo in two voices with drums, about 76 s long and repeating, which
+; shows on the display what it is playing.
+;
+; SPDX-License-Identifier: GPL-3.0-or-later
+; Copyright (C) 2026 Matěj "Wolf" Holyszewski
+; Created with the help of AI (OpenAI Codex).
+;
+; Use: program aion-buzzer-80-eprom-pmi80.bin (or .hex) into the EPROM, put it into the second
+; socket and start it with EX 0400 =. RE stops it. The sound is on MG OUT of the tape
+; connector K3 (pin 3, ground pin 2), for an amplifier or an active speaker. Step by step:
+; README.md in this folder.
+;
+; Board and monitor: PMI-80, 8080 at 10 MHz / 9. Any monitor: nothing of it is called and
+; nothing it has prepared is read, it only starts the program. Another clock or a Z80 changes
+; the pitch and the tempo. Only documented 8080 instructions.
+;
+; Memory: the controller and the music stay in the EPROM (0400h-06B8h). The 296 bytes of
+; code that the program changes as it plays lie in the EPROM from ROM_END (06B9h) and are
+; copied to RAM 1C00h-1D27h at the start; this source assembles them at their RAM addresses,
+; between RAM_BEGIN and RAM_END. Variables 1D28h-1D2Eh. Stack: SP = 1FD9h, 1FD5h-1FD8h used.
+; While it plays, SP carries an oscillator increment: no CALL, PUSH, POP or RET there.
+; So a plain flat export of this source is not the EPROM: tools/make-listings.mjs makes the
+; .hex, the byte list and the .bin with the copied part in its place.
+;
+; The same program as the RAM edition in programs/aion-buzzer-80 (the display, the song and
+; how it works are described in its README.txt); after the copy at the start the sound and
+; the timing are the same. The digits AAA show the address of the music data in the EPROM.
+;
+FREQ1 EQU OSC1+1
+FREQ2 EQU OSC2+1
+ORDERPTR EQU RAM_END
+ROWPTR EQU RAM_END+2
+BASSPTR EQU RAM_END+4
+ROWS EQU RAM_END+6
+RAM_VARS_END EQU RAM_END+7
+ORG 0400h
+START: DI
+ LXI SP,1FD9h
+ LXI H,ROM_END
+ LXI D,RAM_BEGIN
+ LXI B,RAM_END-RAM_BEGIN
+COPY_RAM: MOV A,M
+ STAX D
+ INX H
+ INX D
+ DCX B
+ MOV A,B
+ ORA C
+ JNZ COPY_RAM
+ MVI A,8Ah
+ OUT 0FBh
+ MVI A,7Fh
+ OUT 0F8h
+RESTART: LXI H,ORDER
+ SHLD ORDERPTR
+; Read pattern order (FF terminates/restarts), render P; select packed rows and bass pairs.
+NEXT: LHLD ORDERPTR
+ MOV A,M
+ CPI 0FFh
+ JZ RESTART
+ INX H
+ SHLD ORDERPTR
+ PUSH PSW
+ CALL GLYPH
+ STA G4+1
+ POP PSW
+ MOV L,A
+ MVI H,0
+ DAD H
+ DAD H
+ PUSH H
+ LXI D,BASSTABLE
+ DAD D
+ SHLD BASSPTR
+ POP H
+ DAD H
+ DAD H
+ LXI D,PATTERNS
+ DAD D
+ SHLD ROWPTR
+ MVI A,16
+ STA ROWS
+; Render the CURRENT packed-row address, ranked lead/bass notes and drum code.
+ROW: LHLD ROWPTR
+ MOV A,H
+ CALL GLYPH
+ STA G1+1
+ LHLD ROWPTR
+ MOV A,L
+ CALL SHOWBYTE
+ LHLD ROWPTR
+ MOV A,M
+ ANI 1Fh
+ PUSH PSW
+ SUI 9
+ CPI 0FFh
+ JNZ RANKOK
+ INR A
+RANKOK: CALL SIGNEDGLYPH
+ STA G5+1
+ POP PSW
+ CALL FREQ
+ SHLD FREQ1
+ LHLD ROWPTR
+ MOV A,M
+ CALL GETBASS
+ MOV B,A
+ ANI 0Fh
+ CALL ZEROBLANK
+ STA G6+1
+ MOV A,B
+ RLC
+ RLC
+ ANI 3
+ CALL ZEROBLANK
+ STA G0+1
+ MOV A,B
+ LHLD ROWPTR
+ INX H
+ SHLD ROWPTR
+ ANI 3Fh
+ CALL FREQ
+ SHLD FREQ2
+ MOV A,B
+ RLC
+ RLC
+ ANI 3
+ ADD A
+ ADI LOW(DRUMOPS)
+ MOV L,A
+ MVI H,HIGH(DRUMOPS)
+ MOV A,M
+ STA DRUMVOICE
+ INX H
+ MOV A,M
+ STA DRUMGATE
+ LDA FREQ1+1
+ SUI 1
+ SBB A
+ MOV B,A
+ LDA FREQ2+1
+ SUI 1
+ SBB A
+ MOV C,A
+ ANA B
+ CMA
+ STA LIMITX0+1
+ STA LIMITX1+1
+ STA LIMITX2+1
+ STA LIMITX3+1
+ STA LIMITX4+1
+ MOV A,C
+ ORA B
+ CMA
+ STA LIMITY0+1
+ STA LIMITY1+1
+ STA LIMITY2+1
+ STA LIMITY3+1
+ STA LIMITY5+1
+ STA LIMITY6+1
+ STA LIMITY4+1
+ CALL FREQ
+ DAD B
+ CALL DRUM
+ JMP OSC1
+SHOWBYTE: MOV C,A
+ CALL GLYPH
+ STA G3+1
+ MOV A,C
+ RRC
+ RRC
+ RRC
+ RRC
+ CALL GLYPH
+ STA G2+1
+ RET
+; Negative rank means a blank; F ranks start at 0.
+SIGNEDGLYPH: ORA A
+ JM BLANKGLYPH
+ JMP GLYPH
+; D/B use 1-based codes; zero becomes a blank.
+ZEROBLANK: DCR A
+ JM BLANKGLYPH
+ INR A
+GLYPH: ANI 0Fh
+ ADI LOW(GLYPHS)
+ MOV L,A
+ MVI H,HIGH(GLYPHS)
+ MOV A,M
+ RET
+BLANKGLYPH: MVI A,7Fh
+ RET
+; Packed bit5 chooses one of two bass IDs for the current half-pattern.
+; Return original drum bits OR compressed bass ID in A.
+GETBASS: PUSH PSW
+ ANI 20h
+ RLC
+ RLC
+ RLC
+ MOV E,A
+ LDA ROWS
+ CPI 9
+ SBB A
+ ANI 2
+ ADD E
+ MOV E,A
+ LHLD BASSPTR
+ MOV A,L
+ ADD E
+ MOV L,A
+ MOV E,M
+ POP PSW
+ ANI 0C0h
+ ORA E
+ RET
+; Look up a little-endian 16-bit DDS increment; index 0 is a rest.
+FREQ: ADD A
+ ADI LOW(NOTES)
+ MOV L,A
+ MVI H,HIGH(NOTES)
+ MOV A,M
+ INX H
+ MOV H,M
+ MOV L,A
+ RET
+; 256-sample percussion prefix; 8-bit descending oscillator plus 8-bit noise.
+DRUMOPS: DB 0AFh,0,79h,0,7Ah,0,7Ah,0A0h
+; Compact frequency dictionary, including rest. Exact mapping is in TECHNICAL.en.md.
+NOTES: DW 0,680,763,808,856,1018,1359,1526,1713,2037,2566,2719,3052,3233,3426,3845,4074,4573,5133,5438,6104,6467,6851,7690,8148
+ORDER: DB 0,0,1,1,2,3,4,5,2,3,4,5,6,7,8,9,6,7,8,9,10,10,11,11,2,3,4,5,6,7,8,9,6,7,8,9,10,11,1,0,255
+; 12 patterns x 16 bytes: bits0..4 lead ID, bit5 bass selector, bits6..7 drum.
+PATTERNS: DB 72,0,10,0,14,0,16,0,82,16,14,10,14,16,210,214,118,210,240,206,182,210,240,206,116,209,111,204,180,209,239,204,78,208,242,208,150,210,240,210,78,208,114,208,150,210,240,210,75,206,240,206,147,208,238,208,75,206,112,206,147,208,238,208,76,208,242,208,148,210,240,210,76,208,114,208,148,210,240,210,76,207,241,207,148,209,239,209,76,207,113,207,148,209,239,209,82,210,224,208,145,209,240,206,80,208,113,210,150,212,242,208,83,211,224,210,144,208,238,203,78,208,115,210,144,206,235,206,84,212,242,208,146,210,244,214,88,215,118,212,146,208,242,212,81,209,239,204,143,209,244,211,82,209,111,204,143,145,178,149,86,0,18,192,16,0,142,0,75,0,14,192,16,0,147,0,108,15,241,20,172,15,241,20,141,208,146,213,141,144,146,149
+; Four bass IDs per pattern: first-half pair, then second-half pair.
+BASSTABLE: DB 0,0,0,0,0,4,0,2,4,8,4,8,1,6,1,6,5,9,5,9,2,7,2,7,4,8,4,8,1,6,1,6,5,9,5,9,2,7,2,7,0,0,0,0,0,2,3,3
+
+; Local font on page 1F.
+GLYPHS: DB 64,121,36,48,25,18,2,120,0,16,8,3,70,33,6,14
+ROM_END:
+ORG 1C00h
+RAM_BEGIN:
+OSC1: LXI B,0
+OSC2: LXI SP,0
+ DAD B
+ LDAX B
+OSCREADY:
+ LXI H,0
+ LXI D,0
+ MVI A,96
+ STA COUNT6+1
+; Synthesis/multiplex kernels: BC=freq1, SP=freq2, HL/DE=phases.
+; Blank with PC=0 before changing PA; only select a digit after PA is stable.
+K0: XRA A
+ OUT 0FAh
+ DAD B
+ XCHG
+ DAD SP
+ XCHG
+ MOV A,H
+ ORA D
+ RLC
+ SBB A
+G0: ORI 7Fh
+ OUT 0F8h
+ MVI A,11
+ OUT 0FAh
+LIMITX0: ANI 0FFh
+ OUT 0FAh
+LIMITY0: ANI 0FFh
+ OUT 0FAh
+ MOV A,A
+K1: XRA A
+ OUT 0FAh
+ DAD B
+ XCHG
+ DAD SP
+ XCHG
+ MOV A,H
+ ORA D
+ RLC
+ SBB A
+G1: ORI 7Fh
+ OUT 0F8h
+ MVI A,15
+ OUT 0FAh
+LIMITX1: ANI 0FFh
+ OUT 0FAh
+LIMITY1: ANI 0FFh
+ OUT 0FAh
+ MOV A,A
+K2: XRA A
+ OUT 0FAh
+ DAD B
+ XCHG
+ DAD SP
+ XCHG
+ MOV A,H
+ ORA D
+ RLC
+ SBB A
+G2: ORI 7Fh
+ OUT 0F8h
+ MVI A,14
+ OUT 0FAh
+LIMITX2: ANI 0FFh
+ OUT 0FAh
+LIMITY2: ANI 0FFh
+ OUT 0FAh
+ MOV A,A
+K3: XRA A
+ OUT 0FAh
+ DAD B
+ XCHG
+ DAD SP
+ XCHG
+ MOV A,H
+ ORA D
+ RLC
+ SBB A
+G3: ORI 7Fh
+ OUT 0F8h
+ MVI A,13
+ OUT 0FAh
+LIMITX3: ANI 0FFh
+ OUT 0FAh
+LIMITY3: ANI 0FFh
+ OUT 0FAh
+ MOV A,A
+K5: XRA A
+ OUT 0FAh
+ DAD B
+ XCHG
+ DAD SP
+ XCHG
+ MOV A,H
+ ORA D
+ RLC
+ SBB A
+G5: ORI 7Fh
+ OUT 0F8h
+ MVI A,9
+ OUT 0FAh
+LIMITX5: ANI 0FFh
+ OUT 0FAh
+LIMITY5: ANI 0FFh
+ OUT 0FAh
+ MOV A,A
+K6: XRA A
+ OUT 0FAh
+ DAD B
+ XCHG
+ DAD SP
+ XCHG
+ MOV A,H
+ ORA D
+ RLC
+ SBB A
+G6: ORI 7Fh
+ OUT 0F8h
+ MVI A,10
+ OUT 0FAh
+LIMITX6: ANI 0FFh
+ OUT 0FAh
+LIMITY6: ANI 0FFh
+ OUT 0FAh
+ MOV A,A
+K4: XRA A
+ OUT 0FAh
+ DAD B
+ XCHG
+ DAD SP
+ XCHG
+ MOV A,H
+ ORA D
+ RLC
+ SBB A
+G4: ORI 7Fh
+ OUT 0F8h
+ MVI A,7
+ OUT 0FAh
+LIMITX4: ANI 0FFh
+ OUT 0FAh
+LIMITY4: ANI 0FFh
+ OUT 0FAh
+ MOV A,A
+K7: XRA A
+ OUT 0FAh
+ DAD B
+ XCHG
+ DAD SP
+ XCHG
+ MOV A,H
+ ORA D
+ RLC
+ SBB A
+G7: ORI 7Fh
+ OUT 0F8h
+ MVI A,0
+ OUT 0FAh
+ NOP
+COUNT6: MVI A,96
+ DCR A
+ STA COUNT6+1
+ JNZ K0
+ LXI SP,1FD9h
+ MVI A,7Fh
+ OUT 0F8h
+ LXI H,ROWS
+ DCR M
+ JNZ ROW
+ JMP NEXT
+DRUM: LXI B,0
+ MVI D,0A7h
+DRUMLOOP: MOV A,B
+ RLC
+ RLC
+ RLC
+ ANI 7
+ INR A
+ ADD C
+ MOV C,A
+ MOV A,D
+ RRC
+ JNC NOXOR
+ XRI 38h
+NOXOR: MOV D,A
+DRUMVOICE: MOV A,C
+DRUMGATE: NOP
+ ANI 80h
+ ORI 7Fh
+ OUT 0F8h
+ DCR B
+ JNZ DRUMLOOP
+ RET
+RAM_END:
+; The signature, the last bytes of the EPROM.
+ ORG 07F4h
+SIGNATURE: DB 'Wolf2026v101'
+ END

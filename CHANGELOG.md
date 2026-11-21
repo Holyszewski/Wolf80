@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extras: AION Buzzer 80 for a 1 KiB EPROM in the second socket of the PMI-80 (`extras/aion-buzzer-80-eprom/`): the source, the image to program as BIN and Intel HEX, and a guide. It starts with `EX 0400 =`, does not depend on the monitor and has been tried on a real board.
+
 ## 1.1.0 – 2026-11-07
 
 - A custom ROM (Memory, at the end): an Intel HEX or BIN image that the computer reads instead of its built-in ROM wherever the image has a byte, over the monitor or in an empty area as an extra EPROM; bytes meant for RAM are left out. It is remembered for each board; a note under Monitor and the memory view show it.

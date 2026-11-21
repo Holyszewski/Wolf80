@@ -107,6 +107,10 @@ The emulator now has PMI-80 C (Monitor: PMI-80 C (Nostalcomp)) with the maintain
 
 If you also have a moment for the board with the factory monitor: the optional test D above (the 559 Hz tone on K3) and the WAV loading below are still open.
 
+## PMI-80: AION Buzzer 80 from an EPROM in the second socket (done)
+
+The image `extras/aion-buzzer-80-eprom/aion-buzzer-80-eprom-pmi80.bin`, programmed into an EPROM and put into the second socket, starts with `EX 0400 =` and plays (the maintainer, November 2026).
+
 ## PMI-80 with the factory monitor: loading an exported WAV
 
 Needs a board with the **factory** monitor (PMI-80 C has no tape commands), a cable from a PC or player to K3 (pin 1 MG IN, pin 2 GND) and the emulator's Export WAV (tape). Decides whether the WAV export loads on a real board and how loud it has to be.

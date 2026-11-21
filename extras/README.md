@@ -8,6 +8,8 @@ One folder per program, named after it; in it one source per board or monitor, n
 
 Beside every source there are two listings, made by `node tools/make-listings.mjs` and kept up to date by a test, as in `programs/`: an Intel HEX file (`<name>.hex`) and a list of bytes to type in by hand (`<name>-bytes.txt`, 16 to a line after the address).
 
+A program for an EPROM that copies a part of itself to RAM is assembled as described at `epromBlocks` in `tools/make-listings.mjs`; its listings hold the contents of the EPROM, and a third file beside them, `<name>.bin`, is the whole EPROM for a programmer.
+
 A program by another author names its author and source, with a link, in its header and in the table below, and is not covered by the project licence. The others are the project author's, GPL-3.0-or-later.
 
 ## Programs
@@ -17,3 +19,4 @@ A program by another author names its author and source, with a link, in its hea
 | `clock/clock-pmi80.asm` | PMI-80, factory monitor | A clock showing HH-MM-SS, 60 bytes from 1C00, the start time at 1D00-1D02. Exact to the state at 10 MHz / 9: it counts the length of the monitor's DISP routine. |
 | `clock/clock-pmi80c.asm` | PMI-80, PMI-80 C monitor | The same clock trimmed for the shorter DISP of the PMI-80 C, 61 bytes. |
 | `clock/clock-cal-pmi80.asm`, `clock/clock-cal-pmi80c.asm` | PMI-80, factory or PMI-80 C monitor | The clock with a correction for the board's own crystal, 93 bytes. The correction is the program's last two bytes: 50 00 as typed in, which does nothing, or 50.00 plus the seconds a day the plain clock gains on that board (minus those it loses), in steps of 0.01 s a day. How to work it out: `clock/README.md`. |
+| `aion-buzzer-80-eprom/aion-buzzer-80-eprom-pmi80.asm` | PMI-80, any monitor | The music demo AION Buzzer 80 (1.0.1, the same as in the program list) for a 1 KiB EPROM in the second socket, 0400h–07FFh, with the image to program (`.bin`, `.hex`). Start `EX 0400 =`; uses RAM 1C00h–1D2Eh while it plays. How to program and start it: `aion-buzzer-80-eprom/README.md`. |

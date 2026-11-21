@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Matěj "Wolf" Holyszewski
-// The programs in extras/: the PMI-80 clocks keep exact seconds on their own monitor and roll
+// The programs in extras/: AION Buzzer 80 in an EPROM sounds as its RAM edition; the PMI-80 clocks keep exact seconds on their own monitor and roll
 // over into minutes, hours and a new day; the calibrated ones lengthen their seconds by the
 // correction.
 import test from 'node:test';
@@ -9,6 +9,8 @@ import fs from 'node:fs';
 import { assemble } from '../src/asm/asm8080.js';
 import { Pmi80, pmi80RunKeys } from '../src/board/pmi80.js';
 import { litMasks } from '../src/machine/display.js';
+import { parseIntelHex } from '../src/machine/memfile.js';
+import { epromBlocks, epromImage } from '../tools/make-listings.mjs';
 
 const root = new URL('../', import.meta.url);
 const rom = name => fs.readFileSync(new URL(`roms/pmi80/${name}`, root));
@@ -129,5 +131,48 @@ for (const [file, board, other] of [
     const { lengths } = runClock(other, file, [0x12, 0x00, 0x00], 4);
     const off = Math.abs((lengths[0] + lengths[1]) / 2 / SECOND - 1);
     assert.ok(off > 0.08 && off < 0.11, `${(off * 100).toFixed(1)} %`);
+  });
+}
+
+// AION Buzzer 80 in the second EPROM: the image is the one tried on a real board, and after
+// EX 0400 = it gives the same sound as the RAM edition of the program list, under both monitors.
+const AION_SHA256 = 'a171f618b26197aa33278587c0af64b76918daf2e9c003146eed0b9b6a54ae6b';
+const aionImage = () => {
+  const r = assemble(fs.readFileSync(new URL('extras/aion-buzzer-80-eprom/aion-buzzer-80-eprom-pmi80.asm', root), 'utf8'));
+  assert.deepEqual(r.errors, []);
+  return epromImage(epromBlocks(r));
+};
+
+test('aion-buzzer-80-eprom: one kibibyte from 0400, the image tried on the real board, signed at its end', async () => {
+  const image = aionImage();
+  assert.equal(image.length, 1024);
+  const hash = Buffer.from(await crypto.subtle.digest('SHA-256', image)).toString('hex');
+  assert.equal(hash, AION_SHA256);
+  assert.equal(Buffer.from(image.subarray(1012)).toString('latin1'), 'Wolf2026v101');
+});
+
+for (const [name, monitor, holdMs] of [['factory monitor', 'pmi80_monitor.bin', 40], ['PMI-80 C', 'pmi80c_monitor.bin', 100]]) {
+  test(`aion-buzzer-80-eprom, ${name}: the sound of the RAM edition`, () => {
+    const ram = parseIntelHex(fs.readFileSync(new URL('programs/aion-buzzer-80/AION-Buzzer-80-RAM-display.hex', root), 'utf8'));
+    const EDGES = 12000; // about a sixth of the song
+    const play = (m, start, load = []) => {
+      m.reset();
+      m.run(at(50));
+      for (const { addr, bytes } of load) bytes.forEach((v, i) => m.write(addr + i, v));
+      m.takeAudio();
+      for (const key of pmi80RunKeys(start)) {
+        m.pressKey(key);
+        m.run(at(holdMs));
+        m.releaseKey(key);
+        m.run(at(holdMs));
+      }
+      m.run(at(15000));
+      const edges = m.takeAudio().edges;
+      return Array.from(edges.slice(1, EDGES + 1), (t, i) => t - edges[i]);
+    };
+    const inRom = play(new Pmi80({ rom: rom(monitor), rom2: aionImage() }), '0400');
+    const inRam = play(new Pmi80({ rom: rom(monitor) }), '1C00', ram);
+    assert.equal(inRom.length, EDGES);
+    assert.deepEqual(inRom, inRam);
   });
 }

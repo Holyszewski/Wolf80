@@ -8,7 +8,8 @@
 //   <name>.hex        Intel HEX
 //   <name>-bytes.txt  the bytes for typing in by hand, 16 to a line: address, a colon, the bytes
 // Both hold exactly the blocks the emulator loads. Programs already in Intel HEX or inside a ROM
-// need no file.
+// need no file. A source for an EPROM that copies a part of itself to RAM (see epromBlocks) gets
+// the contents of the EPROM, and a third file, <name>.bin: the whole EPROM, FFh where it is empty.
 //
 //   node tools/make-listings.mjs           write the files
 //   node tools/make-listings.mjs --check   write nothing, fail if a file is missing or out of date
@@ -35,6 +36,36 @@ export function bytesText(blocks) {
   return lines.join('\n') + '\n';
 }
 
+// The blocks of an assembled source as they lie in an EPROM. A program in an EPROM that changes
+// its own code keeps that part in the EPROM and copies it to RAM when it starts: the source
+// assembles the part at its RAM addresses, between the labels RAM_BEGIN and RAM_END, and the label
+// ROM_END says where it lies in the EPROM. A source with these three labels is such a program;
+// any other is returned as it is.
+export function epromBlocks({ blocks, symbols }) {
+  const { ROM_END: rom, RAM_BEGIN: from, RAM_END: to } = symbols;
+  if (rom === undefined || from === undefined || to === undefined) return blocks;
+  const placed = blocks.filter(b => b.bytes.length)
+    .map(b => ({ addr: b.addr >= from && b.addr < to ? rom + b.addr - from : b.addr, bytes: b.bytes }))
+    .sort((a, b) => a.addr - b.addr);
+  const out = [];
+  for (const b of placed) {
+    const last = out.at(-1);
+    if (last && last.addr + last.bytes.length > b.addr) throw new Error('the blocks of the EPROM overlap');
+    if (last && last.addr + last.bytes.length === b.addr) last.bytes = Uint8Array.from([...last.bytes, ...b.bytes]);
+    else out.push({ addr: b.addr, bytes: Uint8Array.from(b.bytes) });
+  }
+  return out;
+}
+
+// The whole EPROM of such a source: from the first address to the end of its kibibyte, FFh where
+// nothing is programmed.
+export function epromImage(blocks) {
+  const start = blocks[0].addr, end = blocks.at(-1).addr + blocks.at(-1).bytes.length;
+  const image = new Uint8Array(Math.ceil((end - start) / 1024) * 1024).fill(0xff);
+  for (const b of blocks) image.set(b.bytes, b.addr - start);
+  return image;
+}
+
 // [{ path, text, entry, blocks }] with the path relative to the repository, e.g.
 // 'programs/cosmos/cosmos-savia.hex' and 'programs/cosmos/cosmos-savia-bytes.txt'; entry is null
 // for the extras.
@@ -56,16 +87,21 @@ export function listings() {
     if (r.errors.length) throw new Error(`extras/${file}: line ${r.errors[0].line}: ${r.errors[0].message}`);
     if (!r.blocks.some(b => b.bytes.length)) throw new Error(`extras/${file}: no bytes`);
     const stem = 'extras/' + file.replace(/\.asm$/, '');
-    out.set(stem + '.hex', { text: toIntelHexBlocks(r.blocks), entry: null, blocks: r.blocks });
-    out.set(stem + '-bytes.txt', { text: bytesText(r.blocks), entry: null, blocks: r.blocks });
+    const blocks = epromBlocks(r);
+    out.set(stem + '.hex', { text: toIntelHexBlocks(blocks), entry: null, blocks });
+    out.set(stem + '-bytes.txt', { text: bytesText(blocks), entry: null, blocks });
+    if (blocks !== r.blocks) out.set(stem + '.bin', { bytes: epromImage(blocks), entry: null, blocks });
   }
-  return [...out].map(([path, v]) => ({ path, ...v }));
+  return [...out].map(([path, v]) => ({ path, ...v }));   // a .bin has `bytes` in place of `text`
 }
 
 // The files whose contents differ from what the sources give (a missing file counts).
 export function staleListings() {
-  return listings().filter(({ path, text }) => {
-    try { return fs.readFileSync(new URL(path, root), 'utf8') !== text; } catch { return true; }
+  return listings().filter(({ path, text, bytes }) => {
+    try {
+      const file = fs.readFileSync(new URL(path, root));
+      return bytes ? !file.equals(Buffer.from(bytes)) : file.toString('utf8') !== text;
+    } catch { return true; }
   }).map(f => f.path);
 }
 
@@ -77,7 +113,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     console.log('listings are up to date');
   } else {
     const all = listings();
-    for (const { path, text } of all) fs.writeFileSync(new URL(path, root), text);
-    console.log(`${all.length} files written beside ${all.length / 2} programs`);
+    for (const { path, text, bytes } of all) fs.writeFileSync(new URL(path, root), bytes ?? text);
+    console.log(`${all.length} files written beside ${all.filter(f => f.path.endsWith('.hex')).length} programs`);
   }
 }
