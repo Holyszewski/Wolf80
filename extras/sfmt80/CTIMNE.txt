@@ -1,0 +1,142 @@
+﻿SFMT80: SCIENCE FAIR MICROCOMPUTER TRAINER NA PMI-80
+====================================================
+
+Verze 1.0.0. Science Fair Microcomputer Trainer (Radio Shack 28-260) je
+čtyřbitový výukový počítač z 80. let: sedm LED, jedna šestnáctková číslice,
+malý reproduktor, klávesnice s dvaceti klávesami a programová paměť po
+půlbajtech (nibblech). SFMT80 z PMI-80 takový počítač udělá. Obsahuje panel
+traineru, jeho monitor, virtuální stroj se všemi instrukcemi a služebními
+rutinami a sedm vestavěných programů, to vše ve dvou 1KiB EPROM, které deska
+má, na místě monitoru PMI-80.
+
+Je napsaný znovu pro 8080 podle chování originálu a neobsahuje nic z původní
+ROM traineru. Programy z příručky traineru se zadávají a běží stejně jako na
+něm.
+
+Soubor                  Co to je
+------------------------------------------------------------------------------
+sfmt80-pmi80-0000.bin   EPROM do patice monitoru, 0000h–03FFh, 1024 bajtů.
+sfmt80-pmi80-0400.bin   EPROM do druhé patice, 0400h–07FFh, 1024 bajtů.
+sfmt80-pmi80.bin        Obě v jednom souboru, 2048 bajtů (pro emulátor, nebo
+                        pro jednu 2KiB paměť na upravené desce).
+sfmt80-pmi80.hex        Totéž ve formátu Intel HEX, s adresami 0000h–07FFh.
+sfmt80-pmi80-bytes.txt  Totéž jako výpis bajtů s adresami.
+sfmt80-pmi80.asm        Zdrojový text.
+
+SHA-256:
+
+    571a69d32c2227d0167c0bef703ffd821b016c12df4463fdb3b2caa5d1c9efd2  sfmt80-pmi80-0000.bin
+    d31d2b79b3dd127d77ee5162fe5a4f144b6d4c22c650d13648ac2f8d950c1748  sfmt80-pmi80-0400.bin
+
+Co je potřeba
+-------------
+
+- PMI-80 s oběma paticemi pro EPROM. Vyměňují se obě EPROM desky, tedy i
+  monitor: původní si schovej pro návrat k PMI-80.
+- Dvě EPROM typu, který deska bere, každá 1 KiB (MHB8708, 2708), a
+  programátor.
+- Zesilovač nebo aktivní reproduktor na výstupu MG OUT magnetofonového
+  konektoru K3: signál na špičce 3, zem na špičce 2. Deska vlastní reproduktor
+  nemá. Bez něj všechno funguje, jen potichu.
+
+Časování je pro PMI-80 s procesorem 8080 na 10 MHz / 9. Na jiném taktu nebo na
+desce se Z80 (Savia-84, Stone 1) by výška tónů i časy vyšly jinak; pro ně
+program není.
+
+Programování EPROM
+------------------
+
+Každý ze dvou souborů .bin se programuje od adresy 000h svého čipu. Soubor
+.hex nese pro obě adresy počítače 0000h–07FFh; rozděl ho na 0400h, nebo použij
+dva soubory .bin.
+
+Obraz zabírá 0000h–07FEh; poslední bajt, 07FFh, je prázdný (FFh).
+
+Spuštění a klávesy
+------------------
+
+Po zapnutí nebo po RE svítí vpravo F: monitor traineru na adrese 00, paměť
+plná F. RE na běžící desce program v paměti zachová; vypnutí a zapnutí ji
+znovu naplní hodnotou F.
+
+PMI-80  Trainer
+----------------
+0–F     0–F
+=       RESET
+S       RUN
+L       INCR
+M       ADRS SET
+
+Displej zleva: LED 6 až 0 traineru jako spodní segmenty sedmi číslic, jedna
+tmavá číslice a šestnáctková číslice.
+
+Všechno se dělá jako na traineru, takže platí jeho příručka:
+
+- Program se zadává jako =, pak každý nibble a za ním L. Dvě číslice a M
+  nastaví adresu.
+- = 1 S spustí program v paměti; = 2 S ho spustí s adresou na LED; = 5 S a = 6
+  S ho krokují klávesou L. = program zastaví.
+- Vestavěné programy: = 9 S varhany, = A S automatická melodie z paměti, = B S
+  hádání melodie, = C S mlácení krys (Rat Bashing), = D S tenis, = E S
+  časovač, = F S Morseova abeceda z paměti.
+
+Vyzkoušení v emulátoru
+----------------------
+
+Ve Wolf80 zvol PMI-80, otevři Paměť a na jejím konci Vlastní ROM; načti
+sfmt80-pmi80.hex (nebo sfmt80-pmi80.bin od adresy 0000). Obraz překryje celý
+monitor, takže počítač naběhne jako trainer, ať je zvolený kterýkoli monitor.
+Klávesy emulované klávesnice si nechávají popisky PMI-80; která je která, říká
+tabulka výše. Odebráním vlastní ROM se PMI-80 vrátí.
+
+Co je jinak než na traineru
+---------------------------
+
+Záměrně, aby se program vešel do dvou EPROM nebo aby se lépe používal:
+
+- Rychlost programu. Každá instrukce trvá stejně, asi 2,2 ms (3 ms s adresními
+  LED); na traineru se jedna od druhé trochu liší. Tóny, časovač a vestavěné
+  programy drží časování traineru na několik procent.
+- Náhoda. Hádání melodie a krysy losují čísla po svém; posloupnosti nejsou
+  stejné jako na traineru.
+- RESET ukončí i krysy, tenis a časovač, které na traineru končí jen vypnutím.
+- LED svítí i během tónu. Na traineru sdílí LED 3 výstup s reproduktorem; tady
+  její změna z programu krátce tikne na MG OUT.
+- Jas. Displej PMI-80 je multiplexovaný a zvuk dělá tentýž procesor: běžící
+  program svítí asi polovičním jasem proti monitoru a prostřední segment
+  číslice během tónu pohasíná.
+
+Drobné rozdíly, které se do dvou EPROM už nevešly:
+
+- Tenis: po příliš brzkém máchnutí letí míček na traineru o 12 % pomaleji;
+  tady rychlost zůstává. Podání potřebuje nový stisk klávesy; na traineru podá
+  i držená klávesa.
+- Krysy: po desáté kryse trainer před závěrečnou znělkou vteřinu počká; tady
+  přijde znělka hned. Trainer při volbě rychlosti klapne; tady je ta klávesa
+  potichu.
+- Varhany se dvěma stisknutými klávesami: trainer hraje první tón, dokud
+  nejsou puštěné obě; tady tón skončí s puštěním první. Klávesy 0 a F, které
+  nehrají, se na traineru ukážou při stisku, tady při puštění; ADRS SET na
+  traineru rozsvítí LED 3, tady nic.
+- Časovač: po doběhnutí na traineru RUN zhasne číslici, tady neudělá nic.
+- Monitor: po nastavení adresy nad 6F ukazuje trainer naposledy psanou
+  číslici, tady obsah buňky. Stisky kratší než asi 40 ms trainer občas
+  vynechá, tady se počítají všechny.
+
+Využitá paměť
+-------------
+
+EPROM 0000h–07FEh. RAM: 1C00h–1C7Fh paměť traineru 00–7F, jeden nibble na bajt
+(registry A na 6F, B na 6C, Y na 6E, Z na 6B, příznak na 6D); 1C80h–1C9Bh
+proměnné; 1F00h–1F20h displej, obraz klávesnice a značka teplého startu;
+zásobník pod 1F00h, hloubka do 20 bajtů. Přerušení zůstávají zakázaná.
+
+Autor a licence
+---------------
+
+Matěj „Wolf“ Holyszewski, 2026; vytvořeno s pomocí AI (Claude od Anthropic).
+GPL-3.0-or-later. SFMT80 je součástí doplňků (extras) emulátoru Wolf80:
+https://github.com/Holyszewski/Wolf80
+
+„Science Fair“ a „Radio Shack“ jsou názvy výrobce originálu; zde slouží jen k
+označení toho, co program napodobuje.

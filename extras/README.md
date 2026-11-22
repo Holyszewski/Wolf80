@@ -4,7 +4,9 @@ Small programs to try on the emulated boards and on the real ones. They come wit
 
 ## Layout
 
-One folder per program, named after it; in it one source per board or monitor, named `<program>-<board>.asm` (`-pmi80`, `-pmi80c` for the PMI-80 C monitor, `-savia`, `-stone1`). The source's header says what the program does, which board and monitor it needs, how to start and use it, its RAM and its version; a README in the folder only when that is not enough.
+One folder per program, named after it; in it one source per board or monitor, named `<program>-<board>.asm` (`-pmi80`, `-pmi80c` for the PMI-80 C monitor, `-savia`, `-stone1`). The source's header says what the program does, which board and monitor it needs, how to start and use it, its RAM and its version; a README in the folder says the rest.
+
+The README of a program is in English and, below that, in Czech, and names the program's version. The Czech half is also beside it as plain text, `CTIMNE.txt` (made by `node tools/make-listings.mjs`), so that a folder can be handed out on its own.
 
 Beside every source there are two listings, made by `node tools/make-listings.mjs` and kept up to date by a test, as in `programs/`: an Intel HEX file (`<name>.hex`) and a list of bytes to type in by hand (`<name>-bytes.txt`, 16 to a line after the address).
 

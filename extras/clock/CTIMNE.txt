@@ -1,0 +1,136 @@
+﻿HODINY PRO PMI-80
+=================
+
+Verze 0.1.0. Hodiny, které ukazují hodiny, minuty a sekundy jako HH-MM-SS a
+jsou tak malé, že se dají do paměti RAM naťukat ručně: 93 bajtů od adresy
+1C00. Dají se zkalibrovat podle krystalu konkrétní desky.
+
+Soubor                Monitor
+------------------------------
+clock-cal-pmi80.asm   tovární
+clock-cal-pmi80c.asm  PMI-80 C
+
+Obě verze se liší jen doladěním: hodiny počítají délku zobrazovací rutiny
+monitoru a ta je v každém monitoru jiná. Na druhém monitoru by se hodiny
+rozcházely asi o desetinu. U každého zdroje je i Intel HEX (.hex) a výpis
+bajtů k naťukání (-bytes.txt).
+
+Hodiny jsou určené pro PMI-80 s procesorem 8080 na 10 MHz / 9. Větší hodiny do
+EPROM, které se na čas zeptají samy a mají budík a stopky, jsou ve stejné
+sbírce jako clock-eprom.
+
+Zadání a spuštění
+-----------------
+
+1. Naťukej bajty od adresy 1C00: M 1C00 =, pak každý bajt a =.
+2. Na adresy 1D00–1D02 zapiš výchozí čas tak, jak se čte: hodiny na 1D00,
+   minuty na 1D01, sekundy na 1D02. Pro 14:30:00 je to 14, 30, 00.
+3. RE, = a potom EX 1C00 =. Hodiny se rozběhnou posledním =.
+
+RE hodiny zastaví; čas zůstane na 1D00–1D02. Za běhu nemačkej jiné klávesy:
+držená klávesa hodiny zrychluje po celou dobu, co ji držíš.
+
+Korekce
+-------
+
+Tak, jak se hodiny naťukají, běží přesně pro 10 MHz / 9. Žádný krystal ale
+nemá přesně 10 MHz a starý může být vedle o pár set miliontin: hodiny se pak
+za den o několik sekund předběhnou nebo zpozdí. Na to je korekce.
+
+Korekce jsou poslední dva bajty programu, na adresách 1C5B a 1C5C. Čte se jako
+číslo se dvěma desetinnými místy: 50 00 je 50,00, 70 81 je 70,81.
+
+- 50,00 (50 00, jak je ve výpisu) neopravuje nic.
+- Nad 50 hodiny zpomaluje, pro desku, na které se předbíhají.
+- Pod 50 hodiny zrychluje, pro desku, na které se zpožďují.
+
+Rozdíl od 50 je v sekundách za den: s 70,81 jdou hodiny o 20,81 sekundy za den
+pomaleji než s 50,00, se 45,50 o 4,5 sekundy za den rychleji. Korekce je tedy
+prostě 50 plus počet sekund, o které se hodiny za den předběhnou (minus počet
+sekund, o které se zpozdí).
+
+Jak korekci zjistit
+-------------------
+
+1. Naťukej hodiny s korekcí tak, jak je (50 00).
+2. Nastav je podle přesných hodin (telefon, rádiem řízené hodiny) a spusť je
+   přesně na sekundu.
+3. Nech je běžet několik dní, čím déle, tím lépe. Deska ať stojí tam, kde
+   obvykle, a nemačkej klávesy.
+4. Porovnej je znovu s přesnými hodinami. Zapiš si, o kolik sekund jsou napřed
+   (nebo pozadu) a jak dlouho běžely, ve dnech (hodiny děleno 24).
+5. Vyděl sekundy dny: tolik se hodiny předběhnou za den (nebo zpozdí).
+6. Nová korekce je ta stará plus to, o co se hodiny za den předběhnou (minus
+   to, o co se zpozdí), zaokrouhleno na dvě desetinná místa. Když začínáš z 50
+   00, je to 50 plus předbíhání.
+7. Zastav hodiny klávesou RE, zapiš dva bajty od 1C5B (M 1C5B =, pak každý
+   bajt a =), nastav znovu čas a spusť je jako předtím.
+
+Když se hodiny i potom předbíhají nebo zpožďují, opakuj postup od kroku 4 a
+korekci oprav stejně: přičti, o co se za den předběhnou, odečti, o co se
+zpozdí.
+
+Korekce může být od 00,00 do 99,99, tedy od zrychlení o 50 sekund za den po
+zpomalení o 49,99 sekundy za den. Deska, která potřebuje víc, má krystal
+daleko mimo toleranci (víc než asi 580 miliontin).
+
+Příklady
+--------
+
+Deska, na které se hodiny předbíhají. S korekcí 50 00 běžely hodiny 7 dní, 19
+hodin a 58 minut, tedy 7,83 dne. Byly o 163 sekund napřed.
+
+- 163 ÷ 7,83 = 20,81 sekundy za den napřed
+- 50 + 20,81 = 70,81
+- na 1C5B zapiš 70, na 1C5C 81
+
+Deska, na které se zpožďují. Hodiny jsou po 2 dnech o 9 sekund pozadu.
+
+- 9 ÷ 2 = 4,5 sekundy za den pozadu
+- 50 − 4,5 = 45,50
+- na 1C5B 45, na 1C5C 50
+
+Doladění. S korekcí 70,81 se hodiny za 4 dny předběhnou ještě o 1,2 sekundy.
+
+- 1,2 ÷ 4 = 0,30 sekundy za den napřed
+- 70,81 + 0,30 = 71,11
+- na 1C5B 71, na 1C5C 11
+
+Jak přesné to může být
+----------------------
+
+Jeden krok korekce je 0,01 sekundy za den, mnohem jemnější, než dokážeš
+změřit. Přesnost hodin omezuje měření a krystal:
+
+- Měření. Když odečteš rozdíl na sekundu za týden, znáš předbíhání asi na 0,15
+  sekundy za den; za měsíc na pár setin.
+- Teplota. Kmitočet krystalu se trochu mění s teplotou. Na PMI-80 sedí krystal
+  hned vedle teplého obvodu MH8224, takže měř s deskou, která už aspoň hodinu
+  běží na svém obvyklém místě. Místnost o pár stupňů teplejší nebo chladnější
+  pak hodiny pořád může posunout asi o desetinu sekundy za den.
+- Klávesy. Klávesa držená za běhu hodiny zrychluje po celou dobu, co ji držíš.
+
+Jak to funguje
+--------------
+
+Hodiny čekají tak, že čas ukážou pevně daným počtem průchodů zobrazovací
+rutinou monitoru, jejíž délka je známá na takt přesně. Každou sekundu dělají o
+něco kratší, než má být, 1 110 468 taktů místo 1 111 111, a k některým přidají
+1286 taktů (jednu setinu sekundy za den). Každou sekundu přičtou korekci k
+průběžnému součtu na 1D03–1D04, a kdykoli součet přeteče přes 99,99, sekundu
+prodlouží. S 50,00 je to každá druhá sekunda, což dává v průměru přesně 1 111
+111 taktů. Se 70,81 se prodlouží 7081 sekund z 10 000. Podrobnosti jsou v
+komentářích zdrojů.
+
+Využitá paměť
+-------------
+
+Program na 1C00h–1C5Ch, čas na 1D00h–1D02h, průběžný součet na 1D03h–1D04h.
+Zásobník zůstává tam, kde ho nechal monitor.
+
+Autor a licence
+---------------
+
+Matěj „Wolf“ Holyszewski, 2026; napsáno s pomocí AI. GPL-3.0-or-later. Hodiny
+jsou součástí doplňků (extras) emulátoru Wolf80:
+https://github.com/Holyszewski/Wolf80

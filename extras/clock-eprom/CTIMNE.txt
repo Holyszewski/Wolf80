@@ -1,0 +1,165 @@
+﻿HODINY DO EPROM PRO PMI-80
+==========================
+
+Verze 0.2.0. Hodiny, které ukazují hodiny, minuty a sekundy jako HH-MM-SS, s
+budíkem a stopkami, pro 1KiB EPROM ve druhé patici PMI-80, adresy 0400h–07FFh.
+Nic se neťuká do paměti: na všechno se zeptají na vlastním displeji. Dají se
+zkalibrovat podle krystalu konkrétní desky a žádná klávesa stisknutá za běhu
+jim nenaruší délku sekundy.
+
+Soubor                       Co to je
+------------------------------------------------------------------------------
+clock-eprom-pmi80.bin        Celá EPROM, 1024 bajtů; první bajt patří na
+                             adresu 0400h.
+clock-eprom-pmi80.hex        Totéž ve formátu Intel HEX, s adresami
+                             0400h–07FFh.
+clock-eprom-pmi80-bytes.txt  Totéž jako výpis bajtů s adresami.
+clock-eprom-pmi80.asm        Zdrojový text.
+
+SHA-256 souboru .bin:
+f8245ba0c96726eb6b03b117c626a72bc919130526cba0a92494eade37808825
+
+Co je potřeba
+-------------
+
+- PMI-80 s volnou druhou paticí pro EPROM (na desce s monitorem PMI-80 C je v
+  ní EPROM s hrami; tahle přijde na její místo). Hodiny jsou časované pro
+  PMI-80 s procesorem 8080 na 10 MHz / 9.
+- EPROM typu, který deska bere, 1 KiB (MHB8708, 2708), a programátor.
+- Pro budík zesilovač nebo aktivní reproduktor na výstupu MG OUT
+  magnetofonového konektoru K3: signál na špičce 3, zem na špičce 2.
+
+Na monitoru nezáleží: hodiny z něj nic nevolají. Od monitoru potřebují jen to,
+aby uměl spustit program od adresy 0400h.
+
+Programování EPROM
+------------------
+
+Použij .bin, pokud programátor počítá adresy od nuly: bajt 000h souboru je
+adresa 0400h počítače. Soubor .hex nese adresy počítače; pokud je programátor
+bere jako adresy v čipu, nastav posun −0400h.
+
+Posledních dvanáct bajtů, 07F4h–07FFh, je podpis Wolf2026v020.
+
+Nastavení a spuštění
+--------------------
+
+Spusť je příkazem EX 0400 = (v jiném monitoru jeho příkazem pro spuštění
+programu od adresy). Pak se zeptají na tři věci:
+
+   Na displeji                   Co udělat
+------------------------------------------------------------------------------
+1  na sekundu CAS, pak 00-00-00  Čas. Naťukej šest číslic, HHMMSS, a potvrď =.
+2  50-00-CAL                     Korekce podle krystalu desky: ta naposledy
+                                 použitá, nebo ta z EPROM. 50-00 neopravuje
+                                 nic. Potvrď ji =, nebo předtím naťukej čtyři
+                                 číslice.
+3  StArt =                       Hodiny stojí a čekají. Rozběhnou se v
+                                 okamžiku stisku =.
+
+- Psaní. Číslice se zadávají zleva. Na místě, které se právě píše, se střídá
+  podtržítko s číslicí. Po posledním místě přijde zase první, takže chybu
+  opravíš tím, že píšeš dál. Berou se jen číslice 0–9.
+- Čas, který nemůže být, například 25-00-00 nebo 12-60-00, ukáže Err a hodiny
+  se zeptají znovu.
+- Přesný start. Nastav čas o chvilku napřed a u StArt = stiskni = ve chvíli,
+  kdy ten čas nastane.
+- Zastavení. RE. Čas, korekce i budík zůstávají v RAM, dokud je deska zapnutá:
+  další EX 0400 = nabídne čas, ve kterém byly hodiny zastaveny, a naposledy
+  použitou korekci. Po zapnutí napájení nabídnou 00-00-00 a korekci z EPROM.
+
+Za běhu
+-------
+
+Klávesa  Co dělá
+----------------------------------
+B        Budík.
+S        Stopky, a zpět na hodiny.
+
+Ostatní klávesy nedělají nic. Žádná klávesa hodiny neruší, ať je stisknutá
+krátce, nebo držená: každá sekunda trvá přesně stejně, jako kdyby ses jich
+nedotkl.
+
+Budík. B ukáže jeho čas jako 07-30-bUd. Naťukej čtyři číslice, HHMM, stejně
+jako při nastavení hodin.
+
+- = budík nastaví a zapne. Když čas neměníš, B a = ho jen zapnou.
+- Další stisk B ho vypne.
+- Když je budík zapnutý, svítí vpravo nahoře segment poslední číslice, vedle
+  sekund.
+- Ve svůj čas hodiny pípají na výstupu MG OUT, minutu nebo do stisku libovolné
+  klávesy. Ta klávesa nic jiného neudělá. Budík zůstane zapnutý i na další
+  den.
+- Čas budíku se nekontroluje: čas, který nemůže být, například 25-00, nikdy
+  nenastane.
+- Při pípání pohasínají v rytmu pípání prostřední segmenty číslic: stejný
+  výstup řídí je i zvuk.
+
+Stopky. S je ukáže jako minuty, sekundy a setiny, 00-00-00.
+
+- = je spouští a zastavuje. Zastavené si drží hodnotu; = pokračuje od ní.
+- 0 je vynuluje a zastaví.
+- S se vrátí na hodiny. Stopky mezitím běží dál a hodiny běží dál za stopkami.
+- Počítají do 99 minut 59,99 sekundy a pak znovu od nuly.
+
+Korekce
+-------
+
+Žádný krystal nemá přesně 10 MHz a starý může být vedle o pár set miliontin:
+hodiny se pak za den o několik sekund předběhnou nebo zpozdí. Korekce to
+vyrovnává. Čte se jako číslo se dvěma desetinnými místy: 50-00 je 50,00.
+
+- 50,00 neopravuje nic.
+- Nad 50 hodiny zpomaluje, pro desku, na které se předbíhají.
+- Pod 50 hodiny zrychluje, pro desku, na které se zpožďují.
+
+Rozdíl od 50 je v sekundách za den, takže korekce je 50 plus počet sekund, o
+které se hodiny za den předběhnou (minus počet sekund, o které se zpozdí).
+Může být od 00,00 do 99,99.
+
+Jak ji zjistit:
+
+1. Spusť hodiny s 50-00, nastavené podle přesných hodin, přesně na sekundu.
+2. Nech je běžet několik dní, čím déle, tím lépe. Deska ať stojí tam, kde
+   obvykle.
+3. Porovnej je s přesnými hodinami. Vyděl sekundy, o které jsou napřed (nebo
+   pozadu), počtem dní běhu: tolik se za den předběhnou (nebo zpozdí).
+4. Přičti ke korekci to, o co se za den předběhnou, nebo odečti to, o co se
+   zpozdí, a výsledek naťukej při dalším spuštění u CAL.
+
+Příklad: hodiny jsou po 7,83 dne o 163 sekund napřed. 163 ÷ 7,83 = 20,81
+sekundy za den; 50 + 20,81 = 70,81; korekce je 70-81. Když se pak ještě za 4
+dny předběhnou o 1,2 sekundy, je to dalších 0,30 za den: 71-11.
+
+Kmitočet krystalu se trochu mění s teplotou, takže měř s deskou, která už
+aspoň hodinu běží na svém obvyklém místě.
+
+Korekce v EPROM. Korekci naťukanou u CAL hodiny nabízejí při každém spuštění,
+dokud desku nevypneš. Ta, kterou nabídnou po zapnutí napájení, jsou dva bajty
+na adresách 0403h a 0404h (bajty 3 a 4 souboru .bin), tak jak se čte: v
+souborech zde 50 00. Až budeš znát korekci své desky, změň tyto dva bajty před
+programováním EPROM: v editoru programátoru, nebo ve zdrojovém textu (CORR: DB
+50h,00h). Pro příklad výše by to bylo 70 81.
+
+Využitá paměť
+-------------
+
+RAM 1F00h–1F2Bh (displej, proměnné, čas na 1F22h–1F24h) a zásobník pod 1FC0h.
+Zbytek RAM zůstává nedotčený.
+
+Jak drží čas i při mačkání kláves
+---------------------------------
+
+Sekunda je sto průchodů hlavní smyčkou, každý asi 10 ms. Každý průchod trvá
+přesně stejně jako všechny ostatní, ať se ukazuje cokoli a mačká cokoli:
+obsluha displeje a kláves, stopky i obraz jsou napsané bez podmíněných skoků a
+každá ze třinácti cest obsluhou klávesy končí čekáním, které ji dorovná na
+délku té nejdelší. Setina stopek je jeden průchod, takže stopky jsou stejně
+přesné jako hodiny.
+
+Autor a licence
+---------------
+
+Matěj „Wolf“ Holyszewski, 2026; napsáno s pomocí AI. GPL-3.0-or-later. Hodiny
+jsou součástí doplňků (extras) emulátoru Wolf80, ve kterém se dají vyzkoušet i
+jako vlastní ROM: https://github.com/Holyszewski/Wolf80

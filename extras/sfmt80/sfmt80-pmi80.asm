@@ -1,6 +1,6 @@
-; SFMT80 for the PMI-80: the panel, the monitor, the 4-bit virtual machine and the seven built-in
-; programs of the Science Fair Microcomputer Trainer (Radio Shack 28-260) in the two 1 KiB EPROMs
-; of the board, 0000h-07FFh. It takes the place of the PMI-80's monitor.
+; SFMT80 for the PMI-80, version 1.0.0: the panel, the monitor, the 4-bit virtual machine and the
+; seven built-in programs of the Science Fair Microcomputer Trainer (Radio Shack 28-260) in the two
+; 1 KiB EPROMs of the board, 0000h-07FFh. It takes the place of the PMI-80's monitor.
 ;
 ; SPDX-License-Identifier: GPL-3.0-or-later
 ; Copyright (C) 2026 Matěj "Wolf" Holyszewski
@@ -30,6 +30,9 @@
 ;
 ; The timing constants, for 10 MHz / 9: the times of the original turned into states of this
 ; clock, with the fixed overhead of the code measured in the emulator.
+;
+; Versions:
+; 1.0.0  first published version
 CHUNK    EQU 247
 DOVH     EQU 163
 LEDBIT   EQU 8

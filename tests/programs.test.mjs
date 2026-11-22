@@ -219,6 +219,7 @@ test('every assembled or binary program has its Intel HEX and byte list beside i
     return m;
   };
   for (const { path, text, bytes, blocks, offset } of listings()) {
+    if (!blocks) continue; // the Czech text of a README
     if (bytes) { // the image of an EPROM: its blocks in their places, FFh elsewhere; or one kibibyte of it
       const end = blocks.at(-1).addr + blocks.at(-1).bytes.length - blocks[0].addr;
       const m = new Uint8Array(Math.ceil(end / 1024) * 1024).fill(0xff);

@@ -69,6 +69,64 @@ export function epromImage(blocks) {
   return image;
 }
 
+// The README.md of a program in extras/ is in English and, after the line CZECH_MARK, in Czech.
+// czechText gives the Czech half as plain text for CTIMNE.txt (UTF-8 with a byte order mark and
+// CRLF, for the Windows Notepad), or null for a README without that line: headings underlined,
+// tables as aligned columns, the Markdown marks of emphasis, code and links taken away (a link
+// keeps its address when it leads out of the folder to the web).
+export const CZECH_MARK = '<a id="cesky"></a>';
+export const CZECH_TXT = 'CTIMNE.txt';
+const WRAP = 78;
+export function czechText(markdown) {
+  const md = markdown.replaceAll('\r\n', '\n');
+  const at = md.indexOf(CZECH_MARK);
+  if (at < 0) return null;
+  const inline = s => s
+    .replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g, (_, label, url) => (label.replaceAll('`', '') === url ? url : `${label} (${url})`))
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/\*\*([^*]+)\*\*/g, '$1').replace(/`([^`]+)`/g, '$1').replace(/\\([|*_])/g, '$1');
+  const wrap = (text, first, rest) => {
+    const lines = [];
+    let line = first;
+    for (const word of text.split(' ')) {
+      if (line.length > (lines.length ? rest : first).length && line.length + 1 + word.length > WRAP) { lines.push(line); line = rest + word; }
+      else line += (line.length > (lines.length ? rest : first).length ? ' ' : '') + word;
+    }
+    lines.push(line);
+    return lines;
+  };
+  const cells = row => row.trim().replace(/^\||\|$/g, '').split(/(?<!\\)\|/).map(c => inline(c.trim()));
+  const out = [];
+  const lines = md.slice(at + CZECH_MARK.length).trim().split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const heading = /^(#+) (.*)$/.exec(line);
+    if (heading) {
+      const title = inline(heading[2]);
+      out.push(heading[1].length === 1 ? title.toUpperCase() : title, (heading[1].length === 1 ? '=' : '-').repeat(title.length));
+    } else if (line.startsWith('|')) {
+      const rows = [];
+      for (; i < lines.length && lines[i].startsWith('|'); i++) if (!/^\|[\s|:-]+\|$/.test(lines[i])) rows.push(cells(lines[i]));
+      i--;
+      const n = rows[0].length, widths = [];
+      for (let c = 0; c < n - 1; c++) widths.push(Math.max(...rows.map(r => r[c].length)));
+      const indent = widths.reduce((a, w) => a + w + 2, 0);
+      rows.forEach((r, k) => {
+        const head = r.slice(0, n - 1).map((c, j) => c.padEnd(widths[j] + 2)).join('');
+        out.push(...wrap(r[n - 1], head, ' '.repeat(indent)).map(l => l.trimEnd()));
+        if (k === 0) out.push('-'.repeat(Math.min(WRAP, indent + Math.max(...rows.map(x => x[n - 1].length)))));
+      });
+    } else if (/^ {4}/.test(line)) out.push(line);
+    else {
+      const item = /^(\s*)(- |\d+\. )(.*)$/.exec(line);
+      if (item) out.push(...wrap(inline(item[3]), item[1] + item[2], item[1] + ' '.repeat(item[2].length)));
+      else if (line.trim()) out.push(...wrap(inline(line.trim()), '', ''));
+      else out.push('');
+    }
+  }
+  return '﻿' + out.join('\r\n').replace(/(\r\n){3,}/g, '\r\n\r\n') + '\r\n';
+}
+
 // [{ path, text, entry, blocks }] with the path relative to the repository, e.g.
 // 'programs/cosmos/cosmos-savia.hex' and 'programs/cosmos/cosmos-savia-bytes.txt'; entry is null
 // for the extras.
@@ -101,6 +159,11 @@ export function listings() {
         out.set(`${stem}-${hex2(a >> 8)}${hex2(a & 0xff)}.bin`, { bytes: image.subarray(i, i + 1024), entry: null, blocks, offset: i });
       }
     }
+  }
+  // the Czech half of a program's README.md as plain text, to hand out with the program
+  for (const file of extras.map(f => f.replaceAll('\\', '/')).filter(f => f.endsWith('/README.md')).sort()) {
+    const text = czechText(fs.readFileSync(new URL(file, extrasDir), 'utf8'));
+    if (text) out.set('extras/' + file.replace(/README\.md$/, CZECH_TXT), { text, entry: null });
   }
   // a .bin has `bytes` in place of `text`; the one of a single EPROM out of several also `offset`,
   // where it begins in the whole image

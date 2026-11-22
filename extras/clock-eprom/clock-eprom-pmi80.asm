@@ -29,7 +29,7 @@
 ; The correction is 50.00 plus the seconds a day an uncorrected clock gains on the board
 ; (minus those it loses), 00.00 to 99.99 in steps of 0.01 s a day; 50.00 corrects nothing.
 ; The one in the EPROM is the two bytes at 0403h-0404h (bytes 3 and 4 of the .bin), in BCD as
-; it reads: 50 00 here. How to work it out: README.md of ../clock.
+; it reads: 50 00 here. How to work it out: README.md in this folder.
 ;
 ; Board and monitor: PMI-80, 8080 at 10 MHz / 9. Any monitor: nothing of it is called, it only
 ; starts the program. Only documented 8080 instructions. Another clock or a Z80 changes the

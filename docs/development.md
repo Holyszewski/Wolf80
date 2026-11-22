@@ -31,7 +31,7 @@ node tools/build.mjs                       # dist/web + dist/Wolf80-offline.html
 node tools/build.mjs --with-sources        # the same, with the demo programs' sources embedded (see "Demo programs")
 node tools/serve.mjs 8780                  # serves dist/web on 127.0.0.1:8780
 node tools/build-desktop.mjs               # dist/desktop/Wolf80.exe (needs the toolchain, see desktop.md)
-node tools/make-listings.mjs               # Intel HEX and a byte list beside every demo program and every extras/ source (--check: only compare)
+node tools/make-listings.mjs               # Intel HEX and a byte list beside every demo program and every extras/ source, CTIMNE.txt beside every extras README (--check: only compare)
 node tools/make-icon.mjs                   # EXE icon assets/icon/wolf80.ico (16–256 px) + preview docs/img/icon.png
 npm test                                   # all unit tests (node --test "tests/*.test.mjs")
 node --test tests/i8080.test.mjs           # one test file
@@ -61,13 +61,13 @@ Demo programs are data, not code. `programs/catalog.json` lists them in display 
 
 ### Extras
 
-`extras/` holds small programs to try on the emulated and the real boards. They are distributed with the source but are not part of the emulator: not in `programs/catalog.json`, not in the builds. One folder per program, one source per board or monitor (`extras/clock/clock-cal-pmi80.asm`, `-pmi80c` for the PMI-80 C monitor). Each is a commented `.asm` whose header explains how to use it (a README in the folder only when the header is not enough), with the Intel HEX and byte list beside it from `node tools/make-listings.mjs`. A program for an EPROM has the label `ROM_END`; one that copies a part of itself to RAM marks that part with `RAM_BEGIN` and `RAM_END` and says with `ROM_END` where it lies in the EPROM (`epromBlocks` in the tool). Its listings hold the contents of the EPROM and a `.bin` of the whole EPROM is written beside them; an image over a kibibyte also gets one `.bin` for each 1 KiB EPROM, named after its first address (`-0000.bin`, `-0400.bin`). `extras/README.md` lists the programs; tests are in `tests/extras.test.mjs`. Programs by other authors name their author and source.
+`extras/` holds small programs to try on the emulated and the real boards. They are distributed with the source but are not part of the emulator: not in `programs/catalog.json`, not in the builds. One folder per program, one source per board or monitor (`extras/clock/clock-cal-pmi80.asm`, `-pmi80c` for the PMI-80 C monitor). Each is a commented `.asm` whose header explains how to use it, with the Intel HEX and byte list beside it from `node tools/make-listings.mjs`. A folder is also handed out on its own, so its `README.md` is a user's guide and nothing else: what the program is and its version, what it needs, how to program or type it in, how to use it; no notes on how it was tested. It is in English and, after the line `<a id="cesky"></a>`, the same in Czech; the tool writes the Czech half beside it as plain text, `CTIMNE.txt` (`czechText`), and the test of the listings fails when it is out of date. A program for an EPROM has the label `ROM_END`; one that copies a part of itself to RAM marks that part with `RAM_BEGIN` and `RAM_END` and says with `ROM_END` where it lies in the EPROM (`epromBlocks` in the tool). Its listings hold the contents of the EPROM and a `.bin` of the whole EPROM is written beside them; an image over a kibibyte also gets one `.bin` for each 1 KiB EPROM, named after its first address (`-0000.bin`, `-0400.bin`). `extras/README.md` lists the programs; tests are in `tests/extras.test.mjs`. Programs by other authors name their author and source.
 
 ## Conventions
 
 ### Language
 
-The repository is in English: code, comments, tool messages, documentation, `CHANGELOG.md` and commit messages. The user interface is English with a Czech switch at the bottom of the side panel, remembered per browser; before any choice, a browser set to Czech or Slovak opens in Czech, any other in English.
+The repository is in English: code, comments, tool messages, documentation, `CHANGELOG.md` and commit messages. The guides of the programs in `extras/` are in English and Czech (see "Extras"). The user interface is English with a Czech switch at the bottom of the side panel, remembered per browser; before any choice, a browser set to Czech or Slovak opens in Czech, any other in English.
 
 All UI texts live in `src/ui/i18n.js`, in an `en` and a `cs` catalogue (English is the fallback). `index.html` names them with `data-i18n`, `data-i18n-html`, `data-i18n-title`, `data-i18n-placeholder` and `data-i18n-aria`; the code calls `t(key, params)`. No user-visible string goes straight into the HTML or JS; `tests/i18n.test.mjs` checks that both catalogues match and that every used key exists.
 

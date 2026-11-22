@@ -1,0 +1,90 @@
+﻿AION BUZZER 80 V EPROM PRO PMI-80
+=================================
+
+Verze 1.0.1. Hudební demo pro 1KiB EPROM ve druhé patici PMI-80, adresy
+0400h–07FFh. Hraje hned po spuštění: dva hlasy a bicí, asi 76 sekund, pak
+znovu od začátku. Displej přitom ukazuje, co se právě hraje.
+
+Soubor                                Co to je
+------------------------------------------------------------------------------
+aion-buzzer-80-eprom-pmi80.bin        Celá EPROM, 1024 bajtů; první bajt patří
+                                      na adresu 0400h.
+aion-buzzer-80-eprom-pmi80.hex        Totéž ve formátu Intel HEX, s adresami
+                                      0400h–07FFh.
+aion-buzzer-80-eprom-pmi80-bytes.txt  Totéž jako výpis bajtů s adresami.
+aion-buzzer-80-eprom-pmi80.asm        Zdrojový text.
+
+SHA-256 souboru .bin:
+a171f618b26197aa33278587c0af64b76918daf2e9c003146eed0b9b6a54ae6b
+
+Co je potřeba
+-------------
+
+- PMI-80 s volnou druhou paticí pro EPROM (na desce s monitorem PMI-80 C je v
+  ní EPROM s hrami COSMOS a TENIS3; tahle přijde na její místo).
+- EPROM typu, který deska bere, 1 KiB (MHB8708, 2708), a programátor.
+- Zesilovač nebo aktivní reproduktor na výstupu MG OUT magnetofonového
+  konektoru K3: signál na špičce 3, zem na špičce 2. Deska vlastní reproduktor
+  nemá.
+
+Na monitoru nezáleží: program z něj nic nevolá a nečte nic, co monitor
+připravil. Od monitoru potřebuje jen to, aby uměl spustit program od adresy
+0400h.
+
+Časování je pro PMI-80 s procesorem 8080 na 10 MHz / 9. Na jiném taktu nebo na
+desce se Z80 (Savia-84, Stone 1) by výška tónů i tempo vyšly jinak; pro ně
+program není.
+
+Programování EPROM
+------------------
+
+Použij .bin, pokud programátor počítá adresy od nuly: bajt 000h souboru je
+adresa 0400h počítače, bajt 3FFh je 07FFh. Soubor .hex nese adresy počítače,
+0400h–07FFh; pokud je programátor bere jako adresy v čipu, nastav posun
+−0400h, nebo použij .bin.
+
+Bajty 07E1h–07F3h jsou prázdné (FFh). Posledních dvanáct, 07F4h–07FFh, je
+podpis Wolf2026v101.
+
+Spuštění
+--------
+
+S EPROM ve druhé patici: EX 0400 = v továrním monitoru i v PMI-80 C; v jiném
+monitoru jeho příkazem pro spuštění programu od adresy, s adresou 0400. RE
+program zastaví a vrátí se do monitoru.
+
+Chceš-li EPROM napřed zkontrolovat, přečti monitorem pár bajtů, M 0400 =: F3,
+31, D9, 1F, 21, B9, 06, 11.
+
+Displej
+-------
+
+Zleva doprava AAA D B F P: AAA je adresa právě hraného kroku v EPROM (bez
+první číslice 0), D bicí (1 kopák, 2 virbl, 3 hi-hat), B tón basu (1–9, od
+nejnižšího), F tón melodie (0–F, od nejnižšího), P pattern (0–B). Hlas, který
+mlčí, neukazuje nic.
+
+Číslice blikají s hudbou a při každém úderu bicích na okamžik zhasnou:
+procesor střídavě dělá zvuk a rozsvěcí displej.
+
+Využitá paměť
+-------------
+
+Při hraní používá RAM 1C00h–1D2Eh: na začátku si tam zkopíruje 296 bajtů
+vlastního kódu (části, které za hraní mění) a za nimi má sedm bajtů
+proměnných. Program naťukaný do této části RAM se přepíše. Zásobník je na
+1FD5h–1FD8h.
+
+Vyzkoušení v emulátoru
+----------------------
+
+Ve Wolf80 zvol PMI-80, otevři Paměť a na jejím konci Vlastní ROM; načti .hex
+(nebo .bin od adresy 0400) a spusť EX 0400 =.
+
+Autor a licence
+---------------
+
+Matěj „Wolf“ Holyszewski, 2026; vytvořeno s pomocí AI (OpenAI Codex).
+GPL-3.0-or-later. Program je součástí doplňků (extras) emulátoru Wolf80, který
+má v seznamu programů stejné demo pro RAM:
+https://github.com/Holyszewski/Wolf80
