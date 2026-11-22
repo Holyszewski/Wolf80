@@ -218,11 +218,12 @@ test('every assembled or binary program has its Intel HEX and byte list beside i
     for (const b of blocks) m.set(b.bytes, b.addr);
     return m;
   };
-  for (const { path, text, bytes, blocks } of listings()) {
-    if (bytes) { // the image of an EPROM: its blocks in their places, FFh elsewhere
-      const m = new Uint8Array(bytes.length).fill(0xff);
+  for (const { path, text, bytes, blocks, offset } of listings()) {
+    if (bytes) { // the image of an EPROM: its blocks in their places, FFh elsewhere; or one kibibyte of it
+      const end = blocks.at(-1).addr + blocks.at(-1).bytes.length - blocks[0].addr;
+      const m = new Uint8Array(Math.ceil(end / 1024) * 1024).fill(0xff);
       for (const b of blocks) m.set(b.bytes, b.addr - blocks[0].addr);
-      assert.deepEqual(bytes, m, path);
+      assert.deepEqual(bytes, offset === undefined ? m : m.subarray(offset, offset + 1024), path);
       continue;
     }
     // the listing read back gives the program's image: the HEX through the parser, the byte list

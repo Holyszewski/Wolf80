@@ -8,8 +8,10 @@
 //   <name>.hex        Intel HEX
 //   <name>-bytes.txt  the bytes for typing in by hand, 16 to a line: address, a colon, the bytes
 // Both hold exactly the blocks the emulator loads. Programs already in Intel HEX or inside a ROM
-// need no file. A source for an EPROM that copies a part of itself to RAM (see epromBlocks) gets
+// need no file. A source for an EPROM (see epromBlocks) gets
 // the contents of the EPROM, and a third file, <name>.bin: the whole EPROM, FFh where it is empty.
+// One that fills more than a kibibyte also gets a file for each 1 KiB EPROM of the board, named
+// after its first address: <name>-0000.bin, <name>-0400.bin.
 //
 //   node tools/make-listings.mjs           write the files
 //   node tools/make-listings.mjs --check   write nothing, fail if a file is missing or out of date
@@ -39,13 +41,14 @@ export function bytesText(blocks) {
 // The blocks of an assembled source as they lie in an EPROM. A program in an EPROM that changes
 // its own code keeps that part in the EPROM and copies it to RAM when it starts: the source
 // assembles the part at its RAM addresses, between the labels RAM_BEGIN and RAM_END, and the label
-// ROM_END says where it lies in the EPROM. A source with these three labels is such a program;
-// any other is returned as it is.
+// ROM_END says where it lies in the EPROM. A program for an EPROM that copies nothing has the
+// label ROM_END alone, at its end. A source without ROM_END is returned as it is.
 export function epromBlocks({ blocks, symbols }) {
   const { ROM_END: rom, RAM_BEGIN: from, RAM_END: to } = symbols;
-  if (rom === undefined || from === undefined || to === undefined) return blocks;
+  if (rom === undefined) return blocks;
+  if ((from === undefined) !== (to === undefined)) throw new Error('RAM_BEGIN and RAM_END go together');
   const placed = blocks.filter(b => b.bytes.length)
-    .map(b => ({ addr: b.addr >= from && b.addr < to ? rom + b.addr - from : b.addr, bytes: b.bytes }))
+    .map(b => ({ addr: from !== undefined && b.addr >= from && b.addr < to ? rom + b.addr - from : b.addr, bytes: b.bytes }))
     .sort((a, b) => a.addr - b.addr);
   const out = [];
   for (const b of placed) {
@@ -90,9 +93,18 @@ export function listings() {
     const blocks = epromBlocks(r);
     out.set(stem + '.hex', { text: toIntelHexBlocks(blocks), entry: null, blocks });
     out.set(stem + '-bytes.txt', { text: bytesText(blocks), entry: null, blocks });
-    if (blocks !== r.blocks) out.set(stem + '.bin', { bytes: epromImage(blocks), entry: null, blocks });
+    if (blocks !== r.blocks) {
+      const image = epromImage(blocks);
+      out.set(stem + '.bin', { bytes: image, entry: null, blocks });
+      for (let i = 0; image.length > 1024 && i < image.length; i += 1024) {
+        const a = blocks[0].addr + i;
+        out.set(`${stem}-${hex2(a >> 8)}${hex2(a & 0xff)}.bin`, { bytes: image.subarray(i, i + 1024), entry: null, blocks, offset: i });
+      }
+    }
   }
-  return [...out].map(([path, v]) => ({ path, ...v }));   // a .bin has `bytes` in place of `text`
+  // a .bin has `bytes` in place of `text`; the one of a single EPROM out of several also `offset`,
+  // where it begins in the whole image
+  return [...out].map(([path, v]) => ({ path, ...v }));
 }
 
 // The files whose contents differ from what the sources give (a missing file counts).

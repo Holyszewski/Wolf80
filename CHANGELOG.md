@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Extras: a clock for a 1 KiB EPROM in the second socket of the PMI-80 (`extras/clock/clock-eprom-pmi80.asm`, with the image as BIN and Intel HEX). It asks for the time, typed from the left and checked, and for the correction, and starts on `=`; while it runs it has an alarm that beeps on MG OUT and a stopwatch to a hundredth of a second. It does not depend on the monitor, and no key pressed or held changes the length of its seconds. `extras/clock/README.md` has a chapter on it.
+- Extras: SFMT80 (`extras/sfmt80/`), the Science Fair Microcomputer Trainer on the PMI-80: its panel, monitor, 4-bit virtual machine and seven built-in programs in the board's two 1 KiB EPROMs, in place of the monitor. The source, the images to program as BIN (one for each EPROM) and Intel HEX, and a guide. It has been tried on a real board; in the emulator it loads as a custom ROM.
+- `tools/make-listings.mjs`: an EPROM program over a kibibyte also gets one `.bin` for each 1 KiB EPROM.
+
 ## 1.1.1 – 2026-11-21
 
 - Extras: AION Buzzer 80 for a 1 KiB EPROM in the second socket of the PMI-80 (`extras/aion-buzzer-80-eprom/`): the source, the image to program as BIN and Intel HEX, and a guide. It starts with `EX 0400 =`, does not depend on the monitor and has been tried on a real board.
