@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extras: the clock for an EPROM has its own folder, `extras/clock-eprom/`, with its own guide; `extras/clock/` keeps the small clock to type in. The plain clocks without a correction (`clock-pmi80.asm`, `clock-pmi80c.asm`) are gone: the calibrated ones do the same with the correction as typed in, `50 00`.
+
 ## 1.1.2 – 2026-11-22
 
 - Extras: a clock for a 1 KiB EPROM in the second socket of the PMI-80 (`extras/clock/clock-eprom-pmi80.asm`, with the image as BIN and Intel HEX). It asks for the time, typed from the left and checked, and for the correction, and starts on `=`; while it runs it has an alarm that beeps on MG OUT and a stopwatch to a hundredth of a second. It does not depend on the monitor, and no key pressed or held changes the length of its seconds. `extras/clock/README.md` has a chapter on it.

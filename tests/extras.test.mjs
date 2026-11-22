@@ -64,31 +64,6 @@ function runClock({ create, holdMs }, file, time, seconds, correction) {
 const factory = { create: () => new Pmi80({ rom: rom('pmi80_monitor.bin') }), holdMs: 40 };
 const pmi80c = { create: () => new Pmi80({ rom: rom('pmi80c_monitor.bin'), rom2: rom('pmi80c_games.bin') }), holdMs: 100 };
 
-for (const [file, board, other] of [
-  ['clock-pmi80.asm', factory, pmi80c],
-  ['clock-pmi80c.asm', pmi80c, factory],
-]) {
-  test(`${file}: exact seconds on its monitor, over midnight`, () => {
-    const { lengths, time, shown } = runClock(board, file, [0x23, 0x59, 0x58], 4);
-    assert.equal(lengths.length, 3);
-    for (const n of lengths) assert.equal(n, SECOND);
-    assert.deepEqual(time, [0x00, 0x00, 0x02]);
-    assert.equal(shown, '00-00-02 ');
-  });
-
-  test(`${file}: carries into minutes and hours`, () => {
-    const { time, shown } = runClock(board, file, [0x09, 0x59, 0x59], 1.5);
-    assert.deepEqual(time, [0x10, 0x00, 0x00]);
-    assert.equal(shown, '10-00-00 ');
-  });
-
-  test(`${file}: about a tenth off on the other monitor`, () => {
-    const { lengths } = runClock(other, file, [0x12, 0x00, 0x00], 3);
-    const off = Math.abs(lengths[0] / SECOND - 1);
-    assert.ok(off > 0.08 && off < 0.11, `${(off * 100).toFixed(1)} %`);
-  });
-}
-
 // The calibrated clocks: a second is SHORT states, plus LEAP when the correction (in hundredths of
 // a second a day, BCD, 5000 as typed in) added to the fraction passes 9999.
 const SHORT = 1110468, LEAP = 1286;
@@ -178,11 +153,11 @@ for (const [name, monitor, holdMs] of [['factory monitor', 'pmi80_monitor.bin', 
   });
 }
 
-// The clock in the second EPROM (extras/clock/clock-eprom-pmi80.asm): asks for the time (typed
+// The clock in the second EPROM (extras/clock-eprom/clock-eprom-pmi80.asm): asks for the time (typed
 // from the left, checked), for the correction and for =, then keeps the seconds of the calibrated
 // clocks whatever the keys do; with an alarm and a stopwatch.
 const EPROM_CLOCK = (() => {
-  const r = assemble(fs.readFileSync(new URL('extras/clock/clock-eprom-pmi80.asm', root), 'utf8'));
+  const r = assemble(fs.readFileSync(new URL('extras/clock-eprom/clock-eprom-pmi80.asm', root), 'utf8'));
   assert.deepEqual(r.errors, []);
   return { image: epromImage(epromBlocks(r)), s: r.symbols };
 })();

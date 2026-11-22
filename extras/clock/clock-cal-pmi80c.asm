@@ -13,8 +13,8 @@
 ; Start it with EX: the EX command blanks the display, which keeps the rightmost digit dark.
 ;
 ; The correction is the last two bytes of the program, 1C5B-1C5C, in BCD as it reads. As
-; typed in, 50 00, it does nothing: the clock runs exactly as clock-pmi80c.asm. Otherwise it
-; is 50.00 plus the seconds a day that clock gains on the board (minus the seconds it loses),
+; typed in, 50 00, it does nothing: a second is 1 111 111 states, exact with an exact crystal. Otherwise it
+; is 50.00 plus the seconds a day the clock then gains on the board (minus the seconds it loses),
 ; 00.00 to 99.99: a board on which it gains 20.81 s a day takes 70 81, one on which it loses
 ; 4.5 s takes 45 50. If this clock still gains or loses, add the seconds it gains a day
 ; (subtract those it loses). One step is 0.01 s a day; the range is -50 to +49.99 s a day
@@ -115,5 +115,5 @@ INC:    DCX H
         JNZ INC         ; until the hours (1D00h) are done
         JMP LOOP
 
-; The correction: 50.00 plus the seconds a day the plain clock gains on this board.
+; The correction: 50.00 plus the seconds a day the clock with 50 00 gains on this board.
 CORR:   DB 50h,00h
