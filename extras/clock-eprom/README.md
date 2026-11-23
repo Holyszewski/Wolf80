@@ -2,7 +2,7 @@
 
 *Česky: [níže](#cesky), nebo v souboru `CTIMNE.txt`.*
 
-**Version 0.2.0.** A clock showing hours, minutes and seconds as HH-MM-SS, with an alarm and a stopwatch, for a 1 KiB EPROM in the **second socket of the PMI-80**, addresses 0400h–07FFh. Nothing is typed into memory: it asks for everything on its own display. It can be corrected for the board's own crystal, and no key pressed while it runs disturbs its seconds.
+**Version 0.3.0.** A clock showing hours, minutes and seconds as HH-MM-SS, with an alarm and a stopwatch, for a 1 KiB EPROM in the **second socket of the PMI-80**, addresses 0400h–07FFh. Nothing is typed into memory: it asks for everything on its own display.
 
 | File | What it is |
 |---|---|
@@ -11,7 +11,7 @@
 | `clock-eprom-pmi80-bytes.txt` | The same as a list of bytes with addresses. |
 | `clock-eprom-pmi80.asm` | The source. |
 
-SHA-256 of the `.bin`: `f8245ba0c96726eb6b03b117c626a72bc919130526cba0a92494eade37808825`
+SHA-256 of the `.bin`: `6ee656bb3d398c283ccb6ab24b8c7cacddbece9160cf1b25136103472809358f`
 
 ## What you need
 
@@ -25,7 +25,7 @@ The monitor does not matter: the clock calls nothing of it. All it needs from a 
 
 Use the `.bin` if the programmer counts addresses from zero: byte 000h of the file is address 0400h of the computer. The `.hex` carries the computer's addresses; if the programmer takes them as addresses in the chip, set an offset of −0400h.
 
-The last twelve bytes, 07F4h–07FFh, are the signature `Wolf2026v020`.
+The last twelve bytes, 07F4h–07FFh, are the signature `Wolf2026v030`.
 
 ## Setting and starting
 
@@ -34,7 +34,7 @@ Start it with `EX 0400 =` (in another monitor: its command that runs a program f
 | | On the display | What to do |
 |---|---|---|
 | 1 | `CAS` for a second, then `00-00-00` | The time ("čas"). Type six digits, HHMMSS, and confirm with `=`. |
-| 2 | `50-00-CAL` | The correction for the board's crystal: the one used last, or the one in the EPROM. `50-00` corrects nothing. Confirm it with `=`, or type four digits first. |
+| 2 | `CAL=50-00` | The correction for the board's crystal: the one used last, or the one in the EPROM. `50-00` corrects nothing. Confirm it with `=`, or type four digits first. |
 | 3 | `StArt =` | The clock stands and waits. It starts at the moment `=` is pressed. |
 
 - **Typing.** Digits go in from the left. The place being typed shows an underscore in turns with its digit. After the last place comes the first again, so a mistake is corrected by typing on. Only 0–9 are taken.
@@ -56,7 +56,7 @@ Other keys do nothing. No key disturbs the clock, whether pressed or held: every
 - `=` sets the alarm and turns it **on**. With the time as it is, `B` and `=` just turn it on.
 - `B` once more turns it **off**.
 - While the alarm is on, the top right segment of the last digit is lit, beside the seconds.
-- At its time the clock beeps on MG OUT for a minute, or until any key is pressed. That key does nothing else. The alarm stays on for the next day.
+- At its time the clock beeps on MG OUT for two minutes, or until any key is pressed. That key does nothing else. The alarm stays on for the next day.
 - The time of the alarm is not checked: one that cannot be, such as 25-00, never comes.
 - While it beeps, the middle segments of the digits are dark in the rhythm of the beeps: the same output drives them and the sound.
 
@@ -65,7 +65,7 @@ Other keys do nothing. No key disturbs the clock, whether pressed or held: every
 - `=` starts and stops it. Stopped, it keeps its value; `=` goes on from there.
 - `0` clears it and stops it.
 - `S` returns to the clock. The stopwatch goes on meanwhile, and the clock goes on behind the stopwatch.
-- It counts to 99 minutes 59.99 seconds and then from zero again.
+- It counts to 99 minutes 59.99 seconds and then goes on from zero.
 
 ## The correction
 
@@ -108,7 +108,7 @@ Matěj "Wolf" Holyszewski, 2026; written with the help of AI. GPL-3.0-or-later. 
 
 # Hodiny do EPROM pro PMI-80
 
-**Verze 0.2.0.** Hodiny, které ukazují hodiny, minuty a sekundy jako HH-MM-SS, s budíkem a stopkami, pro 1KiB EPROM ve **druhé patici PMI-80**, adresy 0400h–07FFh. Nic se neťuká do paměti: na všechno se zeptají na vlastním displeji. Dají se zkalibrovat podle krystalu konkrétní desky a žádná klávesa stisknutá za běhu jim nenaruší délku sekundy.
+**Verze 0.3.0.** Hodiny, které ukazují hodiny, minuty a sekundy jako HH-MM-SS, s budíkem a stopkami, pro 1KiB EPROM ve **druhé patici PMI-80**, adresy 0400h–07FFh. Nic se neťuká do paměti: na všechno se zeptají na vlastním displeji.
 
 | Soubor | Co to je |
 |---|---|
@@ -117,7 +117,7 @@ Matěj "Wolf" Holyszewski, 2026; written with the help of AI. GPL-3.0-or-later. 
 | `clock-eprom-pmi80-bytes.txt` | Totéž jako výpis bajtů s adresami. |
 | `clock-eprom-pmi80.asm` | Zdrojový text. |
 
-SHA-256 souboru `.bin`: `f8245ba0c96726eb6b03b117c626a72bc919130526cba0a92494eade37808825`
+SHA-256 souboru `.bin`: `6ee656bb3d398c283ccb6ab24b8c7cacddbece9160cf1b25136103472809358f`
 
 ## Co je potřeba
 
@@ -131,7 +131,7 @@ Na monitoru nezáleží: hodiny z něj nic nevolají. Od monitoru potřebují je
 
 Použij `.bin`, pokud programátor počítá adresy od nuly: bajt 000h souboru je adresa 0400h počítače. Soubor `.hex` nese adresy počítače; pokud je programátor bere jako adresy v čipu, nastav posun −0400h.
 
-Posledních dvanáct bajtů, 07F4h–07FFh, je podpis `Wolf2026v020`.
+Posledních dvanáct bajtů, 07F4h–07FFh, je podpis `Wolf2026v030`.
 
 ## Nastavení a spuštění
 
@@ -140,7 +140,7 @@ Spusť je příkazem `EX 0400 =` (v jiném monitoru jeho příkazem pro spuště
 | | Na displeji | Co udělat |
 |---|---|---|
 | 1 | na sekundu `CAS`, pak `00-00-00` | Čas. Naťukej šest číslic, HHMMSS, a potvrď `=`. |
-| 2 | `50-00-CAL` | Korekce podle krystalu desky: ta naposledy použitá, nebo ta z EPROM. `50-00` neopravuje nic. Potvrď ji `=`, nebo předtím naťukej čtyři číslice. |
+| 2 | `CAL=50-00` | Korekce podle krystalu desky: ta naposledy použitá, nebo ta z EPROM. `50-00` neopravuje nic. Potvrď ji `=`, nebo předtím naťukej čtyři číslice. |
 | 3 | `StArt =` | Hodiny stojí a čekají. Rozběhnou se v okamžiku stisku `=`. |
 
 - **Psaní.** Číslice se zadávají zleva. Na místě, které se právě píše, se střídá podtržítko s číslicí. Po posledním místě přijde zase první, takže chybu opravíš tím, že píšeš dál. Berou se jen číslice 0–9.
@@ -162,7 +162,7 @@ Ostatní klávesy nedělají nic. Žádná klávesa hodiny neruší, ať je stis
 - `=` budík nastaví a **zapne**. Když čas neměníš, `B` a `=` ho jen zapnou.
 - Další stisk `B` ho **vypne**.
 - Když je budík zapnutý, svítí vpravo nahoře segment poslední číslice, vedle sekund.
-- Ve svůj čas hodiny pípají na výstupu MG OUT, minutu nebo do stisku libovolné klávesy. Ta klávesa nic jiného neudělá. Budík zůstane zapnutý i na další den.
+- Ve svůj čas hodiny pípají na výstupu MG OUT, dvě minuty nebo do stisku libovolné klávesy. Ta klávesa nic jiného neudělá. Budík zůstane zapnutý i na další den.
 - Čas budíku se nekontroluje: čas, který nemůže být, například 25-00, nikdy nenastane.
 - Při pípání pohasínají v rytmu pípání prostřední segmenty číslic: stejný výstup řídí je i zvuk.
 
@@ -171,7 +171,7 @@ Ostatní klávesy nedělají nic. Žádná klávesa hodiny neruší, ať je stis
 - `=` je spouští a zastavuje. Zastavené si drží hodnotu; `=` pokračuje od ní.
 - `0` je vynuluje a zastaví.
 - `S` se vrátí na hodiny. Stopky mezitím běží dál a hodiny běží dál za stopkami.
-- Počítají do 99 minut 59,99 sekundy a pak znovu od nuly.
+- Počítají do 99 minut 59,99 sekundy a pak pokračují od nuly.
 
 ## Korekce
 

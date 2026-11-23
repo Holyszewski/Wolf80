@@ -1,4 +1,4 @@
-; Clock for a 1 KiB EPROM in the second socket of the PMI-80 (0400h-07FFh), version 0.2.0:
+; Clock for a 1 KiB EPROM in the second socket of the PMI-80 (0400h-07FFh), version 0.3.0:
 ; hours, minutes and seconds as HH-MM-SS, with a correction for the board's own crystal, an
 ; alarm and a stopwatch. It asks for the time and for the correction on its own display.
 ;
@@ -12,13 +12,13 @@
 ;              from the left; the place being typed alternates with an underscore and goes
 ;              round after the last one. = confirms. A time that cannot be (25-00-00) shows
 ;              Err and is asked for again.
-;   XX-XX-CAL  the correction: the one used last, or the one in the EPROM. = confirms it, or
+;   CAL=XX-XX  the correction: the one used last, or the one in the EPROM. = confirms it, or
 ;              type four digits first.
 ;   StArt =    the clock stands and starts on the press of =.
 ; While the clock runs:
 ;   B          the alarm ("budík"): HH-MM-bUd. Type its time as above; = sets it and turns
 ;              the alarm on, B turns it off. While it is on, the top right segment of the last
-;              digit is lit. At its time the clock beeps on MG OUT (K3) for a minute, or
+;              digit is lit. At its time the clock beeps on MG OUT (K3) for two minutes, or
 ;              until a key is pressed. Its time is not checked: one that cannot be never comes.
 ;   S          the stopwatch ("stopky"), MM-SS and hundredths: = starts and stops it, 0 clears
 ;              it, S returns to the clock. It goes on while the clock is shown.
@@ -66,7 +66,7 @@ FRAC    EQU 1F1Ah       ; 2 bytes: the running fraction, BCD
 ; kept from one start to the next:
 MARK    EQU 1F20h       ; 2 bytes, 5Ah A5h: what follows was left by this program
 TIME    EQU 1F22h       ; hours, minutes, seconds in BCD
-CAL     EQU 1F25h       ; the correction in use, 2 bytes BCD, and CDh, shown as "CA"
+CAL     EQU 1F25h       ; the correction in use, 2 bytes BCD (a third is drawn with them)
 ALARM   EQU 1F28h       ; the alarm: hours, minutes, and ABh, shown as "bU"
 ALON    EQU 1F2Bh       ; 1: the alarm is on
 STACK   EQU 1FC0h
@@ -80,15 +80,15 @@ V_SW    EQU 8
 V_CAL   EQU 12
 DELAY   EQU 54          ; how long a digit is lit in a round
 FRAMES  EQU 100         ; rounds in a second
-FINE    EQU 137         ; the rest of the second, rounds of 15 states
+FINE    EQU 131         ; the rest of the second, rounds of 15 states
 
         ORG 0400h
 START:  JMP INIT
 ; The correction of the EPROM, in BCD as it reads (0403h-0404h).
 CORR:   DB 50h,00h
-; The digits 0-9 as PA values (a segment is lit by 0); A-D are the letters b, U, C, A.
+; The digits 0-9 as PA values (a segment is lit by 0); A and B are the letters b and U.
 DIGITS: DB 40h,79h,24h,30h,19h,12h,02h,78h,00h,10h
-        DB 03h,41h,46h,08h,7Fh,7Fh
+        DB 03h,41h
 LIMITS: DB 24h,60h,60h
 ; The keys by row (PC4, PC5, PC6) and column: 0-F the digits, 10h =, 11h EX, 12h S, 13h L,
 ; 14h BR, 15h M, 16h R, 1Fh no key there.
@@ -103,8 +103,8 @@ VIEWS:  DW TIME                 ; the clock
         DB 21h,4                ; "d"
         DW SWMIN                ; the stopwatch
         DB 0FFh,6
-        DW CAL                  ; the correction, XX-XX-CAL
-        DB 47h,4                ; "L"
+        DW CAL                  ; the correction: XX-XX here, CAL=XX-XX after CALFIX
+        DB 7Fh,4
 TCAS:   DB 46h,08h,12h,7Fh,7Fh,7Fh,7Fh,7Fh,7Fh  ; CAS
 TERR:   DB 06h,2Fh,2Fh,7Fh,7Fh,7Fh,7Fh,7Fh,7Fh  ; Err
 TSTART: DB 12h,07h,08h,2Fh,07h,7Fh,37h,7Fh,7Fh  ; StArt =
@@ -115,7 +115,6 @@ INIT:   DI
         OUT CWR
         LXI H,LOCK              ; the working variables: 0
         MVI B,MARK-LOCK
-        XRA A
         CALL FILL
         MVI A,5                 ; the key that started the program is still down
         STA LOCK
@@ -127,21 +126,18 @@ INIT:   DI
         JZ INIT1
         LXI H,TIME              ; no: 00-00-00, the correction of the EPROM, no alarm
         MVI B,ALON+1-TIME
-        XRA A
         CALL FILL
         LHLD CORR
         SHLD CAL
         LXI H,0A55Ah
         SHLD MARK
-INIT1:  MVI A,0CDh              ; the letters behind the correction and the alarm
-        STA CAL+2
-        MVI A,0ABh
+INIT1:  MVI A,0ABh              ; the letters behind the alarm
         STA ALARM+2
         CALL VALID              ; and can the time be?
         JC INIT2
-        LXI H,0
-        SHLD TIME
-        SHLD TIME+1
+        LXI H,TIME
+        MVI B,3
+        CALL FILL
 INIT2:  LXI H,TCAS
 ; The time
 ASK:    CALL LABEL
@@ -193,9 +189,7 @@ SECOND: MVI M,FRAMES
         NOP
 SEC1:   DCR A
         JNZ SEC1
-        NOP                     ; 13 states: trimming the second to the state
-        NOP                     ; 13 states: trimming the second to the state
-        MOV A,A                 ; 13 states: trimming the second to the state
+        MOV A,M                 ; 7 states: trimming the second to the state
         LXI H,TIME+2            ; seconds, minutes, hours: add 1 or 0 in BCD
         LXI B,LIMITS+2          ; and compare with the limit; at the limit the
         MVI E,0                 ; field becomes 00 and the next one gets 1
@@ -236,9 +230,8 @@ SEC2:   MOV A,E                 ; E = 00h: add 1; E = FFh: add nothing
         MOV B,A
         LDA TIME+2
         ORA B                   ; 0: now
-        ADI 0FFh
+        SUI 1
         SBB A
-        CMA
         MOV B,A                 ; FFh: now
         LDA ALON
         CMA
@@ -246,7 +239,7 @@ SEC2:   MOV A,E                 ; E = 00h: add 1; E = FFh: add nothing
         ANA B
         MOV B,A
         POP H
-        ANI 60                  ; then a minute of ringing
+        ANI 120                 ; then two minutes of ringing
         MOV C,A
         MOV A,B
         CMA
@@ -371,95 +364,78 @@ HCLOCK: MOV A,B                 ; the clock
 HALARM: MOV A,B                 ; the alarm
         CPI 10
         JC XDIGIT
-        CPI KEY_EQ
-        JZ XALSET
         CPI KEY_B
         JZ XALOFF
+        CPI KEY_EQ
+        JZ XALSET
         JMP XALNO
 ; exits begin: the waits are set by measurement, so that every path through HANDLE takes
 ; the same number of states
-XNONE:  MOV A,M                 ; 7 states: trimming the path
-        MVI A,36
+XNONE:  NOP                     ; 11 states: trimming the path
+        MOV A,M                 ; 11 states: trimming the path
+        MVI A,34
         JMP HWAIT
 XQUIET: MVI M,0
-        MOV A,M                 ; 21 states: trimming the path
-        MOV A,M                 ; 21 states: trimming the path
-        MOV A,M                 ; 21 states: trimming the path
-        MVI A,32
+        MOV A,A                 ; 10 states: trimming the path
+        MOV A,A                 ; 10 states: trimming the path
+        MVI A,31
         JMP HWAIT
 XSWGO:  LXI H,SWRUN
         MOV A,M
         XRI 1
         MOV M,A
-        MOV A,A                 ; 10 states: trimming the path
-        MOV A,A                 ; 10 states: trimming the path
-        MVI A,27
+        MOV A,M                 ; 14 states: trimming the path
+        MOV A,M                 ; 14 states: trimming the path
+        MVI A,25
         JMP HWAIT
 XSWZERO:LXI H,0
         SHLD SWMIN
         SHLD SWHH
-        MVI A,26
+        NOP                     ; 4 states: trimming the path
+        MVI A,24
         JMP HWAIT
 XBACK:  MVI M,V_CLOCK
-        MVI A,27
-        JMP HWAIT
-XSWNO:  MVI A,27
+XSWNO:  NOP                     ; 4 states: trimming the path
+        MVI A,25
         JMP HWAIT
 XTOAL:  MVI M,V_ALARM
         LXI H,0FF00h            ; from the first digit
         SHLD CURSOR
-        MOV A,M                 ; 7 states: trimming the path
-        MVI A,28
+        NOP                     ; 11 states: trimming the path
+        MOV A,M                 ; 11 states: trimming the path
+        MVI A,26
         JMP HWAIT
 XTOSW:  MVI M,V_SW
-        NOP                     ; 16 states: trimming the path
-        MOV A,A                 ; 16 states: trimming the path
-        MOV A,M                 ; 16 states: trimming the path
-        MVI A,28
-        JMP HWAIT
-XCLNO:  NOP                     ; 16 states: trimming the path
-        MOV A,A                 ; 16 states: trimming the path
-        MOV A,M                 ; 16 states: trimming the path
-        MVI A,28
+XCLNO:  MOV A,A                 ; 5 states: trimming the path
+        MVI A,27
         JMP HWAIT
 XDIGIT: CALL PUTDIG
-        NOP                     ; 13 states: trimming the path
-        NOP                     ; 13 states: trimming the path
-        MOV A,A                 ; 13 states: trimming the path
-        MVI A,8
+        MOV A,A                 ; 5 states: trimming the path
+        MVI A,5
         JMP HWAIT
-XALSET: MVI M,V_CLOCK           ; = turns the alarm on
-        MVI A,1
-        STA ALON
+XALOFF: MOV A,A                 ; B turns the alarm off (10 states: level with XALSET)
+        MOV A,A
+        XRA A
+        JMP XALX
+XALSET: MVI A,1                 ; = turns it on
+XALX:   STA ALON
+        MVI M,V_CLOCK
         XRA A
         STA EDITM
-        MOV A,M                 ; 7 states: trimming the path
+        NOP                     ; 9 states: trimming the path
+        MOV A,A                 ; 9 states: trimming the path
+        MVI A,22
+        JMP HWAIT
+XALNO:  NOP                     ; 11 states: trimming the path
+        MOV A,M                 ; 11 states: trimming the path
         MVI A,25
-        JMP HWAIT
-XALOFF: MVI M,V_CLOCK           ; B turns it off
-        XRA A
-        STA ALON
-        STA EDITM
-        MOV A,A                 ; 12 states: trimming the path
-        MOV A,M                 ; 12 states: trimming the path
-        MVI A,24
-        JMP HWAIT
-XALNO:  MOV A,M                 ; 7 states: trimming the path
-        MVI A,27
 ; exits end
 HWAIT:  DCR A
         JNZ HWAIT
         RET
 ; The digit B to the place of the cursor in the bytes of what is shown; the cursor moves on,
 ; and round after the last digit. No conditional jumps.
-PUTDIG: LDA VIEW
-        ADI LOW(VIEWS)
-        MOV L,A
-        MVI H,HIGH(VIEWS)
-        MOV E,M
-        INX H
-        MOV D,M                 ; DE = the bytes
-        INX H
+PUTDIG: CALL VLOOK              ; DE = the bytes
         INX H
         MOV C,M                 ; C = how many digits
         LXI H,CURSOR
@@ -542,14 +518,7 @@ RENDER: LXI H,BLINK
         STA STOG
         RRC
         STA SMASK
-        LDA VIEW
-        ADI LOW(VIEWS)
-        MOV L,A
-        MVI H,HIGH(VIEWS)
-        MOV E,M
-        INX H
-        MOV D,M
-        INX H
+        CALL VLOOK
         MOV A,M                 ; the last digit; where its bit 7 allows and the alarm is
         RLC                     ; on, with segment b lit
         RLC
@@ -589,6 +558,16 @@ RENDER: LXI H,BLINK
         ORA C
         MOV M,A
         RET
+; DE = the bytes of what is shown, HL = at the last digit in its line of VIEWS.
+VLOOK:  LDA VIEW
+        ADI LOW(VIEWS)
+        MOV L,A
+        MVI H,HIGH(VIEWS)
+        MOV E,M
+        INX H
+        MOV D,M
+        INX H
+        RET
 ; B BCD bytes from HL as pairs of digits from DE on, a dash between the pairs.
 DRAWB:  MOV A,M
         CALL BCD
@@ -620,11 +599,12 @@ BCD1:   ANI 0Fh
 
 ; ---------------------------------------------------------------------------
 ; Asking, before the clock runs
-; B bytes from HL: A
-FILL:   MOV M,A
+; B bytes from HL: 0
+FILL:   XRA A
+FILL1:  MOV M,A
         INX H
         DCR B
-        JNZ FILL
+        JNZ FILL1
         RET
 ; One scan; A = the key newly pressed, FFh none.
 GETKEY: CALL SCAN
@@ -677,6 +657,9 @@ EDIT:   STA VIEW
         LXI H,0FF00h
         SHLD CURSOR
 EDIT1:  CALL RENDER
+        LDA VIEW
+        ORA A
+        CNZ CALFIX              ; the correction
         CALL GETKEY
         CPI KEY_EQ
         JZ EDIT2
@@ -689,8 +672,26 @@ EDIT2:  XRA A
         STA EDITM
         STA VIEW
         RET
+; The picture XX-XX-.. of the correction turned into CAL=XX-XX: the five places of the
+; digits, the underscore with them, moved to the right end and the letters put before them.
+CALFIX: LXI H,SCREEN+4
+        LXI D,SCREEN+8
+CALF1:  MOV A,M
+        STAX D
+        DCX D
+        DCR L                   ; (SCREEN is at the start of its page)
+        JP CALF1
+        XCHG                    ; HL = SCREEN + 3
+        MVI M,37h               ; =
+        DCX H
+        MVI M,47h               ; L
+        DCX H
+        MVI M,08h               ; A
+        DCX H
+        MVI M,46h               ; C
+        RET
 ROM_END:
 ; The signature, the last bytes of the EPROM.
         ORG 07F4h
-        DB 'Wolf2026','v020'
+        DB 'Wolf2026','v030'
         END

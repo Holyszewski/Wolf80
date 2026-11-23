@@ -1,11 +1,9 @@
 ﻿HODINY DO EPROM PRO PMI-80
 ==========================
 
-Verze 0.2.0. Hodiny, které ukazují hodiny, minuty a sekundy jako HH-MM-SS, s
+Verze 0.3.0. Hodiny, které ukazují hodiny, minuty a sekundy jako HH-MM-SS, s
 budíkem a stopkami, pro 1KiB EPROM ve druhé patici PMI-80, adresy 0400h–07FFh.
-Nic se neťuká do paměti: na všechno se zeptají na vlastním displeji. Dají se
-zkalibrovat podle krystalu konkrétní desky a žádná klávesa stisknutá za běhu
-jim nenaruší délku sekundy.
+Nic se neťuká do paměti: na všechno se zeptají na vlastním displeji.
 
 Soubor                       Co to je
 ------------------------------------------------------------------------------
@@ -17,7 +15,7 @@ clock-eprom-pmi80-bytes.txt  Totéž jako výpis bajtů s adresami.
 clock-eprom-pmi80.asm        Zdrojový text.
 
 SHA-256 souboru .bin:
-f8245ba0c96726eb6b03b117c626a72bc919130526cba0a92494eade37808825
+6ee656bb3d398c283ccb6ab24b8c7cacddbece9160cf1b25136103472809358f
 
 Co je potřeba
 -------------
@@ -39,7 +37,7 @@ Použij .bin, pokud programátor počítá adresy od nuly: bajt 000h souboru je
 adresa 0400h počítače. Soubor .hex nese adresy počítače; pokud je programátor
 bere jako adresy v čipu, nastav posun −0400h.
 
-Posledních dvanáct bajtů, 07F4h–07FFh, je podpis Wolf2026v020.
+Posledních dvanáct bajtů, 07F4h–07FFh, je podpis Wolf2026v030.
 
 Nastavení a spuštění
 --------------------
@@ -50,7 +48,7 @@ programu od adresy). Pak se zeptají na tři věci:
    Na displeji                   Co udělat
 ------------------------------------------------------------------------------
 1  na sekundu CAS, pak 00-00-00  Čas. Naťukej šest číslic, HHMMSS, a potvrď =.
-2  50-00-CAL                     Korekce podle krystalu desky: ta naposledy
+2  CAL=50-00                     Korekce podle krystalu desky: ta naposledy
                                  použitá, nebo ta z EPROM. 50-00 neopravuje
                                  nic. Potvrď ji =, nebo předtím naťukej čtyři
                                  číslice.
@@ -87,9 +85,9 @@ jako při nastavení hodin.
 - Další stisk B ho vypne.
 - Když je budík zapnutý, svítí vpravo nahoře segment poslední číslice, vedle
   sekund.
-- Ve svůj čas hodiny pípají na výstupu MG OUT, minutu nebo do stisku libovolné
-  klávesy. Ta klávesa nic jiného neudělá. Budík zůstane zapnutý i na další
-  den.
+- Ve svůj čas hodiny pípají na výstupu MG OUT, dvě minuty nebo do stisku
+  libovolné klávesy. Ta klávesa nic jiného neudělá. Budík zůstane zapnutý i na
+  další den.
 - Čas budíku se nekontroluje: čas, který nemůže být, například 25-00, nikdy
   nenastane.
 - Při pípání pohasínají v rytmu pípání prostřední segmenty číslic: stejný
@@ -100,7 +98,7 @@ Stopky. S je ukáže jako minuty, sekundy a setiny, 00-00-00.
 - = je spouští a zastavuje. Zastavené si drží hodnotu; = pokračuje od ní.
 - 0 je vynuluje a zastaví.
 - S se vrátí na hodiny. Stopky mezitím běží dál a hodiny běží dál za stopkami.
-- Počítají do 99 minut 59,99 sekundy a pak znovu od nuly.
+- Počítají do 99 minut 59,99 sekundy a pak pokračují od nuly.
 
 Korekce
 -------

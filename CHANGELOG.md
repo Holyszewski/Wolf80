@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extras: the clock for an EPROM, 0.3.0: the correction is asked for as `CAL=50-00`, the label first (it was `50-00-CAL`); the alarm beeps for two minutes.
+
 - Extras: every program's `README.md` is in English and Czech and names the program's version, and the Czech text is also beside it as `CTIMNE.txt`, so that a folder can be handed out on its own. The guides no longer say how the programs were tested. The clock for an EPROM explains its correction itself. SFMT80 is version 1.0.0.
 
 - Extras: the clock for an EPROM has its own folder, `extras/clock-eprom/`, with its own guide; `extras/clock/` keeps the small clock to type in. The plain clocks without a correction (`clock-pmi80.asm`, `clock-pmi80c.asm`) are gone: the calibrated ones do the same with the correction as typed in, `50 00`.

@@ -244,9 +244,9 @@ for (const mon of [['factory monitor', 'pmi80_monitor.bin', 40], ['PMI-80 C', 'p
     c.type('235958');
     assert.equal(c.field(), '23-59-58 ');
     c.tap('=');
-    assert.equal(c.field(), '50-00-CAL', 'the correction of the EPROM');
+    assert.equal(c.field(), 'CAL=50-00', 'the correction of the EPROM');
     c.type('70');
-    assert.equal(c.field(), '70-00-CAL');
+    assert.equal(c.field(), 'CAL=70-00');
     c.type('81');
     assert.deepEqual(c.bytes('CAL', 2), [0x70, 0x81]);
     c.tap('=');
@@ -361,10 +361,10 @@ for (const mon of [['factory monitor', 'pmi80_monitor.bin', 40], ['PMI-80 C', 'p
     c.m.takeAudio();
     const quiet = () => c.m.takeAudio().edges.length;
     while (c.bytes('TIME', 3)[0] !== 0x07) c.run(100);
-    assert.equal(c.m.read(c.s.RINGS), 60);
+    assert.equal(c.m.read(c.s.RINGS), 120);
     c.run(1500);
     assert.ok(quiet() > 200, 'it beeps');
-    assert.ok(c.m.read(c.s.RINGS) < 60, 'counting down its minute');
+    assert.ok(c.m.read(c.s.RINGS) < 120, 'counting down its two minutes');
     c.tap('5');                                   // any key
     assert.equal(c.m.read(c.s.RINGS), 0);
     assert.equal(c.m.read(c.s.VIEW), 0, 'that key did nothing else');
@@ -377,7 +377,7 @@ for (const mon of [['factory monitor', 'pmi80_monitor.bin', 40], ['PMI-80 C', 'p
     c.tap('B');
     assert.equal(c.m.read(c.s.ALON), 0);
     assert.match(c.shown(), /^07-00-\d\d $/, 'off: no sign');
-    // the stopwatch shows the sign too, and a ringing left alone ends after its minute
+    // the stopwatch shows the sign too, and a ringing left alone ends when its time is over
     c.m.write(c.s.RINGS, 2);
     c.run(2500);
     assert.equal(c.m.read(c.s.RINGS), 0);
@@ -387,7 +387,7 @@ for (const mon of [['factory monitor', 'pmi80_monitor.bin', 40], ['PMI-80 C', 'p
     const c = epromClock(mon, { correction: '4319' });
     c.run(1300);
     c.type('120000'); c.tap('=');
-    assert.equal(c.field(), '43-19-CAL');
+    assert.equal(c.field(), 'CAL=43-19');
     c.type('9999'); c.tap('='); c.tap('=');
     c.tap('B'); c.type('0630'); c.tap('=');
     c.run(2500);
@@ -399,7 +399,7 @@ for (const mon of [['factory monitor', 'pmi80_monitor.bin', 40], ['PMI-80 C', 'p
     c.run(1300);
     assert.equal(c.field(), `12-00-0${stopped[2]}'`, 'the time, and the alarm still on');
     c.tap('=');
-    assert.equal(c.field(), '99-99-CAL', 'the correction typed last time');
+    assert.equal(c.field(), 'CAL=99-99', 'the correction typed last time');
     c.tap('='); c.run(100);
     c.tap('=');
     const first = fractionOf(c);
@@ -426,7 +426,7 @@ for (const mon of [['factory monitor', 'pmi80_monitor.bin', 40], ['PMI-80 C', 'p
       c.run(1300);
       assert.equal(c.field(), expected, why);
       c.tap('=');
-      assert.equal(c.field(), mark ? '12-34-CAL' : '50-00-CAL', why);
+      assert.equal(c.field(), mark ? 'CAL=12-34' : 'CAL=50-00', why);
     }
   });
 }
